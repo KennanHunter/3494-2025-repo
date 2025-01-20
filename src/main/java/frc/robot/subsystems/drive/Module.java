@@ -129,7 +129,8 @@ public class Module {
     // Update setpoints, controllers run in "periodic"
     angleSetpoint = optimizedState.angle;
     speedSetpoint = optimizedState.speedMetersPerSecond;
-
+    System.out.println(angleSetpoint);
+    Logger.recordOutput("Encoder" + index + "target rotation", angleSetpoint);
     return optimizedState;
   }
 
