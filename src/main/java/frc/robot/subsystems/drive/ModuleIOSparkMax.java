@@ -66,7 +66,7 @@ public class ModuleIOSparkMax implements ModuleIO {
   private final Queue<Double> drivePositionQueue;
   private final Queue<Double> turnPositionQueue;
 
-  private final boolean isTurnMotorInverted = true;
+  private final boolean isTurnMotorInverted = true; //FIX MEEE
   private final Rotation2d absoluteEncoderOffset;
 
   private SparkMaxConfig driveSparkMaxConfig = new SparkMaxConfig();
@@ -112,15 +112,18 @@ public class ModuleIOSparkMax implements ModuleIO {
     turnSparkMaxConfig.smartCurrentLimit(30);
     turnSparkMaxConfig.voltageCompensation(12);
     turnSparkMaxConfig.signals.primaryEncoderPositionPeriodMs((int) (1000.0 / Module.ODOMETRY_FREQUENCY));
+    turnSparkMaxConfig.inverted(isTurnMotorInverted);
 
     driveSparkMax.configure(driveSparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     turnSparkMax.configure(turnSparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
 
     driveSparkMax.setCANTimeout(250);
     turnSparkMax.setCANTimeout(250);
 
     driveEncoder = driveSparkMax.getEncoder();
     turnRelativeEncoder = turnSparkMax.getEncoder();
+    
 
     turnSparkMax.setInverted(isTurnMotorInverted);
     driveSparkMax.setInverted(true);
@@ -170,7 +173,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     inputs.driveCurrentAmps = new double[] { driveSparkMax.getOutputCurrent() };
 
     inputs.turnAbsolutePosition = new Rotation2d(
-        turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V() * 2.0 * Math.PI)
+       turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V() * 2.0 * Math.PI)
         .minus(absoluteEncoderOffset);
 
     Logger.recordOutput("Encoder" + index + " output voltage", turnAbsoluteEncoder.getVoltage());
