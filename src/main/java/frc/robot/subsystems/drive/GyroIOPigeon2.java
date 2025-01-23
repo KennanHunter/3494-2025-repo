@@ -25,6 +25,8 @@ import frc.robot.Constants;
 import java.util.OptionalDouble;
 import java.util.Queue;
 
+import org.littletonrobotics.junction.Logger;
+
 /** IO implementation for Pigeon2 */
 public class GyroIOPigeon2 implements GyroIO {
   private final Pigeon2 pigeon = new Pigeon2(Constants.Drivetrain.PIGEON_PORT);
@@ -68,7 +70,7 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
     inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
-
+    Logger.recordOutput("Pigeon2 Readout", yaw.getValueAsDouble());
     inputs.odometryYawTimestamps =
         yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
     inputs.odometryYawPositions =

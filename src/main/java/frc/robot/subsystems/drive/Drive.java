@@ -150,7 +150,9 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    m_LimeLight1.periodic();
+    try{
+    // System.out.println("PRediodicing1");
+    // m_LimeLight1.periodic();
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
     for (var module : modules) {
@@ -197,19 +199,30 @@ public class Drive extends SubsystemBase {
         // Use the real gyro angle
         rawGyroRotation = gyroInputs.odometryYawPositions[i];
       } else {
-        // Use the angle delta from the kinematics and module deltas
+       // Use the angle delta from the kinematics and module deltas
         Twist2d twist = kinematics.toTwist2d(moduleDeltas);
         rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
       }
       // rawGyroRotation = gyroInputs.yawPosition; // Seans test FIX NOT PERMENATE
       rotationRate = gyroInputs.yawVelocityRadPerSec; // Logged for megaTag
+      
       // Apply update
+      // System.out.println(rawGyroRotation+ "|" + poseEstimator.getEstimatedPosition().getRotation());
+      // System.out.println("PRediodicing2");
+      Logger.recordOutput("Odo Yaw from gyro", rawGyroRotation.getDegrees());
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
-      if (m_LimeLight1.measurmentValid()) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
-        poseEstimator.addVisionMeasurement(
-            m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
-      }
+      Logger.recordOutput("Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees() );
+      
+      // if (m_LimeLight1.measurmentValid()) {
+      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+      //   poseEstimator.addVisionMeasurement(
+      //       m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
+      // }
+    }
+  }catch(Exception e){
+      System.out.println(e);
+      System.out.println("alfkds");
+
     }
   }
   /**
