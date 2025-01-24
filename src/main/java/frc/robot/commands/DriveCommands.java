@@ -28,93 +28,89 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class DriveCommands {
-    private static final double DEADBAND = 0.1;
-    private DriveMode currentDriveMode = DriveMode.NORMAL_TELEOP;
-    private static AutoAlignController autoAlignController = null;
-    private static ChassisSpeeds desiredSpeeds = null;
+  private static final double DEADBAND = 0.1;
+  private DriveMode currentDriveMode = DriveMode.NORMAL_TELEOP;
+  private static AutoAlignController autoAlignController = null;
+  private static ChassisSpeeds desiredSpeeds = null;
 
-    // 9c
-    private DriveCommands() {}
+  // 9c
+  private DriveCommands() {}
 
-    /**
-     * Field relative drive command using two joysticks (controlling linear and angular velocities).
-     */
-    public static Command joystickDrive(
-            Drive drive,
-            DoubleSupplier xSupplier,
-            DoubleSupplier ySupplier,
-            DoubleSupplier omegaSupplier) {
-        return Commands.run(
-                () -> {
-                    // Apply deadband
-                    double linearMagnitude =
-                            MathUtil.applyDeadband(
-                                    Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()),
-                                    DEADBAND);
-                    Rotation2d linearDirection =
-                            new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
-                    double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+  /**
+   * Field relative drive command using two joysticks (controlling linear and angular velocities).
+   */
+  public static Command joystickDrive(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier omegaSupplier) {
+    return Commands.run(
+        () -> {
+          // Apply deadband
+          double linearMagnitude =
+              MathUtil.applyDeadband(
+                  Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), DEADBAND);
+          Rotation2d linearDirection =
+              new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
 
-                    // Square values
-                    linearMagnitude = linearMagnitude * linearMagnitude;
-                    omega = Math.copySign(omega * omega, omega);
+          // Square values
+          linearMagnitude = linearMagnitude * linearMagnitude;
+          omega = Math.copySign(omega * omega, omega);
 
-                    // Calcaulate new linear velocity
-                    Translation2d linearVelocity =
-                            new Pose2d(new Translation2d(), linearDirection)
-                                    .transformBy(
-                                            new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
-                                    .getTranslation();
+          // Calcaulate new linear velocity
+          Translation2d linearVelocity =
+              new Pose2d(new Translation2d(), linearDirection)
+                  .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+                  .getTranslation();
 
-                    // Convert to field relative speeds & send command
-                    boolean isFlipped = false;
-                    //   DriverStation.getAlliance().isPresent()
-                    //       // We're flipping at Blue instead of Red (which was 6328 default)
-                    //       && DriverStation.getAlliance().get() == Alliance.Blue;
-                    drive.runVelocity(
-                            ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                                    linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                                    omega * drive.getMaxAngularSpeedRadPerSec(),
-                                    isFlipped
-                                            ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                                            : drive.getRotation()));
-                },
-                drive);
-    }
+          // Convert to field relative speeds & send command
+          boolean isFlipped = false;
+          //   DriverStation.getAlliance().isPresent()
+          //       // We're flipping at Blue instead of Red (which was 6328 default)
+          //       && DriverStation.getAlliance().get() == Alliance.Blue;
+          drive.runVelocity(
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                  omega * drive.getMaxAngularSpeedRadPerSec(),
+                  isFlipped
+                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                      : drive.getRotation()));
+        },
+        drive);
+  }
 
-    public static Command autoAlign(Drive drive) {
-        System.out.println("REUESTED--------------------");
-        Supplier<Pose2d> ampAlignedPose =
-                () -> {
-                    Pose2d ampCenterRotated =
-                            new Pose2d(Constants.Field.ampCenter, new Rotation2d(-Math.PI / 2.0));
-                    double distance =
-                            drive.getPose()
-                                    .getTranslation()
-                                    .getDistance(ampCenterRotated.getTranslation());
-                    double offsetT = MathUtil.clamp((distance - 0.3) / 2.5, 0.0, 1.0);
-                    return ampCenterRotated.transformBy(
-                            new Transform2d(offsetT * 1.75, 0.0, new Rotation2d()));
-                };
-        autoAlignController =
-                new AutoAlignController(
-                        drive,
-                        ampAlignedPose,
-                        () -> {
-                            return new Translation2d();
-                        },
-                        false);
+  public static Command autoAlign(Drive drive) {
+    System.out.println("REUESTED--------------------");
+    Supplier<Pose2d> ampAlignedPose =
+        () -> {
+          Pose2d ampCenterRotated =
+              new Pose2d(Constants.Field.ampCenter, new Rotation2d(-Math.PI / 2.0));
+          double distance =
+              drive.getPose().getTranslation().getDistance(ampCenterRotated.getTranslation());
+          double offsetT = MathUtil.clamp((distance - 0.3) / 2.5, 0.0, 1.0);
+          return ampCenterRotated.transformBy(
+              new Transform2d(offsetT * 1.75, 0.0, new Rotation2d()));
+        };
+    autoAlignController =
+        new AutoAlignController(
+            drive,
+            ampAlignedPose,
+            () -> {
+              return new Translation2d();
+            },
+            false);
 
-        return Commands.runOnce(
-                () -> {
-                    desiredSpeeds = autoAlignController.update(drive);
-                    drive.runVelocity(desiredSpeeds);
-                },
-                drive);
-    }
+    return Commands.runOnce(
+        () -> {
+          desiredSpeeds = autoAlignController.update(drive);
+          drive.runVelocity(desiredSpeeds);
+        },
+        drive);
+  }
 
-    public void setDriveMode(DriveMode newDriveMode) {
-        currentDriveMode = newDriveMode;
-    }
+  public void setDriveMode(DriveMode newDriveMode) {
+    currentDriveMode = newDriveMode;
+  }
 }
