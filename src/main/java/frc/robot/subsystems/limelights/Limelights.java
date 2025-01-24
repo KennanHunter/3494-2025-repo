@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Limelights;
+package frc.robot.subsystems.limelights;
 
 import edu.wpi.first.math.estimator.ExtendedKalmanFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -6,7 +6,7 @@ import edu.wpi.first.math.numbers.N2;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LimelightHelpers;
 
-public class LimeLights {
+public class Limelights {
   private ExtendedKalmanFilter<N2, N2, N2> mKalmanFilter; // NICE IDEA IMPLEMENT LATER
   private String mLimeLight1;
   private Drive drivetrain;
@@ -17,37 +17,32 @@ public class LimeLights {
   private double measurementTimeStamp;
   private Pose2d measurementPosition;
 
-  public LimeLights(Drive drivetrain, String limeLightName) {
+  public Limelights(Drive drivetrain, String limeLightName) {
     this.drivetrain = drivetrain;
     this.mLimeLight1 = limeLightName;
   }
 
   public void periodic() {
-    boolean doReject = false;
     // Use MegaTag2 because better?
-
     LimelightHelpers.SetRobotOrientation(
         "limelight-top", drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
     LimelightHelpers.PoseEstimate limelightLeftMeasurment =
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(mLimeLight1);
 
-    if (limelightLeftMeasurment == null) {
-      doReject = true;
-    } else if (drivetrain.rotationRate < 4.0 * Math.PI) {
-      // Only trust the measurment within a reasonable rotation rate
-      doReject = true;
-    } else if (limelightLeftMeasurment.tagCount == 0) {
-      doReject = true;
+    boolean leftLimelightEmpty = limelightLeftMeasurment == null;
+    boolean rotationRateTooHigh = drivetrain.rotationRate < 4.0 * Math.PI;
+    boolean noTagsFound = limelightLeftMeasurment.tagCount == 0;
+
+    if (leftLimelightEmpty || rotationRateTooHigh || noTagsFound) {
+      validMeasurment = false;
+      return;
     }
 
-    validMeasurment = !doReject;
-
-    if (validMeasurment) {
-      System.out.println("READING-------------");
-      measurementTimeStamp = limelightLeftMeasurment.timestampSeconds;
-      measurementPosition = limelightLeftMeasurment.pose;
-    }
+    validMeasurment = true;
+    System.out.println("READING-------------");
+    measurementTimeStamp = limelightLeftMeasurment.timestampSeconds;
+    measurementPosition = limelightLeftMeasurment.pose;
   }
 
   // returns validity of last measurment

@@ -84,6 +84,7 @@ public class SparkMaxOdometryThread {
     try {
       double[] values = new double[signals.size()];
       boolean isValid = true;
+
       for (int i = 0; i < signals.size(); i++) {
         OptionalDouble value = signals.get(i).get();
         if (value.isPresent()) {
@@ -93,6 +94,7 @@ public class SparkMaxOdometryThread {
           break;
         }
       }
+
       if (isValid) {
         for (int i = 0; i < queues.size(); i++) {
           queues.get(i).offer(values[i]);

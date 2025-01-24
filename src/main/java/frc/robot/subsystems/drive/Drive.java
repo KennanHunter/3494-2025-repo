@@ -21,9 +21,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
-// import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,8 +38,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.Limelights.LimeLights;
 import frc.robot.subsystems.drive.GyroIO.GyroIOInputs;
+import frc.robot.subsystems.limelights.Limelights;
 import frc.robot.util.LocalADStarAK;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
@@ -75,7 +73,7 @@ public class Drive extends SubsystemBase {
       };
   public SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-  private LimeLights m_LimeLight1 = new LimeLights(this, "limeLight-top");
+  private Limelights m_LimeLight1 = new Limelights(this, "limeLight-top");
   public double rotationRate = 0;
 
   public Drive(
