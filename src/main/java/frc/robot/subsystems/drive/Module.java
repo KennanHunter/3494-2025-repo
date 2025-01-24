@@ -111,7 +111,7 @@ public class Module {
                 // towards the setpoint, its velocity should increase. This is achieved by
                 // taking the component of the velocity in the direction of the setpoint.
                 double adjustSpeedSetpoint =
-                        speedSetpoint * Math.cos(turnFeedback.getPositionError());
+                        speedSetpoint * Math.cos(turnFeedback.getError());
 
                 // Run drive controller
                 double velocityRadPerSec = adjustSpeedSetpoint / WHEEL_RADIUS;
