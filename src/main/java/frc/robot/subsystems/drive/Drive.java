@@ -177,8 +177,6 @@ public class Drive extends SubsystemBase {
                 module.updateInputs();
             }
 
-            odometryLock.unlock();
-
             // Logger.processInputs("Drive/Gyro", gyroInputs); //sad auto log removalk
             for (var module : modules) {
                 module.periodic();
@@ -197,12 +195,14 @@ public class Drive extends SubsystemBase {
                 Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
             }
 
-            // Update odometry
+            // Make sure we own odometry at this point
             double[] sampleTimestamps =
                     modules[0].getOdometryTimestamps(); // All signals are sampled together
             int sampleCount = sampleTimestamps.length;
 
             Logger.recordOutput("Odometry Sample Output Length", sampleTimestamps.length);
+
+            odometryLock.unlock();
 
             for (int i = 0; i < sampleCount; i++) {
                 // Read wheel positions and deltas from each module
