@@ -92,7 +92,6 @@ public class Drive extends SubsystemBase {
         modules[3] = new Module(brModuleIO, 3);
 
         // Start threads (no-op for each if no signals have been created)
-        PhoenixOdometryThread.getInstance().start();
         SparkMaxOdometryThread.getInstance().start();
         // THIS IS JUNK DONT LE THIS RUN, IT OTTA BE OVER RUN BY THE FOLLOWING LOOP
         RobotConfig config =
@@ -114,6 +113,7 @@ public class Drive extends SubsystemBase {
                                 1,
                                 0),
                         0);
+
         try {
             config = RobotConfig.fromGUISettings();
         } catch (Exception e) {
@@ -170,14 +170,15 @@ public class Drive extends SubsystemBase {
 
     public void periodic() {
         try {
-            // System.out.println("PRediodicing1");
-            // m_LimeLight1.periodic();
             odometryLock.lock(); // Prevents odometry updates while reading data
             gyroIO.updateInputs(gyroInputs);
+
             for (var module : modules) {
                 module.updateInputs();
             }
+
             odometryLock.unlock();
+
             // Logger.processInputs("Drive/Gyro", gyroInputs); //sad auto log removalk
             for (var module : modules) {
                 module.periodic();
@@ -189,6 +190,7 @@ public class Drive extends SubsystemBase {
                     module.stop();
                 }
             }
+
             // Log empty setpoint states when disabled
             if (DriverStation.isDisabled()) {
                 Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
@@ -199,6 +201,9 @@ public class Drive extends SubsystemBase {
             double[] sampleTimestamps =
                     modules[0].getOdometryTimestamps(); // All signals are sampled together
             int sampleCount = sampleTimestamps.length;
+
+            Logger.recordOutput("Odometry Sample Output Length", sampleTimestamps.length);
+
             for (int i = 0; i < sampleCount; i++) {
                 // Read wheel positions and deltas from each module
                 SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];

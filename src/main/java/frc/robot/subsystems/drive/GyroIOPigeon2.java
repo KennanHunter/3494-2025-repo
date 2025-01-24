@@ -35,7 +35,7 @@ public class GyroIOPigeon2 implements GyroIO {
     private final Queue<Double> yawTimestampQueue;
     private final StatusSignal<AngularVelocity> yawVelocity = pigeon.getAngularVelocityZWorld();
 
-    public GyroIOPigeon2(boolean phoenixDrive) {
+    public GyroIOPigeon2() {
         // Pigeon2Configuration myConfiguratioon = new Pigeon2Configuration()
         // myConfiguratioon.GyroTrim.GyroScalarY
         // pigeon.getConfigurator().apply(new Pigeon2Configuration());
@@ -43,24 +43,19 @@ public class GyroIOPigeon2 implements GyroIO {
         yaw.setUpdateFrequency(Module.ODOMETRY_FREQUENCY);
         yawVelocity.setUpdateFrequency(100.0);
         pigeon.optimizeBusUtilization();
-        if (phoenixDrive) {
-            yawTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
-            yawPositionQueue =
-                    PhoenixOdometryThread.getInstance().registerSignal(pigeon, pigeon.getYaw());
-        } else {
-            yawTimestampQueue = SparkMaxOdometryThread.getInstance().makeTimestampQueue();
-            yawPositionQueue =
-                    SparkMaxOdometryThread.getInstance()
-                            .registerSignal(
-                                    () -> {
-                                        boolean valid = yaw.refresh().getStatus().isOK();
-                                        if (valid) {
-                                            return OptionalDouble.of(yaw.getValueAsDouble());
-                                        } else {
-                                            return OptionalDouble.empty();
-                                        }
-                                    });
-        }
+
+        yawTimestampQueue = SparkMaxOdometryThread.getInstance().makeTimestampQueue();
+        yawPositionQueue =
+                SparkMaxOdometryThread.getInstance()
+                        .registerSignal(
+                                () -> {
+                                    boolean valid = yaw.refresh().getStatus().isOK();
+                                    if (valid) {
+                                        return OptionalDouble.of(yaw.getValueAsDouble());
+                                    } else {
+                                        return OptionalDouble.empty();
+                                    }
+                                });
     }
 
     @Override

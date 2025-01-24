@@ -107,16 +107,16 @@ tasks.withType(JavaCompile) {
 }
 
 spotless {
-    format 'misc', {
-        target '*.gradle', '.gitattributes', '.gitignore'
+	format 'misc', {
+		target '*.gradle', '.gitattributes', '.gitignore'
 
-        // define the steps to apply to those files
-        trimTrailingWhitespace()
-        leadingSpacesToTabs()
-        endWithNewline()
-    }
-    java {
-        googleJavaFormat('1.17.0').aosp().reflowLongStrings().skipJavadocFormatting()
-        formatAnnotations()
-    }
+		// define the steps to apply to those files
+		trimTrailingWhitespace()
+		leadingSpacesToTabs()
+		endWithNewline()
+	}
+	java {
+		googleJavaFormat('1.17.0').aosp().reflowLongStrings().skipJavadocFormatting()
+		formatAnnotations()
+	}
 }
