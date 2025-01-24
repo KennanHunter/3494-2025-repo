@@ -13,7 +13,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -26,61 +25,62 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.REAL;
+    public static final Mode currentMode = Mode.REAL;
 
-  public static enum Mode {
-    /** Running on a real robot. */
-    REAL,
+    public static enum Mode {
+        /** Running on a real robot. */
+        REAL,
 
-    /** Running a physics simulator. */
-    SIM,
+        /** Running a physics simulator. */
+        SIM,
 
-    /** Replaying from a log file. */
-    REPLAY
-  }
-
-  public static class Drivetrain {
-    public static double driveBaseRadius() {
-      return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
+        /** Replaying from a log file. */
+        REPLAY
     }
 
-    public static final double trackWidthX = 0.5222; // TODO: random Number
-    public static final double trackWidthY = 0.574675;
+    public static class Drivetrain {
+        public static double driveBaseRadius() {
+            return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
+        }
 
-    public static final double maxLinearVelocity = 4.5; // TODO: I made this number up
-    public static final double maxLinearAcceleration = 20.0; // TODO: I made this number up
-    public static final double maxAngularVelocity = 6;
-    public static final double maxAngularAcceleration = 12;
+        public static final double trackWidthX = 0.5222; // TODO: random Number
+        public static final double trackWidthY = 0.574675;
 
-    public static final int PIGEON_PORT = 52;
-    public static final int FRONT_LEFT_DRIVE_ID = 18; // 18
-    public static final int FRONT_LEFT_STEER_ID = 16; // 16
-    public static final int FRONT_LEFT_TURN_ENCODER_ID = 3; // 3
-    public static final double FRONT_LEFT_OFFSET =  Math.toRadians(66.0);
+        public static final double maxLinearVelocity = 4.5; // TODO: I made this number up
+        public static final double maxLinearAcceleration = 20.0; // TODO: I made this number up
+        public static final double maxAngularVelocity = 6;
+        public static final double maxAngularAcceleration = 12;
 
-    public static final int FRONT_RIGHT_DRIVE_ID = 19; // 19
-    public static final int FRONT_RIGHT_STEER_ID = 17; // 17
-    public static final int FRONT_RIGHT_TURN_ENCODER_ID = 2; // 2
-  
-    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(180-28); //Kinda ok for now
+        public static final int PIGEON_PORT = 52;
+        public static final int FRONT_LEFT_DRIVE_ID = 18; // 18
+        public static final int FRONT_LEFT_STEER_ID = 16; // 16
+        public static final int FRONT_LEFT_TURN_ENCODER_ID = 3; // 3
+        public static final double FRONT_LEFT_OFFSET = Math.toRadians(66.0);
 
-    public static final int BACK_LEFT_DRIVE_ID = 30; // 30
-    public static final int BACK_LEFT_STEER_ID = 2; // 2
-    public static final int BACK_LEFT_TURN_ENCODER_ID = 1; // 1
-    public static final double BACK_LEFT_OFFSET = Math.toRadians(18);
+        public static final int FRONT_RIGHT_DRIVE_ID = 19; // 19
+        public static final int FRONT_RIGHT_STEER_ID = 17; // 17
+        public static final int FRONT_RIGHT_TURN_ENCODER_ID = 2; // 2
 
-    public static final int BACK_RIGHT_DRIVE_ID = 1; // 1
-    public static final int BACK_RIGHT_STEER_ID = 3; // 3
-    public static final int BACK_RIGHT_TURN_ENCODER_ID = 0; // 0
-    public static final double BACK_RIGHT_OFFSET = Math.toRadians(180+45.0);
-  }
+        public static final double FRONT_RIGHT_OFFSET =
+                Math.toRadians(180 - 28); // Kinda ok for now
 
-  public static class Field {
-    public static final double fieldLength = Units.inchesToMeters(651.223);
-    public static final double fieldWidth = Units.inchesToMeters(323.277);
-    public static final Translation2d ampCenter =
-        new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
-  }
+        public static final int BACK_LEFT_DRIVE_ID = 30; // 30
+        public static final int BACK_LEFT_STEER_ID = 2; // 2
+        public static final int BACK_LEFT_TURN_ENCODER_ID = 1; // 1
+        public static final double BACK_LEFT_OFFSET = Math.toRadians(18);
+
+        public static final int BACK_RIGHT_DRIVE_ID = 1; // 1
+        public static final int BACK_RIGHT_STEER_ID = 3; // 3
+        public static final int BACK_RIGHT_TURN_ENCODER_ID = 0; // 0
+        public static final double BACK_RIGHT_OFFSET = Math.toRadians(180 + 45.0);
+    }
+
+    public static class Field {
+        public static final double fieldLength = Units.inchesToMeters(651.223);
+        public static final double fieldWidth = Units.inchesToMeters(323.277);
+        public static final Translation2d ampCenter =
+                new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
+    }
 }
 
 /*The bad constatns that kinda work

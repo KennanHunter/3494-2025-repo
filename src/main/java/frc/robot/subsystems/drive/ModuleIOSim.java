@@ -28,53 +28,57 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
  * approximation for the behavior of the module.
  */
 public class ModuleIOSim implements ModuleIO {
-  private static final double LOOP_PERIOD_SECS = 0.02;
-  public static final double driveMotorReduction =
-      (45.0 * 22.0) / (14.0 * 15.0); // MAXSwerve with 14 pinion teeth and 22 spur teeth
-      public static final double turnMotorReduction =   9424.0 / 203.0;
-  private DCMotorSim driveSim = new DCMotorSim(
-    LinearSystemId.createDCMotorSystem(DCMotor.getNeoVortex(1), 0.025, driveMotorReduction),
-    DCMotor.getNeoVortex(1));
-  private DCMotorSim turnSim = new DCMotorSim(
-    LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.025, turnMotorReduction),
-    DCMotor.getNEO(1));
-  
-  
-  private final Rotation2d turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
-  private double driveAppliedVolts = 0.0;
-  private double turnAppliedVolts = 0.0;
+    private static final double LOOP_PERIOD_SECS = 0.02;
+    public static final double driveMotorReduction =
+            (45.0 * 22.0) / (14.0 * 15.0); // MAXSwerve with 14 pinion teeth and 22 spur teeth
+    public static final double turnMotorReduction = 9424.0 / 203.0;
+    private DCMotorSim driveSim =
+            new DCMotorSim(
+                    LinearSystemId.createDCMotorSystem(
+                            DCMotor.getNeoVortex(1), 0.025, driveMotorReduction),
+                    DCMotor.getNeoVortex(1));
+    private DCMotorSim turnSim =
+            new DCMotorSim(
+                    LinearSystemId.createDCMotorSystem(
+                            DCMotor.getNEO(1), 0.025, turnMotorReduction),
+                    DCMotor.getNEO(1));
 
-  @Override
-  public void updateInputs(ModuleIOInputs inputs) {
-    driveSim.update(LOOP_PERIOD_SECS);
-    turnSim.update(LOOP_PERIOD_SECS);
+    private final Rotation2d turnAbsoluteInitPosition =
+            new Rotation2d(Math.random() * 2.0 * Math.PI);
+    private double driveAppliedVolts = 0.0;
+    private double turnAppliedVolts = 0.0;
 
-    inputs.drivePositionRad = driveSim.getAngularPositionRad();
-    inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec();
-    inputs.driveAppliedVolts = driveAppliedVolts;
-    inputs.driveCurrentAmps = new double[] {Math.abs(driveSim.getCurrentDrawAmps())};
+    @Override
+    public void updateInputs(ModuleIOInputs inputs) {
+        driveSim.update(LOOP_PERIOD_SECS);
+        turnSim.update(LOOP_PERIOD_SECS);
 
-    inputs.turnAbsolutePosition =
-        new Rotation2d(turnSim.getAngularPositionRad()).plus(turnAbsoluteInitPosition);
-    inputs.turnPosition = new Rotation2d(turnSim.getAngularPositionRad());
-    inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
-    inputs.turnAppliedVolts = turnAppliedVolts;
-    inputs.turnCurrentAmps = new double[] {Math.abs(turnSim.getCurrentDrawAmps())};
+        inputs.drivePositionRad = driveSim.getAngularPositionRad();
+        inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec();
+        inputs.driveAppliedVolts = driveAppliedVolts;
+        inputs.driveCurrentAmps = new double[] {Math.abs(driveSim.getCurrentDrawAmps())};
 
-    inputs.odometryTimestamps = new double[] {Timer.getFPGATimestamp()};
-    inputs.odometryDrivePositionsRad = new double[] {inputs.drivePositionRad};
-    inputs.odometryTurnPositions = new Rotation2d[] {inputs.turnPosition};
-  }
+        inputs.turnAbsolutePosition =
+                new Rotation2d(turnSim.getAngularPositionRad()).plus(turnAbsoluteInitPosition);
+        inputs.turnPosition = new Rotation2d(turnSim.getAngularPositionRad());
+        inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
+        inputs.turnAppliedVolts = turnAppliedVolts;
+        inputs.turnCurrentAmps = new double[] {Math.abs(turnSim.getCurrentDrawAmps())};
 
-  @Override
-  public void setDriveVoltage(double volts) {
-    driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-    driveSim.setInputVoltage(driveAppliedVolts);
-  }
+        inputs.odometryTimestamps = new double[] {Timer.getFPGATimestamp()};
+        inputs.odometryDrivePositionsRad = new double[] {inputs.drivePositionRad};
+        inputs.odometryTurnPositions = new Rotation2d[] {inputs.turnPosition};
+    }
 
-  @Override
-  public void setTurnVoltage(double volts) {
-    turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-    turnSim.setInputVoltage(turnAppliedVolts);
-  }
+    @Override
+    public void setDriveVoltage(double volts) {
+        driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        driveSim.setInputVoltage(driveAppliedVolts);
+    }
+
+    @Override
+    public void setTurnVoltage(double volts) {
+        turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        turnSim.setInputVoltage(turnAppliedVolts);
+    }
 }
