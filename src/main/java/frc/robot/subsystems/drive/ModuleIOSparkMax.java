@@ -126,6 +126,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     driveEncoder = driveSparkMax.getEncoder();
     turnRelativeEncoder = turnSparkMax.getEncoder();
 
+    // TODO: Test the removal of these two lines
     turnSparkMax.setInverted(isTurnMotorInverted);
     driveSparkMax.setInverted(true);
 

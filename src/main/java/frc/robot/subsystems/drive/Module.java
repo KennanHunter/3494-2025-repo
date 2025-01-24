@@ -169,8 +169,6 @@ public class Module {
   }
 
   /** Returns the current turn angle of the module. */
-  ;
-
   public Rotation2d getAngle() {
     // double r = Math.PI;
     // double x = -inputs.turnPosition.getRadians();

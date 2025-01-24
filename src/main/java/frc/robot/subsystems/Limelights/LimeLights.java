@@ -31,15 +31,18 @@ public class LimeLights {
 
     LimelightHelpers.PoseEstimate limelightLeftMeasurment =
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(mLimeLight1);
+
     if (limelightLeftMeasurment == null) {
       doReject = true;
-    } else if (drivetrain.rotationRate
-        < 4.0 * Math.PI) { // Only trust the measurment within a reasonable rotation rate
+    } else if (drivetrain.rotationRate < 4.0 * Math.PI) {
+      // Only trust the measurment within a reasonable rotation rate
       doReject = true;
     } else if (limelightLeftMeasurment.tagCount == 0) {
       doReject = true;
     }
+
     validMeasurment = !doReject;
+
     if (validMeasurment) {
       System.out.println("READING-------------");
       measurementTimeStamp = limelightLeftMeasurment.timestampSeconds;
