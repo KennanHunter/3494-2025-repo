@@ -55,8 +55,9 @@ public class ModuleIOSim implements ModuleIO {
     inputs.driveAppliedVolts = driveAppliedVolts;
     inputs.driveCurrentAmps = new double[] {Math.abs(driveSim.getCurrentDrawAmps())};
 
-    inputs.turnAbsolutePosition =
-        new Rotation2d(turnSim.getAngularPositionRad()).plus(turnAbsoluteInitPosition);
+    inputs.rawTurnEncoderPosition = new Rotation2d(turnSim.getAngularPosition());
+    // TODO: is this supposed to be minus like it is in ModuleIOSparkMax? If not then why not?
+    inputs.turnAbsolutePosition = inputs.rawTurnEncoderPosition.plus(turnAbsoluteInitPosition);
     inputs.turnPosition = new Rotation2d(turnSim.getAngularPositionRad());
     inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
     inputs.turnAppliedVolts = turnAppliedVolts;

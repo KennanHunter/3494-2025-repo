@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -107,18 +108,8 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    // autoChooser.addOption(
-    //     "Flywheel SysId (Quasistatic Forward)",
-    //     flywheel.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    // autoChooser.addOption(
-    //     "Flywheel SysId (Quasistatic Reverse)",
-    //     flywheel.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    // autoChooser.addOption(
-    //     "Flywheel SysId (Dynamic Forward)",
-    // flywheel.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    // autoChooser.addOption(
-    //     "Flywheel SysId (Dynamic Reverse)",
-    // flywheel.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    autoChooser.addOption("Calculate Wheel Position", new WheelOffsetCalculator(drive));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -178,12 +169,6 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
-    // controller
-    //     .a()
-    //     .whileTrue(
-    //         Commands.startEnd(
-    //             () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop,
-    // flywheel));
   }
 
   /**
@@ -192,6 +177,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    Command command = autoChooser.get();
+
+    System.out.println("Starting: " + command.getName());
+
+    return command;
   }
 }

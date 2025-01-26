@@ -84,17 +84,12 @@ public class Module {
     // On first cycle, reset relative turn encoder
     // Wait until absolute angle is nonzero in case it wasn't initialized yet
     if (turnRelativeOffset == null && inputs.turnAbsolutePosition.getRadians() != 0.0) {
-      System.out.println(
-          "Absolute:" + inputs.turnAbsolutePosition + "| Relative:" + inputs.turnPosition);
       turnRelativeOffset =
           inputs.turnAbsolutePosition.minus(inputs.turnPosition); // minus(inputs.turnPosition);
     }
 
     // Run closed loop turn control
     if (angleSetpoint != null) {
-      // System.out.println(turnFeedback.calculate(getAngle().getRadians(),
-      // angleSetpoint.getRadians()) + "|" + getAngle().getRadians() + "|" +
-      // angleSetpoint.getRadians());
       io.setTurnVoltage(
           turnFeedback.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));
 
@@ -170,13 +165,8 @@ public class Module {
 
   /** Returns the current turn angle of the module. */
   public Rotation2d getAngle() {
-    // double r = Math.PI;
-    // double x = -inputs.turnPosition.getRadians();
-    // double num = (x%r)*((Math.floor(x/r)+1)%2) + ((Math.abs(x)%r)*-1+r)*(Math.floor(x/r)%2);
-    // inputs.turnPosition = new Rotation2d(num);
     inputs.turnPosition = new Rotation2d(inputs.turnPosition.getRadians());
-    Logger.recordOutput("Relative Encoder" + index, inputs.turnPosition.getDegrees());
-    Logger.recordOutput("Relative Offset" + index, turnRelativeOffset.getDegrees());
+
     if (turnRelativeOffset == null) {
       return new Rotation2d();
     } else {
@@ -223,5 +213,9 @@ public class Module {
   /** Get position of wheel rotations in radians */
   public double getPositionRads() {
     return inputs.drivePositionRad;
+  }
+
+  public Rotation2d getRawTurnEncoderPosition() {
+    return io.getRawTurnEncoderPosition();
   }
 }

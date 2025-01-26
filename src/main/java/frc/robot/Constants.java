@@ -60,8 +60,7 @@ public final class Constants {
     public static final int FRONT_RIGHT_DRIVE_ID = 19; // 19
     public static final int FRONT_RIGHT_STEER_ID = 17; // 17
     public static final int FRONT_RIGHT_TURN_ENCODER_ID = 2; // 2
-
-    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(180 - 28); // Kinda ok for now
+    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(148); // Kinda ok for now
 
     public static final int BACK_LEFT_DRIVE_ID = 30; // 30
     public static final int BACK_LEFT_STEER_ID = 2; // 2

@@ -39,11 +39,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.drive.GyroIO.GyroIOInputs;
-import frc.robot.subsystems.limelights.Limelights;
 import frc.robot.util.LocalADStarAK;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -73,7 +73,7 @@ public class Drive extends SubsystemBase {
       };
   public SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-  private Limelights m_LimeLight1 = new Limelights(this, "limeLight-top");
+  // private Limelights m_LimeLight1 = new Limelights(this, "limeLight-top");
   public double rotationRate = 0;
 
   public Drive(
@@ -164,86 +164,81 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    try {
-      odometryLock.lock(); // Prevents odometry updates while reading data
-      gyroIO.updateInputs(gyroInputs);
+    odometryLock.lock(); // Prevents odometry updates while reading data
+    gyroIO.updateInputs(gyroInputs);
 
+    for (var module : modules) {
+      module.updateInputs();
+    }
+
+    // Logger.processInputs("Drive/Gyro", gyroInputs); //sad auto log removalk
+    for (var module : modules) {
+      module.periodic();
+    }
+
+    // Stop moving when disabled
+    if (DriverStation.isDisabled()) {
       for (var module : modules) {
-        module.updateInputs();
+        module.stop();
+      }
+    }
+
+    // Log empty setpoint states when disabled
+    if (DriverStation.isDisabled()) {
+      Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
+      Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
+    }
+
+    // Make sure we own odometry at this point
+    double[] sampleTimestamps =
+        modules[0].getOdometryTimestamps(); // All signals are sampled together
+    int sampleCount = sampleTimestamps.length;
+
+    Logger.recordOutput("Odometry Sample Output Length", sampleTimestamps.length);
+
+    odometryLock.unlock();
+
+    for (int i = 0; i < sampleCount; i++) {
+      // Read wheel positions and deltas from each module
+      SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+      SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
+      for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
+        modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
+        moduleDeltas[moduleIndex] =
+            new SwerveModulePosition(
+                modulePositions[moduleIndex].distanceMeters
+                    - lastModulePositions[moduleIndex].distanceMeters,
+                modulePositions[moduleIndex].angle);
+        lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
       }
 
-      // Logger.processInputs("Drive/Gyro", gyroInputs); //sad auto log removalk
-      for (var module : modules) {
-        module.periodic();
+      // Update gyro angle
+      if (gyroInputs.connected) {
+        // Use the real gyro angle
+        rawGyroRotation = gyroInputs.odometryYawPositions[i];
+      } else {
+        // Use the angle delta from the kinematics and module deltas
+        Twist2d twist = kinematics.toTwist2d(moduleDeltas);
+        rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
       }
+      // rawGyroRotation = gyroInputs.yawPosition; // Seans test FIX NOT PERMENATE
+      rotationRate = gyroInputs.yawVelocityRadPerSec; // Logged for megaTag
 
-      // Stop moving when disabled
-      if (DriverStation.isDisabled()) {
-        for (var module : modules) {
-          module.stop();
-        }
-      }
+      // Apply update
+      // System.out.println(rawGyroRotation+ "|" +
+      // poseEstimator.getEstimatedPosition().getRotation());
+      // System.out.println("PRediodicing2");
+      Logger.recordOutput("Odo Yaw from gyro", rawGyroRotation.getDegrees());
+      poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+      Logger.recordOutput(
+          "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
-      // Log empty setpoint states when disabled
-      if (DriverStation.isDisabled()) {
-        Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
-        Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
-      }
-
-      // Make sure we own odometry at this point
-      double[] sampleTimestamps =
-          modules[0].getOdometryTimestamps(); // All signals are sampled together
-      int sampleCount = sampleTimestamps.length;
-
-      Logger.recordOutput("Odometry Sample Output Length", sampleTimestamps.length);
-
-      odometryLock.unlock();
-
-      for (int i = 0; i < sampleCount; i++) {
-        // Read wheel positions and deltas from each module
-        SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
-        SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
-        for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
-          modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
-          moduleDeltas[moduleIndex] =
-              new SwerveModulePosition(
-                  modulePositions[moduleIndex].distanceMeters
-                      - lastModulePositions[moduleIndex].distanceMeters,
-                  modulePositions[moduleIndex].angle);
-          lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
-        }
-
-        // Update gyro angle
-        if (gyroInputs.connected) {
-          // Use the real gyro angle
-          rawGyroRotation = gyroInputs.odometryYawPositions[i];
-        } else {
-          // Use the angle delta from the kinematics and module deltas
-          Twist2d twist = kinematics.toTwist2d(moduleDeltas);
-          rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
-        }
-        // rawGyroRotation = gyroInputs.yawPosition; // Seans test FIX NOT PERMENATE
-        rotationRate = gyroInputs.yawVelocityRadPerSec; // Logged for megaTag
-
-        // Apply update
-        // System.out.println(rawGyroRotation+ "|" +
-        // poseEstimator.getEstimatedPosition().getRotation());
-        // System.out.println("PRediodicing2");
-        Logger.recordOutput("Odo Yaw from gyro", rawGyroRotation.getDegrees());
-        poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
-        Logger.recordOutput(
-            "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-
-        // if (m_LimeLight1.measurmentValid()) {
-        //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
-        //   poseEstimator.addVisionMeasurement(
-        //       m_LimeLight1.getMeasuremPosition(),
-        // m_LimeLight1.getMeasurementTimeStamp());
-        // }
-      }
-    } catch (Exception e) {
-      System.out.println(e);
-      System.out.println("alfkds");
+      // if (m_LimeLight1.measurmentValid()) {
+      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+      //   poseEstimator.addVisionMeasurement(
+      //       m_LimeLight1.getMeasuremPosition(),
+      // m_LimeLight1.getMeasurementTimeStamp());
+      // }
     }
   }
 
@@ -275,7 +270,6 @@ public class Drive extends SubsystemBase {
     runVelocity(new ChassisSpeeds());
   }
 
-  // goonmaster - masterbaiter
   /**
    * Stops the drive and turns the modules to an X arrangement to resist movement. The modules will
    * return to their normal orientations the next time a nonzero velocity is requested.
@@ -389,5 +383,14 @@ public class Drive extends SubsystemBase {
   /** Get the position of all drive wheels in radians. */
   public double[] getWheelRadiusCharacterizationPosition() {
     return Arrays.stream(modules).mapToDouble(Module::getPositionRads).toArray();
+  }
+
+  public Rotation2d[] getRawTurnEncoderPositions() {
+    Function<Module, Rotation2d> getTurn =
+        (Module module) -> {
+          return module.getRawTurnEncoderPosition();
+        };
+
+    return (Rotation2d[]) Arrays.stream(modules).map(getTurn).toArray();
   }
 }

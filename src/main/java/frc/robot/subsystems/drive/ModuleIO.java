@@ -24,6 +24,8 @@ public interface ModuleIO {
     public double driveAppliedVolts = 0.0;
     public double[] driveCurrentAmps = new double[] {};
 
+    // No offset applied
+    public Rotation2d rawTurnEncoderPosition = new Rotation2d();
     public Rotation2d turnAbsolutePosition = new Rotation2d();
     public Rotation2d turnPosition = new Rotation2d();
     public double turnVelocityRadPerSec = 0.0;
@@ -49,4 +51,9 @@ public interface ModuleIO {
 
   /** Enable or disable brake mode on the turn motor. */
   public default void setTurnBrakeMode(boolean enable) {}
+
+  public default Rotation2d getRawTurnEncoderPosition() {
+    throw new UnsupportedOperationException(
+        "getRawEncoderOutput should never be called unless explicitly supported by physical hardwares");
+  }
 }
