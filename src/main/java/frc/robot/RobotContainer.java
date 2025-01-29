@@ -140,7 +140,7 @@ public class RobotContainer {
                   // ------------
 
                   // -----------
-                  drive.setDefaultCommand(DriveCommands.autoAlign(drive));
+                  drive.setDefaultCommand(DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
                   System.out.println(drive.getDefaultCommand());
 
                   // ------------
@@ -148,7 +148,7 @@ public class RobotContainer {
                 }));
     // }));
     controller
-        .a()
+        .a().or(controller.leftBumper()).or(controller.rightBumper())
         .onFalse(
             Commands.runOnce(
                 () -> {

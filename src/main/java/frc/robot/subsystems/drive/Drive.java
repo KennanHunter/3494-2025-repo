@@ -22,6 +22,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.drive.GyroIO.GyroIOInputs;
+import frc.robot.subsystems.limelights.Limelights;
 import frc.robot.util.LocalADStarAK;
 
 import java.util.ArrayList;
@@ -77,7 +80,8 @@ public class Drive extends SubsystemBase {
       };
   public SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-  // private Limelights m_LimeLight1 = new Limelights(this, "limeLight-top");
+  private Limelights m_LimeLight1 = new Limelights(this, "limelight-right");
+  private Limelights m_LimeLight2 = new Limelights(this, "limelight-left");
   public double rotationRate = 0;
 
   public Drive(
@@ -168,6 +172,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
+    m_LimeLight1.periodic();
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
 
@@ -237,12 +242,18 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput(
           "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
-      // if (m_LimeLight1.measurmentValid()) {
-      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
-      //   poseEstimator.addVisionMeasurement(
-      //       m_LimeLight1.getMeasuremPosition(),
-      // m_LimeLight1.getMeasurementTimeStamp());
-      // }
+      if (m_LimeLight1.measurmentValid()) {
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+        poseEstimator.addVisionMeasurement(
+            m_LimeLight1.getMeasuremPosition(),
+            m_LimeLight1.getMeasurementTimeStamp());
+      }
+      if (m_LimeLight2.measurmentValid()) {
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+        poseEstimator.addVisionMeasurement(
+            m_LimeLight2.getMeasuremPosition(),
+            m_LimeLight2.getMeasurementTimeStamp());
+      }
     }
   }
 

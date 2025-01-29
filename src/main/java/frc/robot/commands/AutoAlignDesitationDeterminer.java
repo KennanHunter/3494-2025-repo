@@ -13,7 +13,7 @@ public class AutoAlignDesitationDeterminer {
     public static Supplier<Pose2d> destination(Pose2d robotPosition, boolean leftSide){
         Supplier<Pose2d> targetSupplier =
         () -> {
-            double minDistance = -1;
+            double minDistance = 99999999;
             int minIndex = -1;
             for(int i = 0; i< Constants.Field.Reef.sideLocations.length; i++){
                 double distance = getDistance(robotPosition, Constants.Field.Reef.sideLocations[i]);

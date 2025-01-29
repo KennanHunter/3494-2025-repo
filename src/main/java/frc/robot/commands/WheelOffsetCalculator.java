@@ -43,20 +43,20 @@ public class WheelOffsetCalculator extends Command {
             + ANSI_RESET);
     System.out.println(
         PURPLE
-            + "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
-            + df.format(positions.get(0).getDegrees())
+            + "public static final double FRONT_RIGHT_OFFSET = Math.toRadians("
+            + df.format(positions.get(1).getDegrees())
             + ");"
             + ANSI_RESET);
     System.out.println(
         PURPLE
-            + "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
-            + df.format(positions.get(0).getDegrees())
+            + "public static final double BACK_LEFT_OFFSET = Math.toRadians("
+            + df.format(positions.get(2).getDegrees())
             + ");"
             + ANSI_RESET);
     System.out.println(
         PURPLE
-            + "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
-            + df.format(positions.get(0).getDegrees())
+            + "public static final double BACK_RIGHT_OFFSET = Math.toRadians("
+            + df.format(positions.get(3).getDegrees())
             + ");"
             + ANSI_RESET);
 

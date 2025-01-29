@@ -81,7 +81,7 @@ public class DriveCommands {
         drive);
   }
 
-  public static Command autoAlign(Drive drive) {
+  public static Command autoAlign(Drive drive, boolean leftSide) {
     System.out.println("REUESTED--------------------");
     Supplier<Pose2d> ampAlignedPose =
         () -> {
@@ -93,7 +93,7 @@ public class DriveCommands {
           return ampCenterRotated.transformBy(
               new Transform2d(offsetT * 1.75, 0.0, new Rotation2d()));
         };
-    Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), false);
+    Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide);
     autoAlignController =
         new AutoAlignController(
             drive,
