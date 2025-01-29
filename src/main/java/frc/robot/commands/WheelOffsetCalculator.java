@@ -23,7 +23,7 @@ public class WheelOffsetCalculator extends Command {
 
   @Override
   public void initialize() {
-  ArrayList<Rotation2d> positions = drive.getRawTurnEncoderPositions();
+    ArrayList<Rotation2d> positions = drive.getRawTurnEncoderPositions();
 
     if (positions == null || positions.size() < 4) {
       System.err.println("Error: Encoder positions are invalid.");
@@ -32,22 +32,33 @@ public class WheelOffsetCalculator extends Command {
 
     DecimalFormat df = new DecimalFormat("#.#");
 
+    String PURPLE = "\u001B[35m";
+    String ANSI_RESET = "\u001B[0m";
+
     System.out.println(
-        "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
+        PURPLE
+            + "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
             + df.format(positions.get(0).getDegrees())
-            + ");");
+            + ");"
+            + ANSI_RESET);
     System.out.println(
-        "public static final double FRONT_RIGHT_OFFSET = Math.toRadians("
-            + df.format(positions.get(1).getDegrees())
-            + ");");
+        PURPLE
+            + "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
+            + df.format(positions.get(0).getDegrees())
+            + ");"
+            + ANSI_RESET);
     System.out.println(
-        "public static final double BACK_LEFT_OFFSET = Math.toRadians("
-            + df.format(positions.get(2).getDegrees())
-            + ");");
+        PURPLE
+            + "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
+            + df.format(positions.get(0).getDegrees())
+            + ");"
+            + ANSI_RESET);
     System.out.println(
-        "public static finalP double BACK_RIGHT_OFFSET = Math.toRadians("
-            + df.format(positions.get(3).getDegrees())
-            + ");");
+        PURPLE
+            + "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
+            + df.format(positions.get(0).getDegrees())
+            + ");"
+            + ANSI_RESET);
 
     System.out.println("\n");
   }
