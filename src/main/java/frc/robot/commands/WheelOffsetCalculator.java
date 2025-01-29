@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 //
 public class WheelOffsetCalculator extends Command {
@@ -21,10 +22,10 @@ public class WheelOffsetCalculator extends Command {
   }
 
   @Override
-  public void execute() {
-    Rotation2d[] positions = drive.getRawTurnEncoderPositions();
+  public void initialize() {
+  ArrayList<Rotation2d> positions = drive.getRawTurnEncoderPositions();
 
-    if (positions == null || positions.length < 4) {
+    if (positions == null || positions.size() < 4) {
       System.err.println("Error: Encoder positions are invalid.");
       return;
     }
@@ -33,19 +34,19 @@ public class WheelOffsetCalculator extends Command {
 
     System.out.println(
         "public static final double FRONT_LEFT_OFFSET = Math.toRadians("
-            + df.format(positions[0].getDegrees())
+            + df.format(positions.get(0).getDegrees())
             + ");");
     System.out.println(
         "public static final double FRONT_RIGHT_OFFSET = Math.toRadians("
-            + df.format(positions[1].getDegrees())
+            + df.format(positions.get(1).getDegrees())
             + ");");
     System.out.println(
         "public static final double BACK_LEFT_OFFSET = Math.toRadians("
-            + df.format(positions[2].getDegrees())
+            + df.format(positions.get(2).getDegrees())
             + ");");
     System.out.println(
-        "public static final double BACK_RIGHT_OFFSET = Math.toRadians("
-            + df.format(positions[3].getDegrees())
+        "public static finalP double BACK_RIGHT_OFFSET = Math.toRadians("
+            + df.format(positions.get(3).getDegrees())
             + ");");
 
     System.out.println("\n");

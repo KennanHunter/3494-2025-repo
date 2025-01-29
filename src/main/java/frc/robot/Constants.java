@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -55,17 +57,17 @@ public final class Constants {
     public static final int FRONT_LEFT_DRIVE_ID = 18; // 18
     public static final int FRONT_LEFT_STEER_ID = 16; // 16
     public static final int FRONT_LEFT_TURN_ENCODER_ID = 3; // 3
-    public static final double FRONT_LEFT_OFFSET = Math.toRadians(66.0);
+    public static final double FRONT_LEFT_OFFSET = Math.toRadians(70.0);
 
     public static final int FRONT_RIGHT_DRIVE_ID = 19; // 19
     public static final int FRONT_RIGHT_STEER_ID = 17; // 17
     public static final int FRONT_RIGHT_TURN_ENCODER_ID = 2; // 2
-    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(148); // Kinda ok for now
+    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(150.6); // Kinda ok for now
 
     public static final int BACK_LEFT_DRIVE_ID = 30; // 30
     public static final int BACK_LEFT_STEER_ID = 2; // 2
     public static final int BACK_LEFT_TURN_ENCODER_ID = 1; // 1
-    public static final double BACK_LEFT_OFFSET = Math.toRadians(18);
+    public static final double BACK_LEFT_OFFSET = Math.toRadians(11);
 
     public static final int BACK_RIGHT_DRIVE_ID = 1; // 1
     public static final int BACK_RIGHT_STEER_ID = 3; // 3
@@ -78,6 +80,45 @@ public final class Constants {
     public static final double fieldWidth = Units.inchesToMeters(323.277);
     public static final Translation2d ampCenter =
         new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
+
+    public static class Reef{
+      //       6
+      //     ----
+      //  4 /    \  5
+      //   /      \
+      //   \      /
+      // 2  \    / 3
+      //     ----
+      //      1
+      //NOTE: These side location aren't used to drive to they are just use to search for the nearest side (also these are for the blue side)
+      public static final Translation2d[] sideLocations = {
+        new Translation2d(3.494, 4.038), //1
+        new Translation2d(4.0, 4.879),  //2
+        new Translation2d(4.0, 3.154), //3
+        new Translation2d(5.0, 4.890), //4
+        new Translation2d(5.0, 3.154), //5
+        new Translation2d(5.494, 4.047)//6
+      };
+      
+      public static final Pose2d[] leftLocations = { //Placeholder currently using the center positions
+        new Pose2d(3.494, 4.038, new Rotation2d(0.0)), //1
+        new Pose2d(4.0, 4.879, new Rotation2d(-Math.PI/3.0)),  //2
+        new Pose2d(4.0, 3.154,new Rotation2d(Math.PI/3.0)), //3
+        new Pose2d(5.0, 4.890,new Rotation2d(-2*Math.PI/3.0)), //4
+        new Pose2d(5.0, 3.154,new Rotation2d(2*Math.PI/3.0)), //5
+        new Pose2d(5.494, 4.047, new Rotation2d(Math.PI))//6
+      };
+
+      public static final Pose2d[] rightLocations = { //Placeholder currently using the center positions
+        new Pose2d(3.494, 4.038, new Rotation2d(0.0)), //1
+        new Pose2d(4.0, 4.879, new Rotation2d(-Math.PI/3.0)),  //2
+        new Pose2d(4.0, 3.154,new Rotation2d(Math.PI/3.0)), //3
+        new Pose2d(5.0, 4.890,new Rotation2d(-2*Math.PI/3.0)), //4
+        new Pose2d(5.0, 3.154,new Rotation2d(2*Math.PI/3.0)), //5
+        new Pose2d(5.494, 4.047, new Rotation2d(Math.PI))//6
+      };
+    }
+    
   }
 }
 

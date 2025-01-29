@@ -130,7 +130,7 @@ public class RobotContainer {
             () -> -controller.getRightX())); // used to be -
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     controller
-        .a()
+        .a().or(controller.leftBumper()).or(controller.rightBumper())
         .onTrue(
             Commands.runOnce(
                 () -> {

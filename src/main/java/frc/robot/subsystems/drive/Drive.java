@@ -40,10 +40,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.robot.util.LocalADStarAK;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
+import java.util.stream.Stream;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -385,12 +389,13 @@ public class Drive extends SubsystemBase {
     return Arrays.stream(modules).mapToDouble(Module::getPositionRads).toArray();
   }
 
-  public Rotation2d[] getRawTurnEncoderPositions() {
-    Function<Module, Rotation2d> getTurn =
-        (Module module) -> {
-          return module.getRawTurnEncoderPosition();
-        };
+  public ArrayList<Rotation2d> getRawTurnEncoderPositions() {
+    ArrayList<Rotation2d> out =  new ArrayList<Rotation2d>();
+    
+    for (Module module: modules){
+      out.add(module.getRawTurnEncoderPosition());
+    }   
 
-    return (Rotation2d[]) Arrays.stream(modules).map(getTurn).toArray();
+    return out;
   }
 }

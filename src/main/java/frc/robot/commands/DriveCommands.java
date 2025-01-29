@@ -93,10 +93,11 @@ public class DriveCommands {
           return ampCenterRotated.transformBy(
               new Transform2d(offsetT * 1.75, 0.0, new Rotation2d()));
         };
+    Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), false);
     autoAlignController =
         new AutoAlignController(
             drive,
-            ampAlignedPose,
+            onTheFly,//ampAlignedPose,
             () -> {
               return new Translation2d();
             },
