@@ -8,7 +8,7 @@ import frc.robot.util.LimelightHelpers;
 
 public class Limelights {
   private ExtendedKalmanFilter<N2, N2, N2> mKalmanFilter; // NICE IDEA IMPLEMENT LATER
-  private String mLimeLight1;
+  private String limelightName;
   private Drive drivetrain;
 
   private Object[] lastMeasurement = null;
@@ -19,7 +19,7 @@ public class Limelights {
 
   public Limelights(Drive drivetrain, String limeLightName) {
     this.drivetrain = drivetrain;
-    this.mLimeLight1 = limeLightName;
+    this.limelightName = limeLightName;
   }
 
   public void periodic() {
@@ -27,10 +27,10 @@ public class Limelights {
     //PLEASE FIX BIG PROBLEM, PRETTY SURE IMU ROTATION IS 90 DEGREES OFF, ALSO WHAT DOES THIS FUNCTION DO
     //https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltag-robot-localization-megatag2
     LimelightHelpers.SetRobotOrientation(
-      mLimeLight1, drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      limelightName, drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
     
     LimelightHelpers.PoseEstimate limelightLeftMeasurment =
-        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(mLimeLight1);
+        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
 
     boolean leftLimelightEmpty = limelightLeftMeasurment == null;
     boolean rotationRateTooHigh = drivetrain.rotationRate > 4.0 * Math.PI;

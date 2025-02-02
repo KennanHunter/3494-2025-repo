@@ -20,7 +20,7 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class WheelRadiusCharacterization extends Command {
-  private static final double characterizationSpeed = 0.1;
+  private static final double characterizationSpeed = 0.7;
   private static final double driveRadius = Constants.Drivetrain.driveBaseRadius();
   private static DoubleSupplier gyroYawRadsSupplier =
       () -> 0; // needs to be initialized but gets changed later
@@ -48,6 +48,7 @@ public class WheelRadiusCharacterization extends Command {
 
   @Override
   public void initialize() {
+    System.out.println("started wheel charecterization command");
     timer.reset();
     // Reset
     lastGyroYawRads = gyroYawRadsSupplier.getAsDouble();
@@ -60,7 +61,7 @@ public class WheelRadiusCharacterization extends Command {
 
   @Override
   public void execute() {
-
+    System.out.println("Running Wheel Charecterization");
     // Run drive at velocity
     if (omegaDirection == Direction.CLOCKWISE) {
       drive.runVelocity(

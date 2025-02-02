@@ -161,7 +161,7 @@ public class RobotContainer {
                           () -> -controller.getRightX()));
                 }));
     controller
-        .a()
+        .a().or(controller.leftBumper()).or(controller.rightBumper())
         .onTrue(
             Commands.runOnce(
                     () ->

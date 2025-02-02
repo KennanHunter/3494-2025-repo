@@ -24,8 +24,8 @@ public class AutoAlignController {
   private static final double linearkD = 0.0; // 3.0;
   private static final double thetakP = 7.0; // 7.0
   private static final double thetakD = 0.0;
-  private static final double linearTolerance = 0.08;
-  private static final double thetaTolerance = Units.degreesToRadians(10.0);
+  private static final double linearTolerance = 0.01;
+  private static final double thetaTolerance = Units.degreesToRadians(1.0);
   private static final double toleranceTime = 0.5;
   private static final double maxLinearVelocity = Constants.Drivetrain.maxLinearVelocity;
   private static final double maxLinearAcceleration =

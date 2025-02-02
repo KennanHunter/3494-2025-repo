@@ -173,6 +173,7 @@ public class Drive extends SubsystemBase {
 
   public void periodic() {
     m_LimeLight1.periodic();
+    m_LimeLight2.periodic();
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
 
@@ -247,8 +248,8 @@ public class Drive extends SubsystemBase {
         poseEstimator.addVisionMeasurement(
             m_LimeLight1.getMeasuremPosition(),
             m_LimeLight1.getMeasurementTimeStamp());
-      }
-      if (m_LimeLight2.measurmentValid()) {
+      }//THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
+      else if (m_LimeLight2.measurmentValid()) {
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
         poseEstimator.addVisionMeasurement(
             m_LimeLight2.getMeasuremPosition(),

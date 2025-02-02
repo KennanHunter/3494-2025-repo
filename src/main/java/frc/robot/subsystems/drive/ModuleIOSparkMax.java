@@ -66,7 +66,7 @@ public class ModuleIOSparkMax implements ModuleIO {
   private SparkMaxConfig driveSparkMaxConfig = new SparkMaxConfig();
   private SparkMaxConfig turnSparkMaxConfig = new SparkMaxConfig();
 
-  private int index;
+  private int index; 
 
   public ModuleIOSparkMax(int index) {
     this.index = index;
