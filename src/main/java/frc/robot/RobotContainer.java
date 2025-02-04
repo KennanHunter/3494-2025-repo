@@ -24,12 +24,17 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.TeleopArm;
+import frc.robot.commands.TeleopElevator;
 import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.commands.WheelRadiusCharacterization;
+import frc.robot.subsystems.SuperScructure.Arm;
+import frc.robot.subsystems.SuperScructure.Elevator;
 import frc.robot.subsystems.SuperScructure.Intake;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -48,7 +53,8 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   public final Intake intake;
-  //   private final Flywheel flywheel;
+  private final Elevator elevator;
+  private final Arm arm;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -58,6 +64,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    elevator = new Elevator();
+    arm = new Arm();
+    arm.setDefaultCommand(new TeleopArm(arm));
+    elevator.setDefaultCommand(new TeleopElevator(elevator));
+    
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -183,6 +194,11 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     intake.setDefaultCommand(IntakeContinuous(intake));
+
+    controller.y().onTrue(
+      Commands.sequence(
+        new InstantCommand(()-> {elevator.setElevatorPosition(0.0);})
+      ));
   }
 
   /**
