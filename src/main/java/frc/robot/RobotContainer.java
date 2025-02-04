@@ -13,8 +13,11 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -27,13 +30,13 @@ import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.commands.WheelRadiusCharacterization;
+import frc.robot.subsystems.SuperScructure.Intake;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,6 +47,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
+  public final Intake intake;
   //   private final Flywheel flywheel;
 
   // Controller
@@ -64,6 +68,7 @@ public class RobotContainer {
                 new ModuleIOSparkMax(1),
                 new ModuleIOSparkMax(2),
                 new ModuleIOSparkMax(3));
+        intake = new Intake();
         break;
 
       case SIM:
@@ -75,7 +80,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
-        // flywheel = new Flywheel(new FlywheelIOSim());
+        intake = new Intake();
         break;
 
       default:
@@ -87,7 +92,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        // flywheel = new Flywheel(new FlywheelIO() {});
+        intake = new Intake();
         break;
     }
 
@@ -130,7 +135,9 @@ public class RobotContainer {
             () -> -controller.getRightX())); // used to be -
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     controller
-        .a().or(controller.leftBumper()).or(controller.rightBumper())
+        .a()
+        .or(controller.leftBumper())
+        .or(controller.rightBumper())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -140,7 +147,8 @@ public class RobotContainer {
                   // ------------
 
                   // -----------
-                  drive.setDefaultCommand(DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
+                  drive.setDefaultCommand(
+                      DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
                   System.out.println(drive.getDefaultCommand());
 
                   // ------------
@@ -148,7 +156,9 @@ public class RobotContainer {
                 }));
     // }));
     controller
-        .a().or(controller.leftBumper()).or(controller.rightBumper())
+        .a()
+        .or(controller.leftBumper())
+        .or(controller.rightBumper())
         .onFalse(
             Commands.runOnce(
                 () -> {
@@ -161,7 +171,9 @@ public class RobotContainer {
                           () -> -controller.getRightX()));
                 }));
     controller
-        .a().or(controller.leftBumper()).or(controller.rightBumper())
+        .a()
+        .or(controller.leftBumper())
+        .or(controller.rightBumper())
         .onTrue(
             Commands.runOnce(
                     () ->
@@ -169,6 +181,8 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    intake.setDefaultCommand(IntakeContinuous(intake));
   }
 
   /**
