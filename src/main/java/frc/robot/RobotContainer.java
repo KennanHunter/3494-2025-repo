@@ -67,9 +67,9 @@ public class RobotContainer {
   public RobotContainer() {
     elevator = new Elevator();
     arm = new Arm();
+    intake = new Intake();
     arm.setDefaultCommand(new TeleopArm(arm));
     elevator.setDefaultCommand(new TeleopElevator(elevator));
-    intake = new Intake();
     intake.setDefaultCommand(new TeleopIntake(intake));
 
     switch (Constants.currentMode) {

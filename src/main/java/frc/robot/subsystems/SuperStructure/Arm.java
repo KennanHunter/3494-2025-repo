@@ -1,5 +1,7 @@
 package frc.robot.subsystems.SuperStructure;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -42,6 +44,10 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     if (DriverStation.isEnabled()) this.setBrakes(IdleMode.kBrake);
+
+    Logger.recordOutput("Arm/Arm-Position", armMotor.getEncoder().getPosition());
+    Logger.recordOutput("Arm/Target-Position", targetPosition);
+    Logger.recordOutput("Arm/Manual-Power", manualPower);
   }
 
   public void setMotorPower(double power) {

@@ -1,5 +1,7 @@
 package frc.robot.subsystems.SuperStructure;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -23,6 +25,7 @@ public class Elevator extends SubsystemBase {
   private DigitalInput bottomMagSensor;
 
   public double manualPower = 0;
+  public double targetPosition = 99999.0;
 
   public Elevator() {
     leaderMotor = new SparkMax(Constants.Elevator.leaderMotor, MotorType.kBrushless);
@@ -63,6 +66,10 @@ public class Elevator extends SubsystemBase {
     if (getElevatorSensorState() == ElevatorSensorState.BOTTOM) {
       leaderMotor.getEncoder().setPosition(0);
     }
+
+    Logger.recordOutput("Elevator/Encoder-Position", leaderMotor.getEncoder().getPosition());
+    Logger.recordOutput("Elevator/Sensor-Tripped", getElevatorSensorState());
+    Logger.recordOutput("Elevator/Target-Position", targetPosition);
   }
 
   /**
@@ -78,6 +85,7 @@ public class Elevator extends SubsystemBase {
 
   public void setElevatorPosition(double position) {
     leaderMotor.getClosedLoopController().setReference(position, SparkBase.ControlType.kPosition);
+    targetPosition = position;
   }
 
   public void resetPosition(double position) {
