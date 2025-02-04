@@ -31,6 +31,7 @@ import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopArm;
 import frc.robot.commands.TeleopElevator;
+import frc.robot.commands.TeleopIntake;
 import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.subsystems.SuperScructure.Arm;
@@ -68,7 +69,9 @@ public class RobotContainer {
     arm = new Arm();
     arm.setDefaultCommand(new TeleopArm(arm));
     elevator.setDefaultCommand(new TeleopElevator(elevator));
-    
+    intake = new Intake();
+    intake.setDefaultCommand(new TeleopIntake(intake));
+
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -193,12 +196,14 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    intake.setDefaultCommand(IntakeContinuous(intake));
-
-    controller.y().onTrue(
-      Commands.sequence(
-        new InstantCommand(()-> {elevator.setElevatorPosition(0.0);})
-      ));
+    controller
+        .y()
+        .onTrue(
+            Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                      elevator.setElevatorPosition(0.0);
+                    })));
   }
 
   /**
