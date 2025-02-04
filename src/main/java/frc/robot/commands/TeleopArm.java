@@ -3,7 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.OI;
-import frc.robot.subsystems.SuperScructure.Arm;
+import frc.robot.subsystems.SuperStructure.Arm;
 
 public class TeleopArm extends Command {
   Arm arm;

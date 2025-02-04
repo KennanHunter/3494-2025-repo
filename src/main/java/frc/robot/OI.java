@@ -16,23 +16,33 @@ public final class OI {
     eventLoop.poll();
   }
 
-  public static double deadband(double input) {
-    if (Math.abs(input) > Constants.OI.DEADBAND) {
+  public static double deadband(double input, double deadband) {
+    if (Math.abs(input) > deadband) {
       if (input > 0.0) {
-        return (input - Constants.OI.DEADBAND) / (1.0 - Constants.OI.DEADBAND);
+        return (input - deadband) / (1.0 - deadband);
       }
 
-      return (input + Constants.OI.DEADBAND) / (1.0 - Constants.OI.DEADBAND);
+      return (input + deadband) / (1.0 - deadband);
     }
 
     return 0.0;
   }
 
   public static double intakeIn() {
-    return deadband(primaryController.getRightTriggerAxis());
+    return deadband(primaryController.getRightTriggerAxis(), Constants.Intake.DEADBAND);
   }
 
   public static double intakeOut() {
-    return deadband(primaryController.getLeftTriggerAxis());
+    return deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
+  }
+
+  public static double getElevatorPower() {
+    // TODO: assign a button
+    return 0.0;
+  }
+
+  public static double getArmPower() {
+    // TODO: assign a button
+    return 0.0;
   }
 }

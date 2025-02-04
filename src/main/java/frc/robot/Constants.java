@@ -39,14 +39,28 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
-  public static class Elevator{
+
+  public static class Elevator {
     public static int bottomMagSensorDIO = 0;
     public static int leaderMotor = 0;
     public static int followerMotor = 0;
   }
-  public static class Arm{
+
+  public static class Arm {
+    //TODO: change this value
+    public static final double manualPowerPOS = 0;
     public static int armMotor = 0;
   }
+
+  public static class Intake {
+    public static final double DEADBAND = 0.05;
+    public static final int intakeMotorPort = 0;
+  }
+
+  public static class OI {
+    public static final int PRIMARY_CONTROLLER_PORT = 0;
+  }
+
   public static class Drivetrain {
     public static double driveBaseRadius() {
       return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
@@ -139,17 +153,6 @@ public final class Constants {
         new Pose2d(1.702, 0.613, new Rotation2d(0.872665)), // 8
         new Pose2d(1.698, 7.375, new Rotation2d(-0.872665)) // 9
       };
-    }
-  }
-
-  public static class OI {
-    public static final int PRIMARY_CONTROLLER_PORT = 0;
-    public static final double DEADBAND = 0.05;
-  }
-
-  public static class SuperScructure {
-    public static class Intake {
-      public static final int intakeMotorPort = 0;
     }
   }
 }

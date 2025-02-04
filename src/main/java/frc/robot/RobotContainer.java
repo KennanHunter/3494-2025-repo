@@ -34,9 +34,9 @@ import frc.robot.commands.TeleopElevator;
 import frc.robot.commands.TeleopIntake;
 import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.commands.WheelRadiusCharacterization;
-import frc.robot.subsystems.SuperScructure.Arm;
-import frc.robot.subsystems.SuperScructure.Elevator;
-import frc.robot.subsystems.SuperScructure.Intake;
+import frc.robot.subsystems.SuperStructure.Arm;
+import frc.robot.subsystems.SuperStructure.Elevator;
+import frc.robot.subsystems.SuperStructure.Intake;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -82,7 +82,6 @@ public class RobotContainer {
                 new ModuleIOSparkMax(1),
                 new ModuleIOSparkMax(2),
                 new ModuleIOSparkMax(3));
-        intake = new Intake();
         break;
 
       case SIM:
@@ -94,7 +93,6 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
-        intake = new Intake();
         break;
 
       default:
@@ -106,7 +104,6 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        intake = new Intake();
         break;
     }
 

@@ -2,12 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
-import frc.robot.subsystems.SuperScructure.Intake;
+import frc.robot.subsystems.SuperStructure.Intake;
 
-public class IntakeContinuous extends Command {
+public class TeleopIntake extends Command {
   private Intake intake;
 
-  public IntakeContinuous(Intake intake) {
+  public TeleopIntake(Intake intake) {
     this.intake = intake;
     addRequirements(intake);
   }

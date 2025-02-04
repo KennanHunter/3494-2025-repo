@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SuperScructure;
+package frc.robot.subsystems.SuperStructure;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -16,8 +16,7 @@ public class Intake extends SubsystemBase {
 
   public Intake() {
     intakeConfig.idleMode(IdleMode.kBrake);
-    intakeMotor =
-        new SparkMax(Constants.SuperScructure.Intake.intakeMotorPort, MotorType.kBrushless);
+    intakeMotor = new SparkMax(Constants.Intake.intakeMotorPort, MotorType.kBrushless);
     intakeMotor.configure(
         intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
