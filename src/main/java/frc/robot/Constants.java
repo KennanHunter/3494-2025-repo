@@ -39,7 +39,14 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
-
+  public static class Elevator{
+    public static int bottomMagSensorDIO = 0;
+    public static int leaderMotor = 0;
+    public static int followerMotor = 0;
+  }
+  public static class Arm{
+    public static int armMotor = 0;
+  }
   public static class Drivetrain {
     public static double driveBaseRadius() {
       return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
