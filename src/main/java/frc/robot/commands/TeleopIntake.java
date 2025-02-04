@@ -15,13 +15,7 @@ public class TeleopIntake extends Command {
   @Override
   public void execute() {
     // TODO: might have to invert intake speeds/directions
-    if (OI.intakeIn() > 0) {
-      intake.setSpeed(Math.pow(OI.intakeIn(), 2));
-    } else if (OI.intakeOut() > 0) {
-      intake.setSpeed(-1 * Math.pow(OI.intakeOut(), 2));
-    } else {
-      intake.setSpeed(0);
-    }
+    intake.setSpeed(Math.copySign(Math.pow(OI.getIntakePower(), 2), OI.getIntakePower()));
   }
 
   public boolean isFinished() {
