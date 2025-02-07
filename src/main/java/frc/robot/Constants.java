@@ -27,7 +27,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.SIM;
+  public static final Mode currentMode = Mode.REAL;
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -40,20 +40,31 @@ public final class Constants {
     REPLAY
   }
 
+  public static class Presets{
+    public static double armIntake = -37.0;
+    public static double armOuttake = -110.0;
+    public static double armOuttakeL2 = -103.0;
+    public static double armCoral = -27.0;
+
+    public static double liftOuttakeL2 = 20;
+    public static double liftIntake = 0;
+    public static double liftOuttakeL3 = 44.0;
+
+  }
   public static class OI{
     public static int PRIMARY_CONTROLLER_PORT = 0;
   }
   public static class Elevator{
-    public static int bottomMagSensorDIO = 0;
-    public static int leaderMotor = 0;
-    public static int followerMotor = 0;
+    public static int bottomMagSensorDIO = 9;
+    public static int leaderMotor = 12;
+    public static int followerMotor = 13;
   }
   public static class Arm{
-    public static int armMotor = 0;
-    public static double manualPowerPOS = 0.01;
+    public static int armMotor = 15;
+    public static double manualPowerPOS = 0.3;
   }
   public static class Intake{
-    public static int intakeMotor = 0;
+    public static int intakeMotor = 14;
     public static double DEADBAND = 0.05;
   }
   public static class Drivetrain {
@@ -73,22 +84,22 @@ public final class Constants {
     public static final int FRONT_LEFT_DRIVE_ID = 18; // 18
     public static final int FRONT_LEFT_STEER_ID = 16; // 16
     public static final int FRONT_LEFT_TURN_ENCODER_ID = 3; // 3
-    public static final double FRONT_LEFT_OFFSET = Math.toRadians(70.0);
+    public static final double FRONT_LEFT_OFFSET = Math.toRadians(204.9);
 
     public static final int FRONT_RIGHT_DRIVE_ID = 19; // 19
     public static final int FRONT_RIGHT_STEER_ID = 17; // 17
     public static final int FRONT_RIGHT_TURN_ENCODER_ID = 2; // 2
-    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(150.6); // Kinda ok for now
+    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(239.5); // Kinda ok for now
 
     public static final int BACK_LEFT_DRIVE_ID = 30; // 30
     public static final int BACK_LEFT_STEER_ID = 2; // 2
     public static final int BACK_LEFT_TURN_ENCODER_ID = 1; // 1
-    public static final double BACK_LEFT_OFFSET = Math.toRadians(11);
+    public static final double BACK_LEFT_OFFSET = Math.toRadians(267.3);
 
     public static final int BACK_RIGHT_DRIVE_ID = 1; // 1
     public static final int BACK_RIGHT_STEER_ID = 3; // 3
     public static final int BACK_RIGHT_TURN_ENCODER_ID = 0; // 0
-    public static final double BACK_RIGHT_OFFSET = Math.toRadians(180 + 45.0);
+    public static final double BACK_RIGHT_OFFSET = Math.toRadians(148.5);
   }
 
   public static class Field {

@@ -145,53 +145,53 @@ public class RobotContainer {
             () -> -controller.getLeftX(), // used to be -
             () -> -controller.getRightX())); // used to be -
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    controller
-        .a()
-        .or(controller.leftBumper())
-        .or(controller.rightBumper())
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  System.out.println("ALIGNING-------------------------------------------");
-                  // DriveCommands.autoAlign(drive).execute();
-                  System.out.println(drive.getDefaultCommand());
-                  // ------------
+    // controller
+    //     .a()
+    //     .or(controller.leftBumper())
+    //     .or(controller.rightBumper())
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               System.out.println("ALIGNING-------------------------------------------");
+    //               // DriveCommands.autoAlign(drive).execute();
+    //               System.out.println(drive.getDefaultCommand());
+    //               // ------------
 
-                  // -----------
-                  drive.setDefaultCommand(
-                      DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
-                  System.out.println(drive.getDefaultCommand());
+    //               // -----------
+    //               drive.setDefaultCommand(
+    //                   DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
+    //               System.out.println(drive.getDefaultCommand());
 
-                  // ------------
+    //               // ------------
 
-                }));
+    //             }));
     // }));
-    controller
-        .a()
-        .or(controller.leftBumper())
-        .or(controller.rightBumper())
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  System.out.println("Stopping-------------------------------------------");
-                  drive.setDefaultCommand(
-                      DriveCommands.joystickDrive(
-                          drive,
-                          () -> -controller.getLeftY(),
-                          () -> -controller.getLeftX(), // used to be -
-                          () -> -controller.getRightX()));
-                }));
-    controller
-        .a()
-        .or(controller.leftBumper())
-        .or(controller.rightBumper())
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPoseDummy(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+    // controller
+    //     .a()
+    //     .or(controller.leftBumper())
+    //     .or(controller.rightBumper())
+    //     .onFalse(
+    //         Commands.runOnce(
+    //             () -> {
+    //               System.out.println("Stopping-------------------------------------------");
+    //               drive.setDefaultCommand(
+    //                   DriveCommands.joystickDrive(
+    //                       drive,
+    //                       () -> -controller.getLeftY(),
+    //                       () -> -controller.getLeftX(), // used to be -
+    //                       () -> -controller.getRightX()));
+    //             }));
+    // controller
+    //     .a()
+    //     .or(controller.leftBumper())
+    //     .or(controller.rightBumper())
+    //     .onTrue(
+    //         Commands.runOnce(
+    //                 () ->
+    //                     drive.setPoseDummy(
+    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+    //                 drive)
+    //             .ignoringDisable(true));
 
     controller
         .y()
@@ -199,7 +199,43 @@ public class RobotContainer {
             Commands.sequence(
                 new InstantCommand(
                     () -> {
-                      elevator.setElevatorPosition(0.0);
+                      elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+                      arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+                    })));
+    controller
+        .a()
+            .onTrue(
+                Commands.sequence(
+                    new InstantCommand(
+                        () -> {
+                            elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                            arm.setTargetAngle(Constants.Presets.armCoral, 0);
+                        })));
+    
+    // controller
+    //     .y()
+    //     .onTrue(
+    //         Commands.sequence(
+    //             new InstantCommand(
+    //                 () -> {
+    //                   elevator.setElevatorPosition(0.0);
+    //                 })));
+    controller
+        .b()
+            .onTrue(
+                Commands.sequence(
+                    new InstantCommand(
+                        () -> {
+                            elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                            arm.setTargetAngle(Constants.Presets.armIntake, 0);
+                        })));
+    controller
+        .x().onTrue(
+            Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+                        arm.setTargetAngle(Constants.Presets.armOuttake, 0);
                     })));
   }
 
