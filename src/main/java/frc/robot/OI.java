@@ -28,12 +28,8 @@ public final class OI {
     return 0.0;
   }
 
-  public static double intakeIn() {
-    return deadband(primaryController.getRightTriggerAxis(), Constants.Intake.DEADBAND);
-  }
-
-  public static double intakeOut() {
-    return deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
+  public static double getIntakePower() {
+    return deadband(primaryController.getRightTriggerAxis() , Constants.Intake.DEADBAND) - deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
   }
 
   public static double getElevatorPower() {
