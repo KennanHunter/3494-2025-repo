@@ -55,6 +55,7 @@ public class Arm extends SubsystemBase {
     // if (DriverStation.isEnabled()) this.setBrakes(IdleMode.kBrake);
 
     Logger.recordOutput("Arm/Arm-Position", encoder.getPosition());
+    // Logger.recordOutput("Arm/Arm-Encoder-Position", armMotor.getAlternateEncoder().getPosition());
     Logger.recordOutput("Arm/Target-Position", targetPosition);
     Logger.recordOutput("Arm/Manual-Power", manualPower);
     Logger.recordOutput("Arm/Applied-Power", armMotor.getAppliedOutput());

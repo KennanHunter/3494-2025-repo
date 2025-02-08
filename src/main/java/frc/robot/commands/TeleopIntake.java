@@ -8,6 +8,7 @@ import frc.robot.subsystems.SuperStructure.Intake;
 
 public class TeleopIntake extends Command {
   private Intake intake;
+  double lastPower;
 
   public TeleopIntake(Intake intake) {
     this.intake = intake;
@@ -17,7 +18,14 @@ public class TeleopIntake extends Command {
   @Override
   public void execute() {
     // TODO: might have to invert intake speeds/directions
-    intake.setSpeed(Math.copySign(Math.pow(OI.getIntakePower(), 2), OI.getIntakePower()));
+    double intakePower = Math.copySign(Math.pow(OI.getIntakePower(), 2), OI.getIntakePower());
+    if(intakePower == 0){
+      intakePower = 0.075* Math.copySign(1 ,lastPower) ;
+    }
+    else{
+      lastPower = intakePower;
+    }
+    intake.setSpeed(intakePower);
     Logger.recordOutput("Intake/Intake-Power-Command", -1 * Math.pow(OI.getIntakePower(), 2));
       
   }

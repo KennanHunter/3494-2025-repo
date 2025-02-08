@@ -144,7 +144,7 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(), // used to be -
             () -> -controller.getRightX())); // used to be -
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     // controller
     //     .a()
     //     .or(controller.leftBumper())
@@ -193,6 +193,7 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
 
+    //======== L3 ============
     controller
         .y()
         .onTrue(
@@ -200,26 +201,36 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> {
                       elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
-                      arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+                      arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
                     })));
     controller
-        .a()
-            .onTrue(
-                Commands.sequence(
-                    new InstantCommand(
-                        () -> {
-                            elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                            arm.setTargetAngle(Constants.Presets.armCoral, 0);
-                        })));
-    
-    // controller
-    //     .y()
-    //     .onTrue(
-    //         Commands.sequence(
-    //             new InstantCommand(
-    //                 () -> {
-    //                   elevator.setElevatorPosition(0.0);
-    //                 })));
+        .y()
+        .onFalse(
+            Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                      elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+                      arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+                    })));
+    //========== L2 ===============
+    controller
+        .x().onTrue(
+            Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                        arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+                    })));
+    controller
+        .x().onFalse(
+            Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+                        arm.setTargetAngle(Constants.Presets.armOuttake, 0);
+                    })));
+    //========= L1 ==============
+    //========= Intake ==============
     controller
         .b()
             .onTrue(
@@ -227,16 +238,18 @@ public class RobotContainer {
                     new InstantCommand(
                         () -> {
                             elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                            arm.setTargetAngle(Constants.Presets.armIntake, 0);
+                            arm.setTargetAngle(Constants.Presets.armCoral, 0);
                         })));
     controller
-        .x().onTrue(
-            Commands.sequence(
-                new InstantCommand(
-                    () -> {
-                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
-                        arm.setTargetAngle(Constants.Presets.armOuttake, 0);
-                    })));
+        .b()
+            .onFalse(
+                Commands.sequence(
+                    new InstantCommand(
+                        () -> {
+                            elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                            arm.setTargetAngle(Constants.Presets.armIntake, 0);
+                        })));
+    
   }
 
   /**
