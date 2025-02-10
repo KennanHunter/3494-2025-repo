@@ -30,9 +30,9 @@ public class Arm extends SubsystemBase {
     armMotorConfig = new SparkMaxConfig();
     armMotorConfig.idleMode(IdleMode.kCoast);
     armMotorConfig.inverted(false);
-    armMotorConfig.closedLoop.pid(0.5, 0, 0);
-    armMotorConfig.closedLoop.outputRange(-0.7, 0.7);
-    armMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    armMotorConfig.closedLoop.pid(2, 0, 0);
+    armMotorConfig.closedLoop.outputRange(-0.6, 0.6);
+    armMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     encoder = armMotor.getEncoder();
     armMotor.configure(
         armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -55,7 +55,7 @@ public class Arm extends SubsystemBase {
     // if (DriverStation.isEnabled()) this.setBrakes(IdleMode.kBrake);
 
     Logger.recordOutput("Arm/Arm-Position", encoder.getPosition());
-    // Logger.recordOutput("Arm/Arm-Encoder-Position", armMotor.getAlternateEncoder().getPosition());
+    Logger.recordOutput("Arm/Arm-Encoder-Position", armMotor.getAbsoluteEncoder().getPosition());
     Logger.recordOutput("Arm/Target-Position", targetPosition);
     Logger.recordOutput("Arm/Manual-Power", manualPower);
     Logger.recordOutput("Arm/Applied-Power", armMotor.getAppliedOutput());

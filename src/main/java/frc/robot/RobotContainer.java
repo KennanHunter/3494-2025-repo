@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoIntakePower;
 import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopArm;
@@ -108,11 +109,54 @@ public class RobotContainer {
     }
 
     // Set up auto routines
-
     NamedCommands.registerCommand(
-        "Run Flywheel", new WheelRadiusCharacterization(drive, Direction.COUNTER_CLOCKWISE));
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+        "Wheel Radius Calc", new WheelRadiusCharacterization(drive, Direction.COUNTER_CLOCKWISE));
+    //INTAKE STUFF-----------------------
+    NamedCommands.registerCommand(
+            "Intake", new AutoIntakePower(intake, 1));
+    NamedCommands.registerCommand(
+            "Outtake", new AutoIntakePower(intake, -1));
+    NamedCommands.registerCommand(
+            "Stop Intake", new AutoIntakePower(intake, 0));
+    //Superstructure Place STUFF-----------------------
+    NamedCommands.registerCommand(
+            "L2 Outtake", Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+                        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+        })));
+    NamedCommands.registerCommand(
+        "L2 Algea", Commands.sequence(
+            new InstantCommand(
+                () -> {
+                    elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                    arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
+        })));
+    NamedCommands.registerCommand(
+        "L3 Outtake", Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                      elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+                      arm.setTargetAngle(Constants.Presets.armOuttakeL3, 0);
+        })));
+    NamedCommands.registerCommand(
+        "L3 Algea", Commands.sequence(
+            new InstantCommand(
+                () -> {
+                  elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+                  arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
+        })) );
+    //Superstrucutre Intake Stuff-----------------------
+    NamedCommands.registerCommand(
+            "Intake", Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                        arm.setTargetAngle(Constants.Presets.armIntake, 0);
+                    })));
 
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // Set up SysId routines
     autoChooser.addOption(
         "Drive SysId (Quasistatic Forward)",
@@ -145,53 +189,49 @@ public class RobotContainer {
             () -> -controller.getLeftX(), // used to be -
             () -> -controller.getRightX())); // used to be -
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    // controller
-    //     .a()
-    //     .or(controller.leftBumper())
-    //     .or(controller.rightBumper())
-    //     .onTrue(
-    //         Commands.runOnce(
-    //             () -> {
-    //               System.out.println("ALIGNING-------------------------------------------");
-    //               // DriveCommands.autoAlign(drive).execute();
-    //               System.out.println(drive.getDefaultCommand());
-    //               // ------------
+    controller.
+        leftBumper()
+        .or(controller.rightBumper())
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  System.out.println("ALIGNING-------------------------------------------");
+                  // DriveCommands.autoAlign(drive).execute();
+                  System.out.println(drive.getDefaultCommand());
+                  // ------------
 
-    //               // -----------
-    //               drive.setDefaultCommand(
-    //                   DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
-    //               System.out.println(drive.getDefaultCommand());
+                  // -----------
+                  drive.setDefaultCommand(
+                      DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
+                  System.out.println(drive.getDefaultCommand());
 
-    //               // ------------
+                  // ------------
 
-    //             }));
-    // }));
-    // controller
-    //     .a()
-    //     .or(controller.leftBumper())
-    //     .or(controller.rightBumper())
-    //     .onFalse(
-    //         Commands.runOnce(
-    //             () -> {
-    //               System.out.println("Stopping-------------------------------------------");
-    //               drive.setDefaultCommand(
-    //                   DriveCommands.joystickDrive(
-    //                       drive,
-    //                       () -> -controller.getLeftY(),
-    //                       () -> -controller.getLeftX(), // used to be -
-    //                       () -> -controller.getRightX()));
-    //             }));
-    // controller
-    //     .a()
-    //     .or(controller.leftBumper())
-    //     .or(controller.rightBumper())
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPoseDummy(
-    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-    //                 drive)
-    //             .ignoringDisable(true));
+        }));
+    controller
+        .leftBumper()
+        .or(controller.rightBumper())
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  System.out.println("Stopping-------------------------------------------");
+                  drive.setDefaultCommand(
+                      DriveCommands.joystickDrive(
+                          drive,
+                          () -> -controller.getLeftY(),
+                          () -> -controller.getLeftX(), // used to be -
+                          () -> -controller.getRightX()));
+                }));
+    controller
+        .leftBumper()
+        .or(controller.rightBumper())
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPoseDummy(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
 
     //======== L3 ============
     controller
@@ -201,7 +241,7 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> {
                       elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
-                      arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+                      arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
                     })));
     controller
         .y()
@@ -210,7 +250,7 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> {
                       elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
-                      arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+                      arm.setTargetAngle(Constants.Presets.armOuttakeL3, 0);
                     })));
     //========== L2 ===============
     controller
@@ -227,7 +267,7 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> {
                         elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
-                        arm.setTargetAngle(Constants.Presets.armOuttake, 0);
+                        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
                     })));
     //========= L1 ==============
     //========= Intake ==============
