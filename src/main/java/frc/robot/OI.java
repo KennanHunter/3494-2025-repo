@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 
 public final class OI {
@@ -44,4 +45,5 @@ public final class OI {
     double rightPower = (primaryController.povRight(eventLoop).getAsBoolean()? -0.5 : 0.0);
     return leftPower+rightPower;
   }
+
 }

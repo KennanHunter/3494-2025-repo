@@ -149,7 +149,7 @@ public class RobotContainer {
         })) );
     //Superstrucutre Intake Stuff-----------------------
     NamedCommands.registerCommand(
-            "Intake", Commands.sequence(
+            "Intake Pos", Commands.sequence(
                 new InstantCommand(
                     () -> {
                         elevator.setElevatorPosition(Constants.Presets.liftIntake);
@@ -189,6 +189,10 @@ public class RobotContainer {
             () -> -controller.getLeftX(), // used to be -
             () -> -controller.getRightX())); // used to be -
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.back().onTrue(Commands.runOnce(
+        () -> {
+           GyroIOPigeon2.pigeon.setYaw(0.0);
+        }));
     controller.
         leftBumper()
         .or(controller.rightBumper())
