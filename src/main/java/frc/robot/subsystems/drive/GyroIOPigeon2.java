@@ -34,7 +34,6 @@ public class GyroIOPigeon2 implements GyroIO {
   private final Queue<Double> yawPositionQueue;
   private final Queue<Double> yawTimestampQueue;
   private final StatusSignal<AngularVelocity> yawVelocity = pigeon.getAngularVelocityZWorld();
-  public static double offset = 0;
   public GyroIOPigeon2() {
     // Pigeon2Configuration myConfiguratioon = new Pigeon2Configuration()
     // myConfiguratioon.GyroTrim.GyroScalarY

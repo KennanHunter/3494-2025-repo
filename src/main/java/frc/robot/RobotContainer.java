@@ -274,6 +274,14 @@ public class RobotContainer {
                         arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
                     })));
     //========= L1 ==============
+    controller
+        .a().onFalse(
+            Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                        arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
+                    })));
     //========= Intake ==============
     controller
         .b()

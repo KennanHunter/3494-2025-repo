@@ -43,6 +43,7 @@ public final class Constants {
   public static class Presets{
     public static double armIntake = 0.65;//-34.0;
     public static double armCoral = 0.7;//-136.0;
+    public static double armOuttakeL1 = 0.257;
     public static double armOuttakeL2 = 0.224;//-111.0;
     public static double armOuttakeL3 = 0.29;//-106.0;
 
