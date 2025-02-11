@@ -29,6 +29,8 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static final Mode currentMode = Mode.REAL;
 
+  public static final int POWER_DISTRIBUTION_PANEL_CAN_ID = 28;
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
@@ -162,6 +164,5 @@ public final class Constants {
         new Pose2d(1.698, 7.375, new Rotation2d(-0.872665-Math.PI/2.0))//9
       };
     }
-    
   }
 }
