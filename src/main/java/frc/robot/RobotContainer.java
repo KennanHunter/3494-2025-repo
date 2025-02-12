@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoIntakePower;
@@ -71,7 +72,7 @@ public class RobotContainer {
     intake = new Intake();
     arm.setDefaultCommand(new TeleopArm(arm));
     elevator.setDefaultCommand(new TeleopElevator(elevator));
-    intake.setDefaultCommand(new TeleopIntake(intake));
+    intake.setDefaultCommand(new TeleopIntake(intake, arm));
 
     switch (Constants.currentMode) {
       case REAL:
@@ -117,6 +118,8 @@ public class RobotContainer {
     NamedCommands.registerCommand(
             "Outtake", new AutoIntakePower(intake, -1));
     NamedCommands.registerCommand(
+            "Outtake L1 ", new AutoIntakePower(intake, -0.3));
+    NamedCommands.registerCommand(
             "Stop Intake", new AutoIntakePower(intake, 0));
     //Superstructure Place STUFF-----------------------
     NamedCommands.registerCommand(
@@ -135,6 +138,14 @@ public class RobotContainer {
         })));
     NamedCommands.registerCommand(
         "L3 Outtake", Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                      elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+                      arm.setTargetAngle(Constants.Presets.armOuttakeL3, 0);
+        })));
+    NamedCommands.registerCommand(
+        "L3 Outtake Delayed", Commands.sequence(
+                new WaitCommand(0.5),
                 new InstantCommand(
                     () -> {
                       elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
@@ -170,7 +181,7 @@ public class RobotContainer {
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     autoChooser.addOption("Calculate Wheel Position", new WheelOffsetCalculator(drive));
-
+    autoChooser.addOption("Outtake Test", new AutoIntakePower(intake, -1));
     // Configure the button bindings
     configureButtonBindings();
   }

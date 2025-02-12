@@ -12,6 +12,7 @@ public class AutoIntakePower extends Command {
         this.intake = intake;
         this.power = power;
         timer.start();
+        addRequirements(intake);
     }
     @Override
     public void execute(){
@@ -19,7 +20,7 @@ public class AutoIntakePower extends Command {
     }
     @Override
     public boolean isFinished(){
-        if(timer.hasElapsed(0.5)){
+        if(timer.hasElapsed(2.0)){
             return true;
         }
         return false;

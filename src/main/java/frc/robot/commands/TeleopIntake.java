@@ -3,16 +3,21 @@ package frc.robot.commands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.OI;
+import frc.robot.subsystems.SuperStructure.Arm;
 import frc.robot.subsystems.SuperStructure.Intake;
 
 public class TeleopIntake extends Command {
   private Intake intake;
+  private Arm arm;
   double lastPower;
 
-  public TeleopIntake(Intake intake) {
+  public TeleopIntake(Intake intake, Arm arm) {
     this.intake = intake;
+    this.arm = arm;
     addRequirements(intake);
+    addRequirements(arm);
   }
 
   @Override
@@ -24,6 +29,9 @@ public class TeleopIntake extends Command {
     }
     else{
       lastPower = intakePower;
+    }
+    if(arm.getTargetPosition() == Constants.Presets.armOuttakeL1){
+      intakePower *= 0.3;
     }
     intake.setSpeed(intakePower);
     Logger.recordOutput("Intake/Intake-Power-Command", -1 * Math.pow(OI.getIntakePower(), 2));
