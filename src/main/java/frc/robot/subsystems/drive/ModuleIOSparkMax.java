@@ -174,6 +174,7 @@ public class ModuleIOSparkMax implements ModuleIO {
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
     Logger.recordOutput("Odometry/DriveOutputQueueLength", drivePositionQueue.size());
+    Logger.recordOutput("Odometry/TurnOutputQueueLength", turnPositionQueue.size());
 
     inputs.drivePositionRad =
         Units.rotationsToRadians(driveEncoder.getPosition()) / DRIVE_GEAR_RATIO;
