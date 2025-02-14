@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import au.grapplerobotics.MitoCANdria;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -42,6 +43,13 @@ public final class Constants {
     REPLAY
   }
 
+  public static class Mitocandria {
+    public static final int MITOCANDRIA_CAN_ID = 50;
+
+    public static final int LIMELIGHT_CHANNEL = MitoCANdria.MITOCANDRIA_CHANNEL_5VB;
+    public static final int PIGEON_CHANNEL = MitoCANdria.MITOCANDRIA_CHANNEL_ADJ;
+  }
+
   public static class Presets{
     public static double armIntake = 0.65;//-34.0;
     public static double armCoral = 0.7;//-136.0;
@@ -55,24 +63,28 @@ public final class Constants {
     public static double liftIntake = 0;
     public static double liftOuttakeL2 = 20;
     public static double liftOuttakeL3 = 44.0;
-
   }
-  public static class OI{
+
+  public static class OI {
     public static int PRIMARY_CONTROLLER_PORT = 0;
   }
-  public static class Elevator{
+
+  public static class Elevator {
     public static int bottomMagSensorDIO = 9;
     public static int leaderMotor = 12;
     public static int followerMotor = 13;
   }
-  public static class Arm{
+
+  public static class Arm {
     public static int armMotor = 15;
     public static double manualPowerPOS = 0.005;
   }
-  public static class Intake{
+
+  public static class Intake {
     public static int intakeMotor = 14;
     public static double DEADBAND = 0.05;
   }
+
   public static class Climber{
     public static int climberMotor = 6;
     public static double manualPowerPOS = 0.01;
@@ -119,7 +131,7 @@ public final class Constants {
     public static final Translation2d ampCenter =
         new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
 
-    public static class Reef{
+    public static class Reef {
       //       6
       //     ----
       //  4 /    \  5
@@ -128,23 +140,23 @@ public final class Constants {
       // 2  \    / 3
       //     ----
       //      1
-      //Algea is 7
-      //Intake Station Left is 8
-      //Intake Station Right is 9
-      //NOTE: These side location aren't used to drive to they are just use to search for the nearest side (also these are for the blue side)
+      // Algea is 7
+      // Intake Station Left is 8
+      // Intake Station Right is 9
+      // NOTE: These side location aren't used to drive to they are just use to search for the
+      // nearest side (also these are for the blue side)
       public static final Translation2d[] sideLocations = {
-        new Translation2d(3.156, 4.030), //1
-        new Translation2d(3.823, 5.154),  //2
-        new Translation2d(3.776, 2.858), //3
-        new Translation2d(5.164, 5.156), //4
-        new Translation2d(5.170, 2.858), //5
-        new Translation2d(5.832, 4.047),//6
-        new Translation2d(6.001, 0.489),//7
-        new Translation2d(1.172, 1.00),//8
-        new Translation2d(1.172, 7.0)//9
-
+        new Translation2d(3.156, 4.030), // 1
+        new Translation2d(3.823, 5.154), // 2
+        new Translation2d(3.776, 2.858), // 3
+        new Translation2d(5.164, 5.156), // 4
+        new Translation2d(5.170, 2.858), // 5
+        new Translation2d(5.832, 4.047), // 6
+        new Translation2d(6.001, 0.489), // 7
+        new Translation2d(1.172, 1.00), // 8
+        new Translation2d(1.172, 7.0) // 9
       };
-      
+
       public static final Pose2d[] leftLocations = { //Placeholder currently using the center positions
         new Pose2d(3.277, 4.176, new Rotation2d(0.0-Math.PI/2.0)), //1
         new Pose2d(3.944, 5.265, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
