@@ -67,11 +67,16 @@ public final class Constants {
   }
   public static class Arm{
     public static int armMotor = 15;
-    public static double manualPowerPOS = 0.015;
+    public static double manualPowerPOS = 0.005;
   }
   public static class Intake{
     public static int intakeMotor = 14;
     public static double DEADBAND = 0.05;
+  }
+  public static class Climber{
+    public static int climberMotor = 6;
+    public static double manualPowerPOS = 0.01;
+    public static double climberTargetPostion = 0;
   }
   public static class Drivetrain {
     public static double driveBaseRadius() {

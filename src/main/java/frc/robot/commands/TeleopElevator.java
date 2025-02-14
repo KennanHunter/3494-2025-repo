@@ -16,11 +16,11 @@ public class TeleopElevator extends Command {
     }
     @Override
     public void execute() {
-        elevatorPower = OI.deadband(OI.getElevatorPower(), 0.05);
+        // elevatorPower = OI.deadband(OI.getElevatorPower(), 0.05);
         Logger.recordOutput("Elevator/Manual-Power", elevatorPower);
-        if(elevatorPower != 0 || (elevator.getManualMotorPower() != 0 && elevatorPower == 0)){
-            elevator.setElevatorPower(elevatorPower);
-        }
+        // if(elevatorPower != 0 || (elevator.getManualMotorPower() != 0 && elevatorPower == 0)){
+        //     elevator.setElevatorPower(elevatorPower);
+        // }
 
     }
     

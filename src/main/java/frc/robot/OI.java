@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
@@ -44,6 +45,11 @@ public final class OI {
     double leftPower = (primaryController.povLeft(eventLoop).getAsBoolean()? 0.5: 0.0);
     double rightPower = (primaryController.povRight(eventLoop).getAsBoolean()? -0.5 : 0.0);
     return leftPower+rightPower;
+  }
+  public static double getClimberPower(){
+    double upPower = (primaryController.povUp(eventLoop).getAsBoolean()? 10.0: 0.0);
+    double downPower = (primaryController.povDown(eventLoop).getAsBoolean()? -4.0 : 0.0);
+    return upPower+downPower;
   }
 
 }

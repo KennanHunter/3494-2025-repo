@@ -21,6 +21,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,10 +33,12 @@ import frc.robot.commands.AutoIntakePower;
 import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopArm;
+import frc.robot.commands.TeleopClimber;
 import frc.robot.commands.TeleopElevator;
 import frc.robot.commands.TeleopIntake;
 import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.commands.WheelRadiusCharacterization;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.SuperStructure.Arm;
 import frc.robot.subsystems.SuperStructure.Elevator;
 import frc.robot.subsystems.SuperStructure.Intake;
@@ -58,10 +61,11 @@ public class RobotContainer {
   public final Intake intake;
   private final Elevator elevator;
   private final Arm arm;
+  private final Climber climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
-
+  private static Joystick leftButtonBoard = new Joystick(1);
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -70,10 +74,11 @@ public class RobotContainer {
     elevator = new Elevator();
     arm = new Arm();
     intake = new Intake();
+    climber = new Climber();
     arm.setDefaultCommand(new TeleopArm(arm));
     elevator.setDefaultCommand(new TeleopElevator(elevator));
     intake.setDefaultCommand(new TeleopIntake(intake, arm));
-
+    climber.setDefaultCommand(new TeleopClimber(climber));
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -118,10 +123,17 @@ public class RobotContainer {
     NamedCommands.registerCommand(
             "Outtake", new AutoIntakePower(intake, -1));
     NamedCommands.registerCommand(
-            "Outtake L1 ", new AutoIntakePower(intake, -0.3));
+            "Outtake L1", new AutoIntakePower(intake, -0.3));
     NamedCommands.registerCommand(
             "Stop Intake", new AutoIntakePower(intake, 0));
     //Superstructure Place STUFF-----------------------
+    NamedCommands.registerCommand(
+            "L1", Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                        arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
+                    })));
     NamedCommands.registerCommand(
             "L2 Outtake", Commands.sequence(
                 new InstantCommand(
@@ -250,7 +262,7 @@ public class RobotContainer {
 
     //======== L3 ============
     controller
-        .y()
+        .y().or(()->leftButtonBoard.getRawButton(2))
         .onTrue(
             Commands.sequence(
                 new InstantCommand(
@@ -259,7 +271,7 @@ public class RobotContainer {
                       arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
                     })));
     controller
-        .y()
+        .y().or(()->leftButtonBoard.getRawButton(4))
         .onFalse(
             Commands.sequence(
                 new InstantCommand(
@@ -269,7 +281,8 @@ public class RobotContainer {
                     })));
     //========== L2 ===============
     controller
-        .x().onTrue(
+        .x().or(()->leftButtonBoard.getRawButton(5))
+        .onTrue(
             Commands.sequence(
                 new InstantCommand(
                     () -> {
@@ -277,7 +290,8 @@ public class RobotContainer {
                         arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
                     })));
     controller
-        .x().onFalse(
+        .x().or(()->leftButtonBoard.getRawButton(8))
+        .onFalse(
             Commands.sequence(
                 new InstantCommand(
                     () -> {
@@ -286,7 +300,8 @@ public class RobotContainer {
                     })));
     //========= L1 ==============
     controller
-        .a().onFalse(
+        .a().or(()->leftButtonBoard.getRawButton(9))
+        .onFalse(
             Commands.sequence(
                 new InstantCommand(
                     () -> {
@@ -295,7 +310,7 @@ public class RobotContainer {
                     })));
     //========= Intake ==============
     controller
-        .b()
+        .b().or(()->leftButtonBoard.getRawButton(10))
             .onTrue(
                 Commands.sequence(
                     new InstantCommand(
@@ -304,7 +319,7 @@ public class RobotContainer {
                             arm.setTargetAngle(Constants.Presets.armCoral, 0);
                         })));
     controller
-        .b()
+        .b().or(()->leftButtonBoard.getRawButton(6))
             .onFalse(
                 Commands.sequence(
                     new InstantCommand(
