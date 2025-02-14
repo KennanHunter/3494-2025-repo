@@ -190,6 +190,9 @@ public class Drive extends SubsystemBase {
 
     SparkMaxOdometryThread odo = SparkMaxOdometryThread.getInstance();
 
+    // As the queue can change size between this call and the following standard err logging calls
+    // this value does not represent the actual amount of errors logged, just how many at this
+    // point in the program
     Logger.recordOutput("SparkMaxOdometryThread/DriveErrorCount", odo.pastDriveErrors.size());
 
     odo.pastDriveErrors
