@@ -66,7 +66,7 @@ public class ModuleIOSparkMax implements ModuleIO {
   private SparkMaxConfig driveSparkMaxConfig = new SparkMaxConfig();
   private SparkMaxConfig turnSparkMaxConfig = new SparkMaxConfig();
 
-  private int index; 
+  private int index;
 
   public ModuleIOSparkMax(int index) {
     this.index = index;
@@ -173,6 +173,9 @@ public class ModuleIOSparkMax implements ModuleIO {
 
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
+    Logger.recordOutput("Odometry/DriveOutputQueueLength", drivePositionQueue.size());
+    Logger.recordOutput("Odometry/TurnOutputQueueLength", turnPositionQueue.size());
+
     inputs.drivePositionRad =
         Units.rotationsToRadians(driveEncoder.getPosition()) / DRIVE_GEAR_RATIO;
     inputs.driveVelocityRadPerSec =
@@ -204,6 +207,7 @@ public class ModuleIOSparkMax implements ModuleIO {
         drivePositionQueue.stream()
             .mapToDouble((Double value) -> Units.rotationsToRadians(value) / DRIVE_GEAR_RATIO)
             .toArray();
+
     inputs.odometryTurnPositions =
         turnPositionQueue.stream()
             .map((Double value) -> Rotation2d.fromRotations(value / TURN_GEAR_RATIO))

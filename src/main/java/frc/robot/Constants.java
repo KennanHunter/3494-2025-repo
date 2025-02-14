@@ -50,14 +50,15 @@ public final class Constants {
     public static final int PIGEON_CHANNEL = MitoCANdria.MITOCANDRIA_CHANNEL_ADJ;
   }
 
-  public static class Presets {
-    public static double armIntake = 0.65; // -34.0;
-    public static double armCoral = 0.7; // -136.0;
-    public static double armOuttakeL2 = 0.224; // -111.0;
-    public static double armOuttakeL3 = 0.29; // -106.0;
+  public static class Presets{
+    public static double armIntake = 0.65;//-34.0;
+    public static double armCoral = 0.7;//-136.0;
+    public static double armOuttakeL1 = 0.77;
+    public static double armOuttakeL2 = 0.224;//-111.0;
+    public static double armOuttakeL3 = 0.27;//-106.0;
 
     public static double armAlgeaL2 = 0.25;
-    public static double armAlgeaL3 = 0.25; // -116.0;
+    public static double armAlgeaL3 = 0.23;//-116.0;
 
     public static double liftIntake = 0;
     public static double liftOuttakeL2 = 20;
@@ -76,7 +77,7 @@ public final class Constants {
 
   public static class Arm {
     public static int armMotor = 15;
-    public static double manualPowerPOS = 0.015;
+    public static double manualPowerPOS = 0.005;
   }
 
   public static class Intake {
@@ -84,6 +85,11 @@ public final class Constants {
     public static double DEADBAND = 0.05;
   }
 
+  public static class Climber{
+    public static int climberMotor = 6;
+    public static double manualPowerPOS = 0.01;
+    public static double climberTargetPostion = 0;
+  }
   public static class Drivetrain {
     public static double driveBaseRadius() {
       return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
@@ -151,30 +157,28 @@ public final class Constants {
         new Translation2d(1.172, 7.0) // 9
       };
 
-      public static final Pose2d[]
-          leftLocations = { // Placeholder currently using the center positions
-        new Pose2d(3.158, 4.2, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
-        new Pose2d(3.944, 5.265, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
-        new Pose2d(3.662, 2.952, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
-        new Pose2d(5.024, 5.243, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
-        new Pose2d(5.025, 2.771, new Rotation2d(2 * Math.PI / 3.0 - Math.PI / 2.0)), // 5
-        new Pose2d(5.832, 4.187, new Rotation2d(Math.PI - Math.PI / 2.0)), // 6
-        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI / 2.0 - Math.PI / 2.0)), // 7
-        new Pose2d(0.646, 1.434, new Rotation2d(0.872665 - Math.PI / 2.0)), // 8
-        new Pose2d(0.683, 6.619, new Rotation2d(-0.872665 - Math.PI / 2.0)) // 9
+      public static final Pose2d[] leftLocations = { //Placeholder currently using the center positions
+        new Pose2d(3.277, 4.176, new Rotation2d(0.0-Math.PI/2.0)), //1
+        new Pose2d(3.944, 5.265, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
+        new Pose2d(3.662, 2.952,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
+        new Pose2d(5.024, 5.243,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
+        new Pose2d(5.025, 2.771,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
+        new Pose2d(5.832, 4.187, new Rotation2d(Math.PI-Math.PI/2.0)),//6
+        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
+        new Pose2d(1.312, 0.948, new Rotation2d(0.872665-Math.PI/2.0)),//8
+        new Pose2d(0.683, 6.619, new Rotation2d(-0.872665-Math.PI/2.0))//9
       };
 
-      public static final Pose2d[]
-          rightLocations = { // Placeholder currently using the center positions
-        new Pose2d(3.157, 3.957, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
-        new Pose2d(3.7, 5.090, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
-        new Pose2d(3.971, 2.778, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
-        new Pose2d(5.313, 5.078, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
-        new Pose2d(5.306, 2.968, new Rotation2d(2 * Math.PI / 3.0 - Math.PI / 2.0)), // 5
-        new Pose2d(5.832, 3.868, new Rotation2d(Math.PI - Math.PI / 2.0)), // 6
-        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI / 2.0 - Math.PI / 2.0)), // 7
-        new Pose2d(1.702, 0.613, new Rotation2d(0.872665 - Math.PI / 2.0)), // 8
-        new Pose2d(1.698, 7.375, new Rotation2d(-0.872665 - Math.PI / 2.0)) // 9
+      public static final Pose2d[] rightLocations = { //Placeholder currently using the center positions
+        new Pose2d(3.326, 3.862, new Rotation2d(0.0-Math.PI/2.0)), //1
+        new Pose2d(3.7, 5.090, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
+        new Pose2d(3.971, 2.778,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
+        new Pose2d(5.313, 5.078,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
+        new Pose2d(5.306, 2.968,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
+        new Pose2d(5.832, 3.868, new Rotation2d(Math.PI-Math.PI/2.0)),//6
+        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
+        new Pose2d(1.702, 0.613, new Rotation2d(0.872665-Math.PI/2.0)),//8
+        new Pose2d(1.698, 7.375, new Rotation2d(-0.872665-Math.PI/2.0))//9
       };
     }
   }
