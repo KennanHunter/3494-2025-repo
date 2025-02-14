@@ -205,7 +205,7 @@ public class Drive extends SubsystemBase {
         .iterator()
         .forEachRemaining(
             (err) -> {
-              System.err.println("Drive Spark Max error: " + err.toString());
+              System.err.println("Turn Spark Max error: " + err.toString());
             });
 
     // Log empty setpoint states when disabled
