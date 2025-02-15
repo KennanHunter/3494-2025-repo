@@ -9,6 +9,7 @@ public final class OI {
   private static EventLoop eventLoop = new EventLoop();
   public static XboxController primaryController =
       new XboxController(Constants.OI.PRIMARY_CONTROLLER_PORT);
+  public static Joystick rightButtonBoard = new Joystick(1);
 
   public static XboxController getPrimaryController() {
     return primaryController;
@@ -31,7 +32,7 @@ public final class OI {
   }
 
   public static double getIntakePower() {
-    return deadband(primaryController.getRightTriggerAxis() , Constants.Intake.DEADBAND) - deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
+    return deadband(-primaryController.getRightTriggerAxis() , Constants.Intake.DEADBAND) + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
   }
 
   public static double getElevatorPower() {

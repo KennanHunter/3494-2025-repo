@@ -28,7 +28,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.SIM;
+  public static final Mode currentMode = Mode.REAL;
 
   public static final int POWER_DISTRIBUTION_PANEL_CAN_ID = 28;
 
@@ -51,11 +51,12 @@ public final class Constants {
   }
 
   public static class Presets{
-    public static double armIntake = 0.65;//-34.0;
+    public static double globalArmOffset = -0.03;//-0.01
+    public static double armIntake = 0.66;//-34.0;
     public static double armCoral = 0.7;//-136.0;
     public static double armOuttakeL1 = 0.77;
     public static double armOuttakeL2 = 0.224;//-111.0;
-    public static double armOuttakeL3 = 0.25;//-106.0;
+    public static double armOuttakeL3 = 0.26;//-106.0;
 
     public static double armAlgeaL2 = 0.25;
     public static double armAlgeaL3 = 0.23;//-116.0;

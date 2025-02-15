@@ -65,7 +65,7 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
-  private static Joystick leftButtonBoard = new Joystick(1);
+  public static Joystick leftButtonBoard = new Joystick(1);
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -78,6 +78,7 @@ public class RobotContainer {
     //arm.setDefaultCommand(new TeleopArm(arm)); the intake command overrides this so for now its content is going in the intake command
     elevator.setDefaultCommand(new TeleopElevator(elevator));
     intake.setDefaultCommand(new TeleopIntake(intake, arm));
+    arm.setDefaultCommand(new TeleopIntake(intake, arm));
     climber.setDefaultCommand(new TeleopClimber(climber));
     switch (Constants.currentMode) {
       case REAL:
@@ -262,7 +263,7 @@ public class RobotContainer {
 
     //======== L3 ============
     controller
-        .y().or(()->leftButtonBoard.getRawButton(2))
+        .y().or(()->leftButtonBoard.getRawButton(4))
         .onTrue(
             Commands.sequence(
                 new InstantCommand(
@@ -271,7 +272,7 @@ public class RobotContainer {
                       arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
                     })));
     controller
-        .y().or(()->leftButtonBoard.getRawButton(4))
+        .y().or(()->leftButtonBoard.getRawButton(2))
         .onFalse(
             Commands.sequence(
                 new InstantCommand(
