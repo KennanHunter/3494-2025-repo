@@ -28,7 +28,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIM;
 
   public static final int POWER_DISTRIBUTION_PANEL_CAN_ID = 28;
 
@@ -126,8 +126,8 @@ public final class Constants {
   }
 
   public static class Field {
-    public static final double fieldLength = Units.inchesToMeters(651.223);
-    public static final double fieldWidth = Units.inchesToMeters(323.277);
+    public static final double fieldLength = Units.inchesToMeters(689.25);
+    public static final double fieldWidth = Units.inchesToMeters(317);
     public static final Translation2d ampCenter =
         new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
 

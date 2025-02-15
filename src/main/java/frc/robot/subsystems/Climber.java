@@ -59,7 +59,7 @@ public class Climber extends SubsystemBase {
     power = Math.max(Math.min(power, 1), -1);
     manualPower = power;
     // System.out.println(manualPower);
-    if(climberMotor.getEncoder().getPosition() > 0){
+    if(climberMotor.getEncoder().getPosition() > -1){
       climberMotor.set(manualPower);
     }
     
