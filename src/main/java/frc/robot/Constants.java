@@ -126,8 +126,8 @@ public final class Constants {
   }
 
   public static class Field {
-    public static final double fieldLength = Units.inchesToMeters(689.25);
-    public static final double fieldWidth = Units.inchesToMeters(317);
+    public static final double fieldLength = Units.inchesToMeters(690.875); //57 ft 6 and 7/8 in
+    public static final double fieldWidth = Units.inchesToMeters(317); // 26ft 6in
     public static final Translation2d ampCenter =
         new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
 
@@ -159,26 +159,26 @@ public final class Constants {
 
       public static final Pose2d[] leftLocations = { //Placeholder currently using the center positions
         new Pose2d(3.277, 4.176, new Rotation2d(0.0-Math.PI/2.0)), //1
-        new Pose2d(3.944, 5.265, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
-        new Pose2d(3.662, 2.952,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
-        new Pose2d(5.024, 5.243,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
-        new Pose2d(5.025, 2.771,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
-        new Pose2d(5.832, 4.187, new Rotation2d(Math.PI-Math.PI/2.0)),//6
+        new Pose2d(4.040, 5.124, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
+        new Pose2d(3.742, 3.103,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
+        new Pose2d(4.943, 5.116,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
+        new Pose2d(5.233, 3.095,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
+        new Pose2d(5.678, 4.164, new Rotation2d(Math.PI-Math.PI/2.0)),//6
         new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
         new Pose2d(1.312, 0.948, new Rotation2d(0.872665-Math.PI/2.0)),//8
-        new Pose2d(0.683, 6.619, new Rotation2d(-0.872665-Math.PI/2.0))//9
+        new Pose2d(1.101, 7.042, new Rotation2d(-0.872665-Math.PI/2.0))//9
       };
 
       public static final Pose2d[] rightLocations = { //Placeholder currently using the center positions
         new Pose2d(3.326, 3.862, new Rotation2d(0.0-Math.PI/2.0)), //1
-        new Pose2d(3.7, 5.090, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
-        new Pose2d(3.971, 2.778,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
-        new Pose2d(5.313, 5.078,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
-        new Pose2d(5.306, 2.968,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
-        new Pose2d(5.832, 3.868, new Rotation2d(Math.PI-Math.PI/2.0)),//6
+        new Pose2d(3.781, 4.964, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
+        new Pose2d(4.029, 2.930,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
+        new Pose2d(5.223, 4.952,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
+        new Pose2d(4.946, 2.910,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
+        new Pose2d(5.663, 3.851, new Rotation2d(Math.PI-Math.PI/2.0)),//6
         new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
         new Pose2d(1.702, 0.613, new Rotation2d(0.872665-Math.PI/2.0)),//8
-        new Pose2d(1.698, 7.375, new Rotation2d(-0.872665-Math.PI/2.0))//9
+        new Pose2d(1.101, 7.375, new Rotation2d(-0.872665-Math.PI/2.0))//9
       };
     }
   }
