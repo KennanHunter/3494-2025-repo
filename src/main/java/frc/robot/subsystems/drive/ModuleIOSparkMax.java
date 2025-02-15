@@ -152,28 +152,22 @@ public class ModuleIOSparkMax implements ModuleIO {
             .registerSignal(
                 () -> {
                   double value = driveEncoder.getPosition();
-
-                  REVLibError lastError = driveSparkFlex.getLastError();
-
-                  if (lastError != REVLibError.kOk) {
-                    SparkMaxOdometryThread.getInstance().pastDriveErrors.add(lastError);
+                  if (driveSparkFlex.getLastError() == REVLibError.kOk) {
+                    return OptionalDouble.of(value);
+                  } else {
+                    return OptionalDouble.empty();
                   }
-
-                  return OptionalDouble.of(value);
                 });
     turnPositionQueue =
         SparkMaxOdometryThread.getInstance()
             .registerSignal(
                 () -> {
                   double value = turnRelativeEncoder.getPosition();
-
-                  REVLibError lastError = turnSparkMax.getLastError();
-
-                  if (lastError != REVLibError.kOk) {
-                    SparkMaxOdometryThread.getInstance().pastTurnErrors.add(lastError);
+                  if (turnSparkMax.getLastError() == REVLibError.kOk) {
+                    return OptionalDouble.of(value);
+                  } else {
+                    return OptionalDouble.empty();
                   }
-
-                  return OptionalDouble.of(value);
                 });
   }
 

@@ -13,7 +13,6 @@
 
 package frc.robot.subsystems.drive;
 
-import com.revrobotics.REVLibError;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
 
 /**
@@ -37,12 +35,6 @@ public class SparkMaxOdometryThread {
 
   private final Notifier notifier;
   private static SparkMaxOdometryThread instance = null;
-
-  // TODO: Experiment with different capacities, if a motor dies completely it will fill up
-  // this queue and potentially slow down the main loop
-  public LinkedBlockingQueue<REVLibError> pastDriveErrors =
-      new LinkedBlockingQueue<REVLibError>(20);
-  public LinkedBlockingQueue<REVLibError> pastTurnErrors = new LinkedBlockingQueue<REVLibError>(20);
 
   public static SparkMaxOdometryThread getInstance() {
     if (instance == null) {
