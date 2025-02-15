@@ -17,11 +17,14 @@ public class TeleopClimber extends Command {
     }
     @Override
     public void execute() {
-        climberPower = OI.deadband(OI.getClimberPower(), 0.00);
+        climberPower = OI.deadband(OI.getClimberPower(), 0.05);
         Logger.recordOutput("Climber/Manual-Power-Command", climberPower);
-        if(climberPower != 0 || (climber.getManualMotorPower() != 0 && climberPower == 0)){
-            climber.setTargetAngle(climber.getTargetPosition()+climberPower*Constants.Climber.manualPowerPOS, climberPower);
-        }
+        // if(climberPower != 0 || (climber.getManualMotorPower() != 0 && climberPower == 0)){
+        //     climber.setTargetAngle(climber.getTargetPosition()+climberPower*Constants.Climber.manualPowerPOS, climberPower);
+        // }
+
+        //We have a ratchet now!
+        climber.setMotorPower(climberPower);
         
 
     }

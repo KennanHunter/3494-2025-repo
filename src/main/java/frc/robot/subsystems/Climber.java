@@ -55,12 +55,15 @@ public class Climber extends SubsystemBase {
 
   }
 
-  // public void setMotorPower(double power) {
-  //   power = Math.max(Math.min(power, 1), -1);
-  //   manualPower = power;
-  //   // System.out.println(manualPower);
-  //   armMotor.set(manualPower);
-  // }
+  public void setMotorPower(double power) {
+    power = Math.max(Math.min(power, 1), -1);
+    manualPower = power;
+    // System.out.println(manualPower);
+    if(climberMotor.getEncoder().getPosition() > 0){
+      climberMotor.set(manualPower);
+    }
+    
+  }
 
   public double getManualMotorPower() {
     return manualPower;
