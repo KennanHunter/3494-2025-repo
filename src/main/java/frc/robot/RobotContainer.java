@@ -75,7 +75,7 @@ public class RobotContainer {
     arm = new Arm();
     intake = new Intake();
     climber = new Climber();
-    arm.setDefaultCommand(new TeleopArm(arm));
+    //arm.setDefaultCommand(new TeleopArm(arm)); the intake command overrides this so for now its content is going in the intake command
     elevator.setDefaultCommand(new TeleopElevator(elevator));
     intake.setDefaultCommand(new TeleopIntake(intake, arm));
     climber.setDefaultCommand(new TeleopClimber(climber));

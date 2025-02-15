@@ -12,6 +12,7 @@ public class TeleopIntake extends Command {
   private Intake intake;
   private Arm arm;
   double lastPower;
+  private double armPower = 0;
 
   public TeleopIntake(Intake intake, Arm arm) {
     this.intake = intake;
@@ -35,7 +36,14 @@ public class TeleopIntake extends Command {
     }
     intake.setSpeed(intakePower);
     Logger.recordOutput("Intake/Intake-Power-Command", -1 * Math.pow(OI.getIntakePower(), 2));
-      
+    
+    armPower = OI.deadband(OI.getArmPower(), 0.05);
+    System.out.println("test");
+    Logger.recordOutput("Arm/Manual-Power-Command", armPower);
+    if(armPower != 0 || (arm.getManualMotorPower() != 0 && armPower == 0)){
+        // arm.setMotorPower(armPower*0.2);
+        arm.setTargetAngle(arm.getTargetPosition()+armPower*Constants.Arm.manualPowerPOS,0);
+    }
   }
 
   public boolean isFinished() {

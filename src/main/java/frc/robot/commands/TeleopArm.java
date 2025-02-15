@@ -17,6 +17,7 @@ public class TeleopArm extends Command {
     @Override
     public void execute() {
         armPower = OI.deadband(OI.getArmPower(), 0.05);
+        System.out.println("test");
         Logger.recordOutput("Arm/Manual-Power-Command", armPower);
         if(armPower != 0 || (arm.getManualMotorPower() != 0 && armPower == 0)){
             // arm.setMotorPower(armPower*0.2);
