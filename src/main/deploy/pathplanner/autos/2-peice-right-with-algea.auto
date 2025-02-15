@@ -25,7 +25,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -92,7 +92,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -104,7 +104,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Outtake"
           }
         },
         {
@@ -114,19 +114,38 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Algea-after-2nd-peice"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Algea-after-2nd-peice"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.75
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.25
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
+          "data": {
+            "name": "Stop Intake"
+          }
+        },
+        {
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -136,15 +155,9 @@
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "Stop Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Pos"
+                  "waitTime": 3.0
                 }
               }
             ]

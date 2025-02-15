@@ -30,6 +30,7 @@ public class Arm extends SubsystemBase {
     armMotorConfig = new SparkMaxConfig();
     armMotorConfig.idleMode(IdleMode.kCoast);
     armMotorConfig.inverted(false);
+    armMotorConfig.smartCurrentLimit(50);
     armMotorConfig.closedLoop.pid(2, 0, 0);
     armMotorConfig.closedLoop.outputRange(-0.6, 0.6);
     armMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);

@@ -55,7 +55,7 @@ public final class Constants {
     public static double armCoral = 0.7;//-136.0;
     public static double armOuttakeL1 = 0.77;
     public static double armOuttakeL2 = 0.224;//-111.0;
-    public static double armOuttakeL3 = 0.27;//-106.0;
+    public static double armOuttakeL3 = 0.25;//-106.0;
 
     public static double armAlgeaL2 = 0.25;
     public static double armAlgeaL3 = 0.23;//-116.0;

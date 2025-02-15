@@ -119,9 +119,9 @@ public class RobotContainer {
         "Wheel Radius Calc", new WheelRadiusCharacterization(drive, Direction.COUNTER_CLOCKWISE));
     //INTAKE STUFF-----------------------
     NamedCommands.registerCommand(
-            "Intake", new AutoIntakePower(intake, 1));
+            "Intake", new AutoIntakePower(intake, 0.5));
     NamedCommands.registerCommand(
-            "Outtake", new AutoIntakePower(intake, -1));
+            "Outtake", new AutoIntakePower(intake, -0.5));
     NamedCommands.registerCommand(
             "Outtake L1", new AutoIntakePower(intake, -0.3));
     NamedCommands.registerCommand(
@@ -281,7 +281,7 @@ public class RobotContainer {
                     })));
     //========== L2 ===============
     controller
-        .x().or(()->leftButtonBoard.getRawButton(5))
+        .x().or(()->leftButtonBoard.getRawButton(8))
         .onTrue(
             Commands.sequence(
                 new InstantCommand(
@@ -290,7 +290,7 @@ public class RobotContainer {
                         arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
                     })));
     controller
-        .x().or(()->leftButtonBoard.getRawButton(8))
+        .x().or(()->leftButtonBoard.getRawButton(5))
         .onFalse(
             Commands.sequence(
                 new InstantCommand(
