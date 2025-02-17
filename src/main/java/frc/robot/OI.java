@@ -9,7 +9,7 @@ public final class OI {
   private static EventLoop eventLoop = new EventLoop();
   public static XboxController primaryController =
       new XboxController(Constants.OI.PRIMARY_CONTROLLER_PORT);
-  public static Joystick rightButtonBoard = new Joystick(1);
+  public static Joystick rightButtonBoard = new Joystick(2);
 
   public static XboxController getPrimaryController() {
     return primaryController;
@@ -32,23 +32,26 @@ public final class OI {
   }
 
   public static double getIntakePower() {
-    return deadband(-primaryController.getRightTriggerAxis() , Constants.Intake.DEADBAND) + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
+    
+    double Sean_intake_power = deadband(-primaryController.getRightTriggerAxis() , Constants.Intake.DEADBAND) + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
+    double Ashton_intake_power = deadband(rightButtonBoard.getRawAxis(0), Constants.Intake.DEADBAND);
+    return   Sean_intake_power + Ashton_intake_power;
   }
 
   public static double getElevatorPower() {
     // TODO: assign a button
-    double upPower = (primaryController.povUp(eventLoop).getAsBoolean()? 0.5: 0.0);
-    double downPower = (primaryController.povDown(eventLoop).getAsBoolean()? -0.5 : 0.0);
+    double upPower = (primaryController.povUp(eventLoop).getAsBoolean()? -0.5: 0.0);
+    double downPower = (primaryController.povDown(eventLoop).getAsBoolean()? 0.5 : 0.0);
     return upPower+downPower;
   }
 
   public static double getArmPower() {
-    double leftPower = (primaryController.povLeft(eventLoop).getAsBoolean()? 0.5: 0.0);
-    double rightPower = (primaryController.povRight(eventLoop).getAsBoolean()? -0.5 : 0.0);
+    double leftPower = (primaryController.povLeft(eventLoop).getAsBoolean()? 0.1: 0.0);
+    double rightPower = (primaryController.povRight(eventLoop).getAsBoolean()? -0.1 : 0.0);
     return leftPower+rightPower;
   }
   public static double getClimberPower(){
-    double upPower = (primaryController.povUp(eventLoop).getAsBoolean()? 1: 0.0);
+    double upPower = (primaryController.povUp(eventLoop).getAsBoolean()? 0.7: 0.0);
     double downPower = (primaryController.povDown(eventLoop).getAsBoolean()? -0.25 : 0.0);
     return upPower+downPower;
   }

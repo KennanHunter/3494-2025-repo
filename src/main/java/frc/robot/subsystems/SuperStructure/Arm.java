@@ -32,7 +32,7 @@ public class Arm extends SubsystemBase {
     armMotorConfig.inverted(false);
     // armMotorConfig.smartCurrentLimit(60s);
     armMotorConfig.closedLoop.pid(3, 0, 0);
-    armMotorConfig.closedLoop.outputRange(-0.6, 0.6);
+    armMotorConfig.closedLoop.outputRange(-0.45, 0.45);
     armMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     encoder = armMotor.getEncoder();
     armMotor.configure(
