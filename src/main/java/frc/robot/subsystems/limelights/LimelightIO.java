@@ -13,7 +13,7 @@ public class LimelightIO {
   @AutoLog
   public static class LimelightIOInputs {
     public Rotation2d drivetrainHeading;
-    public Boolean isDrivetrainRotationRateTooHigh;
+    public boolean isDrivetrainRotationRateTooHigh;
 
     public @Nullable LimelightHelpers.PoseEstimate limelightMeasurement;
   }

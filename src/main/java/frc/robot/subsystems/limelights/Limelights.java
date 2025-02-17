@@ -34,8 +34,8 @@ public class Limelights {
 
     invalidMeasurment = false;
 
-    measurementTimeStamp = measurement.timestampSeconds;
-    measurementPosition = measurement.pose;
+    measurementTimeStamp = measurement.timestampSeconds();
+    measurementPosition = measurement.pose();
   }
 
   // returns validity of last measurment
