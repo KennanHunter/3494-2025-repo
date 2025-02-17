@@ -5,54 +5,42 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N2;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LimelightHelpers;
+import org.littletonrobotics.junction.Logger;
 
 public class Limelights {
   private ExtendedKalmanFilter<N2, N2, N2> mKalmanFilter; // NICE IDEA IMPLEMENT LATER
-  private String limelightName;
-  private Drive drivetrain;
 
-  private Object[] lastMeasurement = null;
-
-  private boolean validMeasurment = false;
+  private boolean invalidMeasurment = true;
   private double measurementTimeStamp;
   private Pose2d measurementPosition;
 
+  private LimelightIOInputsAutoLogged inputs;
+  private LimelightIO limelightIO;
+
   public Limelights(Drive drivetrain, String limeLightName) {
-    this.drivetrain = drivetrain;
-    this.limelightName = limeLightName;
+    inputs = new LimelightIOInputsAutoLogged();
   }
 
   public void periodic() {
-    // Use MegaTag2 because better?
-    //PLEASE FIX BIG PROBLEM, PRETTY SURE IMU ROTATION IS 90 DEGREES OFF, ALSO WHAT DOES THIS FUNCTION DO
-    //https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltag-robot-localization-megatag2
-    LimelightHelpers.SetRobotOrientation(
-      limelightName, drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-    
-    LimelightHelpers.PoseEstimate limelightLeftMeasurment =
-        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+    limelightIO.updateInputs(inputs);
+    Logger.processInputs("Limelights", inputs);
 
-    boolean leftLimelightEmpty = limelightLeftMeasurment == null;
-    boolean rotationRateTooHigh = drivetrain.rotationRate > 4.0 * Math.PI;
-    boolean noTagsFound = true;
-    if(!leftLimelightEmpty){
-      noTagsFound = limelightLeftMeasurment.tagCount == 0;
-    }
-    if (leftLimelightEmpty || rotationRateTooHigh || noTagsFound) {
-      validMeasurment = false;
-      // System.out.println("Invalid Measurement");
+    LimelightHelpers.PoseEstimate measurement = inputs.limelightMeasurement;
+
+    if (measurement == null || inputs.isDrivetrainRotationRateTooHigh) {
+      invalidMeasurment = true;
       return;
     }
 
-    validMeasurment = true;
-    // System.out.println("READING-------------");
-    measurementTimeStamp = limelightLeftMeasurment.timestampSeconds;
-    measurementPosition = limelightLeftMeasurment.pose;
+    invalidMeasurment = false;
+
+    measurementTimeStamp = measurement.timestampSeconds;
+    measurementPosition = measurement.pose;
   }
 
   // returns validity of last measurment
   public boolean measurmentValid() {
-    return validMeasurment;
+    return !invalidMeasurment;
   }
 
   public double getMeasurementTimeStamp() {
