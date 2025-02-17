@@ -89,9 +89,7 @@ public final class Constants {
   }
 
   public static class Climber {
-    public static int climberMotor = 6;
-    public static double manualPowerPOS = 0.01;
-    public static double climberTargetPostion = 0;
+    public static int CLIMBER_MOTOR_CAN_ID = 6;
   }
 
   public static class Drivetrain {
