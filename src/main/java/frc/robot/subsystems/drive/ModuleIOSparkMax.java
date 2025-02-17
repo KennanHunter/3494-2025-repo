@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import java.util.OptionalDouble;
 import java.util.Queue;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * Module IO implementation for SparkMax drive motor controller, SparkMax turn motor controller (NEO
@@ -173,9 +172,6 @@ public class ModuleIOSparkMax implements ModuleIO {
 
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
-    Logger.recordOutput("Odometry/DriveOutputQueueLength", drivePositionQueue.size());
-    Logger.recordOutput("Odometry/TurnOutputQueueLength", turnPositionQueue.size());
-
     inputs.drivePositionRad =
         Units.rotationsToRadians(driveEncoder.getPosition()) / DRIVE_GEAR_RATIO;
     inputs.driveVelocityRadPerSec =
@@ -189,10 +185,6 @@ public class ModuleIOSparkMax implements ModuleIO {
     this.lastRawTurnEncoderPosition = inputs.rawTurnEncoderPosition;
     inputs.turnAbsolutePosition = inputs.rawTurnEncoderPosition.minus(absoluteEncoderOffset);
 
-    Logger.recordOutput("Encoder" + index + " output voltage", turnAbsoluteEncoder.getVoltage());
-    Logger.recordOutput(
-        "Encoder" + index + " output rotation", inputs.turnAbsolutePosition.getDegrees());
-    // Logger.recordOutput("Encoder" + index + " output rotation", inputs.)
     inputs.turnPosition =
         Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);
     inputs.turnVelocityRadPerSec =

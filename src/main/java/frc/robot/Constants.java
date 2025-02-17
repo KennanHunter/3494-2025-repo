@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -28,7 +29,8 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode simMode = Mode.SIM;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   public static final int POWER_DISTRIBUTION_PANEL_CAN_ID = 28;
 
@@ -50,16 +52,16 @@ public final class Constants {
     public static final int PIGEON_CHANNEL = MitoCANdria.MITOCANDRIA_CHANNEL_ADJ;
   }
 
-  public static class Presets{
-    public static double globalArmOffset = -0.03;//-0.01
-    public static double armIntake = 0.66;//-34.0;
-    public static double armCoral = 0.7;//-136.0;
+  public static class Presets {
+    public static double globalArmOffset = -0.03; // -0.01
+    public static double armIntake = 0.66; // -34.0;
+    public static double armCoral = 0.7; // -136.0;
     public static double armOuttakeL1 = 0.77;
-    public static double armOuttakeL2 = 0.224;//-111.0;
-    public static double armOuttakeL3 = 0.26;//-106.0;
+    public static double armOuttakeL2 = 0.224; // -111.0;
+    public static double armOuttakeL3 = 0.26; // -106.0;
 
     public static double armAlgeaL2 = 0.25;
-    public static double armAlgeaL3 = 0.23;//-116.0;
+    public static double armAlgeaL3 = 0.23; // -116.0;
 
     public static double liftIntake = 0;
     public static double liftOuttakeL2 = 20;
@@ -86,11 +88,12 @@ public final class Constants {
     public static double DEADBAND = 0.05;
   }
 
-  public static class Climber{
+  public static class Climber {
     public static int climberMotor = 6;
     public static double manualPowerPOS = 0.01;
     public static double climberTargetPostion = 0;
   }
+
   public static class Drivetrain {
     public static double driveBaseRadius() {
       return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
@@ -127,7 +130,7 @@ public final class Constants {
   }
 
   public static class Field {
-    public static final double fieldLength = Units.inchesToMeters(690.875); //57 ft 6 and 7/8 in
+    public static final double fieldLength = Units.inchesToMeters(690.875); // 57 ft 6 and 7/8 in
     public static final double fieldWidth = Units.inchesToMeters(317); // 26ft 6in
     public static final Translation2d ampCenter =
         new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
@@ -158,28 +161,30 @@ public final class Constants {
         new Translation2d(1.172, 7.0) // 9
       };
 
-      public static final Pose2d[] leftLocations = { //Placeholder currently using the center positions
-        new Pose2d(3.277, 4.176, new Rotation2d(0.0-Math.PI/2.0)), //1
-        new Pose2d(4.040, 5.124, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
-        new Pose2d(3.742, 3.103,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
-        new Pose2d(4.943, 5.116,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
-        new Pose2d(5.233, 3.095,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
-        new Pose2d(5.678, 4.164, new Rotation2d(Math.PI-Math.PI/2.0)),//6
-        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
-        new Pose2d(1.312, 0.948, new Rotation2d(0.872665-Math.PI/2.0)),//8
-        new Pose2d(1.101, 7.042, new Rotation2d(-0.872665-Math.PI/2.0))//9
+      public static final Pose2d[]
+          leftLocations = { // Placeholder currently using the center positions
+        new Pose2d(3.277, 4.176, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
+        new Pose2d(4.040, 5.124, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
+        new Pose2d(3.742, 3.103, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
+        new Pose2d(4.943, 5.116, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
+        new Pose2d(5.233, 3.095, new Rotation2d(2 * Math.PI / 3.0 - Math.PI / 2.0)), // 5
+        new Pose2d(5.678, 4.164, new Rotation2d(Math.PI - Math.PI / 2.0)), // 6
+        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI / 2.0 - Math.PI / 2.0)), // 7
+        new Pose2d(1.312, 0.948, new Rotation2d(0.872665 - Math.PI / 2.0)), // 8
+        new Pose2d(1.101, 7.042, new Rotation2d(-0.872665 - Math.PI / 2.0)) // 9
       };
 
-      public static final Pose2d[] rightLocations = { //Placeholder currently using the center positions
-        new Pose2d(3.326, 3.862, new Rotation2d(0.0-Math.PI/2.0)), //1
-        new Pose2d(3.781, 4.964, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
-        new Pose2d(4.029, 2.930,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
-        new Pose2d(5.223, 4.952,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
-        new Pose2d(4.946, 2.910,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
-        new Pose2d(5.663, 3.851, new Rotation2d(Math.PI-Math.PI/2.0)),//6
-        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
-        new Pose2d(1.702, 0.613, new Rotation2d(0.872665-Math.PI/2.0)),//8
-        new Pose2d(1.101, 7.375, new Rotation2d(-0.872665-Math.PI/2.0))//9
+      public static final Pose2d[]
+          rightLocations = { // Placeholder currently using the center positions
+        new Pose2d(3.326, 3.862, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
+        new Pose2d(3.781, 4.964, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
+        new Pose2d(4.029, 2.930, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
+        new Pose2d(5.223, 4.952, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
+        new Pose2d(4.946, 2.910, new Rotation2d(2 * Math.PI / 3.0 - Math.PI / 2.0)), // 5
+        new Pose2d(5.663, 3.851, new Rotation2d(Math.PI - Math.PI / 2.0)), // 6
+        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI / 2.0 - Math.PI / 2.0)), // 7
+        new Pose2d(1.702, 0.613, new Rotation2d(0.872665 - Math.PI / 2.0)), // 8
+        new Pose2d(1.101, 7.375, new Rotation2d(-0.872665 - Math.PI / 2.0)) // 9
       };
     }
   }

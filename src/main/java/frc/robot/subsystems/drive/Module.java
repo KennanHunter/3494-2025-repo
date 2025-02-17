@@ -20,16 +20,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.ModuleIO.ModuleIOInputs;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
-  private static final double WHEEL_RADIUS =
-      Units.inchesToMeters(2.031000299198190);//Units.inchesToMeters(1.895796963450933); // Units.inchesToMeters(2.0);
+  private static final double WHEEL_RADIUS = Units.inchesToMeters(2.031000299198190);
+  // Units.inchesToMeters(1.895796963450933);
+  // Units.inchesToMeters(2.0);
   static final double ODOMETRY_FREQUENCY = 250.0;
 
   private final ModuleIO io;
-  private final ModuleIOInputs inputs = new ModuleIOInputs();
+  private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   private final int index;
 
   private final SimpleMotorFeedforward driveFeedforward;
@@ -75,6 +75,7 @@ public class Module {
    */
   public void updateInputs() {
     io.updateInputs(inputs);
+    Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
   }
 
   public void periodic() {
