@@ -6,11 +6,18 @@ import org.littletonrobotics.junction.AutoLog;
 public class ClimberIO {
   SparkMax climberMotor;
 
+  public static enum ClimberMode {
+    Manual,
+    Automatic
+  }
+
   @AutoLog
   public static class ClimberIOInputs {
     double targetPosition;
     double power;
     double climberPosition;
+
+    ClimberMode mode;
   }
 
   public ClimberIO(SparkMax climberMotor) {

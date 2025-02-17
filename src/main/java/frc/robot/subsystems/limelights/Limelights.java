@@ -17,8 +17,9 @@ public class Limelights {
   private LimelightIOInputsAutoLogged inputs;
   private LimelightIO limelightIO;
 
-  public Limelights(Drive drivetrain, String limeLightName) {
+  public Limelights(Drive drivetrain, String limelightName) {
     inputs = new LimelightIOInputsAutoLogged();
+    limelightIO = new LimelightIO(drivetrain, limelightName);
   }
 
   public void periodic() {
