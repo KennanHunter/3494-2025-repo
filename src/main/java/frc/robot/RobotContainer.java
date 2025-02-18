@@ -226,6 +226,10 @@ public class RobotContainer {
         () -> {
            GyroIOPigeon2.pigeon.setYaw(0.0);
         }));
+    controller.start().onTrue(Commands.runOnce(
+        () -> {
+           drive.rezeroModulesRelativeEncoders();
+        }));
     controller.
         leftBumper()
         .or(controller.rightBumper())
