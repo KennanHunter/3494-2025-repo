@@ -53,9 +53,10 @@ public final class Constants {
   }
 
   public static class Presets {
-    public static double globalArmOffset = -0.03; // -0.01
+    public static double globalArmOffset = -0.04; // -0.01
     public static double armIntake = 0.66; // -34.0;
     public static double armCoral = 0.7; // -136.0;
+
     public static double armOuttakeL1 = 0.77;
     public static double armOuttakeL2 = 0.224; // -111.0;
     public static double armOuttakeL3 = 0.26; // -106.0;
@@ -80,7 +81,7 @@ public final class Constants {
 
   public static class Arm {
     public static int armMotor = 15;
-    public static double manualPowerPOS = 0.005;
+    public static double manualPowerPOS = 0.0001;
   }
 
   public static class Intake {

@@ -19,11 +19,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.AutoAlignController;
 import frc.robot.subsystems.drive.Drive;
+
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -69,7 +73,19 @@ public class DriveCommands {
           //   DriverStation.getAlliance().isPresent()
           //       // We're flipping at Blue instead of Red (which was 6328 default)
           //       && DriverStation.getAlliance().get() == Alliance.Blue;
-          drive.runVelocity(
+          Optional<Alliance> ally = DriverStation.getAlliance();
+          if(ally.get() == DriverStation.Alliance.Red){
+            drive.runVelocity(
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  linearVelocity.getX() * -drive.getMaxLinearSpeedMetersPerSec(),
+                  linearVelocity.getY() * -drive.getMaxLinearSpeedMetersPerSec(),
+                  omega * drive.getMaxAngularSpeedRadPerSec(),
+                  isFlipped
+                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                      : drive.getRotation()));
+          }
+          else{
+            drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
@@ -77,6 +93,8 @@ public class DriveCommands {
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
                       : drive.getRotation()));
+          }
+          
         },
         drive);
   }

@@ -75,7 +75,7 @@ public class RobotContainer {
     //arm.setDefaultCommand(new TeleopArm(arm)); the intake command overrides this so for now its content is going in the intake command
     elevator.setDefaultCommand(new TeleopElevator(elevator));
     intake.setDefaultCommand(new TeleopIntake(intake, arm));
-    arm.setDefaultCommand(new TeleopIntake(intake, arm));
+    // arm.setDefaultCommand(new TeleopIntake(intake, arm));
     climber.setDefaultCommand(new TeleopClimber(climber));
     switch (Constants.currentMode) {
       case REAL:
@@ -117,9 +117,11 @@ public class RobotContainer {
         "Wheel Radius Calc", new WheelRadiusCharacterization(drive, Direction.COUNTER_CLOCKWISE));
     //INTAKE STUFF-----------------------
     NamedCommands.registerCommand(
-            "Intake", new AutoIntakePower(intake, 0.5));
+            "Intake", new AutoIntakePower(intake, -1));
     NamedCommands.registerCommand(
-            "Outtake", new AutoIntakePower(intake, -0.5));
+            "Outtake", new AutoIntakePower(intake, 0.5));
+    NamedCommands.registerCommand(
+                "Outtake Algea", new AutoIntakePower(intake, 1));
     NamedCommands.registerCommand(
             "Outtake L1", new AutoIntakePower(intake, -0.3));
     NamedCommands.registerCommand(
@@ -175,6 +177,13 @@ public class RobotContainer {
                     () -> {
                         elevator.setElevatorPosition(Constants.Presets.liftIntake);
                         arm.setTargetAngle(Constants.Presets.armIntake, 0);
+                    })));
+    NamedCommands.registerCommand(
+            "Algea Pos", Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                        arm.setTargetAngle(Constants.Presets.armCoral, 0);
                     })));
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

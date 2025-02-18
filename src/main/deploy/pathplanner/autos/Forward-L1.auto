@@ -25,7 +25,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Outtake L1"
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
           }
         }
       ]

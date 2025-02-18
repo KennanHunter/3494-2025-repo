@@ -402,4 +402,11 @@ public class Drive extends SubsystemBase {
 
     return out;
   }
+
+  /** Get the position of all drive wheels in radians. */
+  public void rezeroModulesRelativeEncoders() {
+    for (Module module : modules) {
+      module.rezeroRelativeEncoder();
+    }
+  }
 }

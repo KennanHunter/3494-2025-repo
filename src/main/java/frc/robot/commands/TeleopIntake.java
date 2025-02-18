@@ -31,7 +31,7 @@ public class TeleopIntake extends Command {
     else{
       lastPower = intakePower;
     }
-    if(arm.getTargetPosition() == Constants.Presets.armOuttakeL1){
+    if(arm.getTargetPosition() == Constants.Presets.armOuttakeL1+Constants.Presets.globalArmOffset){
       intakePower *= 0.3;
     }
     intake.setSpeed(intakePower);
