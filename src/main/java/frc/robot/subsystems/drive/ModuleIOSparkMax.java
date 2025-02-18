@@ -155,7 +155,7 @@ public class ModuleIOSparkMax implements ModuleIO {
                   REVLibError lastError = driveSparkFlex.getLastError();
 
                   if (lastError != REVLibError.kOk) {
-                    SparkMaxOdometryThread.getInstance().pastDriveErrors.add(lastError);
+                    SparkMaxOdometryThread.getInstance().addDriveError(lastError);
                   }
 
                   return OptionalDouble.of(value);
@@ -169,7 +169,7 @@ public class ModuleIOSparkMax implements ModuleIO {
                   REVLibError lastError = turnSparkMax.getLastError();
 
                   if (lastError != REVLibError.kOk) {
-                    SparkMaxOdometryThread.getInstance().pastTurnErrors.add(lastError);
+                    SparkMaxOdometryThread.getInstance().addTurnError(lastError);
                   }
 
                   return OptionalDouble.of(value);
