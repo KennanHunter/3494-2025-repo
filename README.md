@@ -3,7 +3,7 @@ Featuring:
   - A Single Stage Elevator
   - Dual Use Intake
   - Swerve drive with full field odometery and a simplified Kalman filter
-  - Auto Align and APril tag relocalization
+  - Auto Align and April Tag relocalization
   - Finite State Machine (Lets be real this is a freaking boolean)
 
 ![Screenshot_2025-02-10_025641](https://github.com/user-attachments/assets/87c0d535-9e3d-4ffb-a92c-3e61072c69fc)
