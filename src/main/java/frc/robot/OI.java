@@ -46,8 +46,8 @@ public final class OI {
   }
 
   public static double getArmPower() {
-    double leftPower = (primaryController.povLeft(eventLoop).getAsBoolean()? 0.1: 0.0);
-    double rightPower = (primaryController.povRight(eventLoop).getAsBoolean()? -0.1 : 0.0);
+    double leftPower = (primaryController.povLeft(eventLoop).getAsBoolean()? 1: 0.0);
+    double rightPower = (primaryController.povRight(eventLoop).getAsBoolean()? -1 : 0.0);
     return leftPower+rightPower;
   }
   public static double getClimberPower(){

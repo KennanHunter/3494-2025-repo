@@ -41,7 +41,8 @@ public class TeleopIntake extends Command {
     Logger.recordOutput("Arm/Manual-Power-Command", armPower);
     if(armPower != 0 || (arm.getManualMotorPower() != 0 && armPower == 0)){
         // arm.setMotorPower(armPower*0.2);
-        arm.setTargetAngle(arm.getTargetPosition()+armPower*Constants.Arm.manualPowerPOS,0);
+        Logger.recordOutput("Arm/Manual-index-Command", armPower*Constants.Arm.manualPowerPOS);
+        arm.setTargetAngle(arm.getTargetPosition()+armPower*Constants.Arm.manualPowerPOS-Constants.Presets.globalArmOffset,0);
     }
   }
 

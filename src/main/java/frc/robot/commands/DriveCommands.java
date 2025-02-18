@@ -70,21 +70,11 @@ public class DriveCommands {
 
           // Convert to field relative speeds & send command
           boolean isFlipped = false;
-          //   DriverStation.getAlliance().isPresent()
-          //       // We're flipping at Blue instead of Red (which was 6328 default)
-          //       && DriverStation.getAlliance().get() == Alliance.Blue;
+          // We're flipping at Blue instead of Red (which was 6328 default)
           Optional<Alliance> ally = DriverStation.getAlliance();
           if(ally.get() == DriverStation.Alliance.Red){
-            drive.runVelocity(
-              ChassisSpeeds.fromFieldRelativeSpeeds(
-                  linearVelocity.getX() * -drive.getMaxLinearSpeedMetersPerSec(),
-                  linearVelocity.getY() * -drive.getMaxLinearSpeedMetersPerSec(),
-                  omega * drive.getMaxAngularSpeedRadPerSec(),
-                  isFlipped
-                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                      : drive.getRotation()));
+            isFlipped = true;
           }
-          else{
             drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
@@ -92,9 +82,7 @@ public class DriveCommands {
                   omega * drive.getMaxAngularSpeedRadPerSec(),
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                      : drive.getRotation()));
-          }
-          
+                      : drive.getRotation()));          
         },
         drive);
   }

@@ -81,7 +81,7 @@ public final class Constants {
 
   public static class Arm {
     public static int armMotor = 15;
-    public static double manualPowerPOS = 0.0001;
+    public static double manualPowerPOS = 0.006;
   }
 
   public static class Intake {
