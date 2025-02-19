@@ -194,18 +194,18 @@ public class Drive extends SubsystemBase {
     // point in the program
     Logger.recordOutput("SparkMaxOdometryThread/DriveErrorCount", odo.pastDriveErrors.size());
 
-    odo.pastDriveErrors
-        .iterator()
-        .forEachRemaining(
-            (err) -> {
-              System.err.println("Drive Spark Max error: " + err.toString());
-            });
-    odo.pastTurnErrors
-        .iterator()
-        .forEachRemaining(
-            (err) -> {
-              System.err.println("Turn Spark Max error: " + err.toString());
-            });
+    // odo.pastDriveErrors
+    //     .iterator()
+    //     .forEachRemaining(
+    //         (err) -> {
+    //           System.err.println("Drive Spark Max error: " + err.toString());
+    //         });
+    // odo.pastTurnErrors
+    //     .iterator()
+    //     .forEachRemaining(
+    //         (err) -> {
+    //           System.err.println("Turn Spark Max error: " + err.toString());
+    //         });
 
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {
