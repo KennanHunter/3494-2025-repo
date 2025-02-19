@@ -121,14 +121,14 @@ public class SparkMaxOdometryThread {
   }
 
   public synchronized void addDriveError(REVLibError err) {
-    if (err == this.lastDriveError) return;
+    if (this.lastDriveError != null && err.value == this.lastDriveError.value) return;
 
     this.lastDriveError = err;
     pastDriveErrors.offer(err);
   }
 
   public synchronized void addTurnError(REVLibError err) {
-    if (err == this.lastTurnError) return;
+    if (this.lastTurnError != null && err.value == this.lastTurnError.value) return;
 
     this.lastTurnError = err;
     pastDriveErrors.offer(err);
