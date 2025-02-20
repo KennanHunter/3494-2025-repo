@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -28,7 +29,10 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.SIM;
+
+  public static final Mode simMode = Mode.SIM;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
 
   public static final int POWER_DISTRIBUTION_PANEL_CAN_ID = 28;
 
@@ -50,16 +54,17 @@ public final class Constants {
     public static final int PIGEON_CHANNEL = MitoCANdria.MITOCANDRIA_CHANNEL_ADJ;
   }
 
-  public static class Presets{
-    public static double globalArmOffset = -0.04;//-0.01
-    public static double armIntake = 0.66;//-34.0;
-    public static double armCoral = 0.7;//-136.0;
+  public static class Presets {
+    public static double globalArmOffset = -0.04; // -0.01
+    public static double armIntake = 0.66; // -34.0;
+    public static double armCoral = 0.7; // -136.0;
+
     public static double armOuttakeL1 = 0.77;
-    public static double armOuttakeL2 = 0.224;//-111.0;
-    public static double armOuttakeL3 = 0.26;//-106.0;
+    public static double armOuttakeL2 = 0.224; // -111.0;
+    public static double armOuttakeL3 = 0.26; // -106.0;
 
     public static double armAlgeaL2 = 0.25;
-    public static double armAlgeaL3 = 0.23;//-116.0;
+    public static double armAlgeaL3 = 0.23; // -116.0;
 
     public static double liftIntake = 0;
     public static double liftOuttakeL2 = 20;
@@ -86,11 +91,10 @@ public final class Constants {
     public static double DEADBAND = 0.05;
   }
 
-  public static class Climber{
-    public static int climberMotor = 6;
-    public static double manualPowerPOS = 0.01;
-    public static double climberTargetPostion = 0;
+  public static class Climber {
+    public static int CLIMBER_MOTOR_CAN_ID = 6;
   }
+
   public static class Drivetrain {
     public static double driveBaseRadius() {
       return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
@@ -127,7 +131,7 @@ public final class Constants {
   }
 
   public static class Field {
-    public static final double fieldLength = Units.inchesToMeters(690.875); //57 ft 6 and 7/8 in
+    public static final double fieldLength = Units.inchesToMeters(690.875); // 57 ft 6 and 7/8 in
     public static final double fieldWidth = Units.inchesToMeters(317); // 26ft 6in
     public static final Translation2d ampCenter =
         new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
@@ -180,6 +184,7 @@ public final class Constants {
         new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
         new Pose2d(1.702, 0.613, new Rotation2d(0.3*Math.PI-Math.PI/2.0)),//8
         new Pose2d(1.101, 7.375, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
+
       };
     }
   }

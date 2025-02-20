@@ -39,7 +39,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.drive.GyroIO.GyroIOInputs;
 import frc.robot.subsystems.limelights.Limelights;
 import frc.robot.util.LocalADStarAK;
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class Drive extends SubsystemBase {
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
 
-  private final GyroIOInputs gyroInputs = new GyroIOInputs();
+  private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
 
@@ -176,7 +175,7 @@ public class Drive extends SubsystemBase {
       module.updateInputs();
     }
 
-    // Logger.processInputs("Drive/Gyro", gyroInputs); //sad auto log removalk
+    Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
       module.periodic();
     }
@@ -187,6 +186,26 @@ public class Drive extends SubsystemBase {
         module.stop();
       }
     }
+
+    SparkMaxOdometryThread odo = SparkMaxOdometryThread.getInstance();
+
+    // As the queue can change size between this call and the following standard err logging calls
+    // this value does not represent the actual amount of errors logged, just how many at this
+    // point in the program
+    Logger.recordOutput("SparkMaxOdometryThread/DriveErrorCount", odo.pastDriveErrors.size());
+
+    // odo.pastDriveErrors
+    //     .iterator()
+    //     .forEachRemaining(
+    //         (err) -> {
+    //           System.err.println("Drive Spark Max error: " + err.toString());
+    //         });
+    // odo.pastTurnErrors
+    //     .iterator()
+    //     .forEachRemaining(
+    //         (err) -> {
+    //           System.err.println("Turn Spark Max error: " + err.toString());
+    //         });
 
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {
