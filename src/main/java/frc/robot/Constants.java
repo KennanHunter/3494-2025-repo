@@ -29,8 +29,10 @@ import edu.wpi.first.wpilibj.RobotBase;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
 
   public static final int POWER_DISTRIBUTION_PANEL_CAN_ID = 28;
 
@@ -160,30 +162,29 @@ public final class Constants {
         new Translation2d(1.172, 7.0) // 9
       };
 
-      public static final Pose2d[]
-          leftLocations = { // Placeholder currently using the center positions
-        new Pose2d(3.277, 4.176, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
-        new Pose2d(4.040, 5.124, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
-        new Pose2d(3.742, 3.103, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
-        new Pose2d(4.943, 5.116, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
-        new Pose2d(5.233, 3.095, new Rotation2d(2 * Math.PI / 3.0 - Math.PI / 2.0)), // 5
-        new Pose2d(5.678, 4.164, new Rotation2d(Math.PI - Math.PI / 2.0)), // 6
-        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI / 2.0 - Math.PI / 2.0)), // 7
-        new Pose2d(1.312, 0.948, new Rotation2d(0.872665 - Math.PI / 2.0)), // 8
-        new Pose2d(1.101, 7.042, new Rotation2d(-0.872665 - Math.PI / 2.0)) // 9
+      public static final Pose2d[] leftLocations = { //Placeholder currently using the center positions
+        new Pose2d(3.277, 4.176, new Rotation2d(0.0-Math.PI/2.0)), //1
+        new Pose2d(4.040, 5.124, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
+        new Pose2d(3.742, 3.103,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
+        new Pose2d(4.943, 5.116,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
+        new Pose2d(5.233, 3.095,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
+        new Pose2d(5.678, 4.164, new Rotation2d(Math.PI-Math.PI/2.0)),//6
+        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
+        new Pose2d(1.312, 0.948, new Rotation2d(0.3*Math.PI-Math.PI/2.0)),//8
+        new Pose2d(1.101, 7.042, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
       };
 
-      public static final Pose2d[]
-          rightLocations = { // Placeholder currently using the center positions
-        new Pose2d(3.326, 3.862, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
-        new Pose2d(3.781, 4.964, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
-        new Pose2d(4.029, 2.930, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
-        new Pose2d(5.223, 4.952, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
-        new Pose2d(4.946, 2.910, new Rotation2d(2 * Math.PI / 3.0 - Math.PI / 2.0)), // 5
-        new Pose2d(5.663, 3.851, new Rotation2d(Math.PI - Math.PI / 2.0)), // 6
-        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI / 2.0 - Math.PI / 2.0)), // 7
-        new Pose2d(1.702, 0.613, new Rotation2d(0.872665 - Math.PI / 2.0)), // 8
-        new Pose2d(1.101, 7.375, new Rotation2d(-0.872665 - Math.PI / 2.0)) // 9
+      public static final Pose2d[] rightLocations = { //Placeholder currently using the center positions
+        new Pose2d(3.326, 3.862, new Rotation2d(0.0-Math.PI/2.0)), //1
+        new Pose2d(3.781, 4.964, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
+        new Pose2d(4.029, 2.930,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
+        new Pose2d(5.223, 4.952,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
+        new Pose2d(4.946, 2.910,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
+        new Pose2d(5.663, 3.851, new Rotation2d(Math.PI-Math.PI/2.0)),//6
+        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
+        new Pose2d(1.702, 0.613, new Rotation2d(0.3*Math.PI-Math.PI/2.0)),//8
+        new Pose2d(1.101, 7.375, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
+
       };
     }
   }
