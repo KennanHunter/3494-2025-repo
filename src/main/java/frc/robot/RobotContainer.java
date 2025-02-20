@@ -124,6 +124,8 @@ public class RobotContainer {
     NamedCommands.registerCommand(
             "Outtake", new AutoIntakePower(intake, 0.5));
     NamedCommands.registerCommand(
+                "Outtake Fast", new AutoIntakePower(intake, 0.5));
+    NamedCommands.registerCommand(
                 "Outtake Algea", new AutoIntakePower(intake, 1));
     NamedCommands.registerCommand(
             "Outtake L1", new AutoIntakePower(intake, -0.3));
