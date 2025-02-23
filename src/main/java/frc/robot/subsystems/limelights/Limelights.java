@@ -1,47 +1,65 @@
 package frc.robot.subsystems.limelights;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.estimator.ExtendedKalmanFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LimelightHelpers;
-import org.littletonrobotics.junction.Logger;
+
 
 public class Limelights {
   private ExtendedKalmanFilter<N2, N2, N2> mKalmanFilter; // NICE IDEA IMPLEMENT LATER
+  private String limelightName;
+  private Drive drivetrain;
 
-  private boolean invalidMeasurment = true;
+  private Object[] lastMeasurement = null;
+
+  private boolean validMeasurment = false;
   private double measurementTimeStamp;
   private Pose2d measurementPosition;
 
-  private LimelightIOInputsAutoLogged inputs;
-  private LimelightIO limelightIO;
-
-  public Limelights(Drive drivetrain, String limelightName) {
-    inputs = new LimelightIOInputsAutoLogged();
-    limelightIO = new LimelightIO(drivetrain, limelightName);
+  public Limelights(Drive drivetrain, String limeLightName) {
+    this.drivetrain = drivetrain;
+    this.limelightName = limeLightName;
   }
 
   public void periodic() {
-    limelightIO.updateInputs(inputs);
-    Logger.processInputs("Limelights", inputs);
+    // Use MegaTag2 because better?
+    //PLEASE FIX BIG PROBLEM, PRETTY SURE IMU ROTATION IS 90 DEGREES OFF, ALSO WHAT DOES THIS FUNCTION DO
+    //https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltag-robot-localization-megatag2
 
-    LimelightHelpers.PoseEstimate measurement = inputs.limelightMeasurement;
+      LimelightHelpers.SetRobotOrientation(
+        limelightName, drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    
+    LimelightHelpers.PoseEstimate limelightLeftMeasurment =
+        LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
 
-    if (measurement == null || inputs.isDrivetrainRotationRateTooHigh) {
-      invalidMeasurment = true;
+    boolean leftLimelightEmpty = limelightLeftMeasurment == null;
+    boolean rotationRateTooHigh = drivetrain.rotationRate > 4.0 * Math.PI;
+    boolean noTagsFound = true;
+    if(!leftLimelightEmpty){
+      noTagsFound = limelightLeftMeasurment.tagCount() == 0;
+    }
+    if (leftLimelightEmpty || rotationRateTooHigh || noTagsFound) {
+      validMeasurment = false;
+      // System.out.println("Invalid Measurement");
       return;
     }
 
-    invalidMeasurment = false;
-
-    measurementTimeStamp = measurement.timestampSeconds();
-    measurementPosition = measurement.pose();
+    validMeasurment = true;
+    // System.out.println("READING-------------");
+    measurementTimeStamp = limelightLeftMeasurment.timestampSeconds();
+    measurementPosition = limelightLeftMeasurment.pose();
   }
 
   // returns validity of last measurment
   public boolean measurmentValid() {
-    return !invalidMeasurment;
+    return validMeasurment;
   }
 
   public double getMeasurementTimeStamp() {

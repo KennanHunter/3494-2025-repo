@@ -29,7 +29,7 @@ public class Climber extends SubsystemBase {
     climberMotorConfig.closedLoop.pid(2, 0, 0);
     climberMotorConfig.closedLoop.outputRange(-1, 1);
     climberMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    climberMotorConfig.smartCurrentLimit(80);
+    climberMotorConfig.smartCurrentLimit(100);
 
     climberMotor.configure(
         climberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

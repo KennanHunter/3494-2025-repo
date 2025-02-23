@@ -225,10 +225,10 @@ public class RobotContainer {
         () -> {
            GyroIOPigeon2.pigeon.setYaw(0.0);
         }));
-    controller.start().onTrue(Commands.runOnce(
-        () -> {
-           drive.rezeroModulesRelativeEncoders();
-        }));
+    // controller.start().onTrue(Commands.runOnce(
+    //     () -> {
+    //        drive.rezeroModulesRelativeEncoders();
+    //     }));
     controller.
         leftBumper()
         .or(controller.rightBumper())
@@ -340,6 +340,17 @@ public class RobotContainer {
                             elevator.setElevatorPosition(Constants.Presets.liftIntake);
                             arm.setTargetAngle(Constants.Presets.armIntake, 0);
                         })));
+
+    //BARGE===================
+    controller.start().or(()->OI.rightButtonBoard.getRawButton(1))
+        .onTrue(Commands.sequence(
+            new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+            new WaitCommand(0.1),
+            new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+            new WaitCommand(0.0),
+            new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+            new WaitCommand(0.20),
+            new InstantCommand(() -> {intake.setSpeed(-1);})));
     
   }
 

@@ -31,8 +31,8 @@ public class Arm extends SubsystemBase {
     armMotorConfig.idleMode(IdleMode.kCoast);
     armMotorConfig.inverted(false);
     // armMotorConfig.smartCurrentLimit(60s);
-    armMotorConfig.closedLoop.pid(3, 0, 0);
-    armMotorConfig.closedLoop.outputRange(-0.45, 0.45);
+    armMotorConfig.closedLoop.pid(6 , 0, 0);
+    armMotorConfig.closedLoop.outputRange(-1, 1);
     armMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     encoder = armMotor.getEncoder();
     armMotor.configure(

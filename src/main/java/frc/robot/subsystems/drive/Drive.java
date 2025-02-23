@@ -257,16 +257,17 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput(
           "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
-      if (m_LimeLight1.measurmentValid()) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
-        poseEstimator.addVisionMeasurement(
-            m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
-      } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
-      else if (m_LimeLight2.measurmentValid()) {
+      if (m_LimeLight2.measurmentValid()) {
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
         poseEstimator.addVisionMeasurement(
             m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
       }
+      else if (m_LimeLight1.measurmentValid()) {
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+        poseEstimator.addVisionMeasurement(
+            m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
+      } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
+      
     }
   }
 

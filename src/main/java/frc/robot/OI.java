@@ -55,5 +55,8 @@ public final class OI {
     double downPower = (primaryController.povDown(eventLoop).getAsBoolean()? -0.25 : 0.0);
     return upPower+downPower;
   }
+  public static BooleanEvent bargeYeet(){
+    return rightButtonBoard.button(1, eventLoop);
+  }
 
 }
