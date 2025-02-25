@@ -100,6 +100,10 @@ public class DriveCommands {
               new Transform2d(offsetT * 1.75, 0.0, new Rotation2d()));
         };
     Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide);
+    if(leftSide){
+      drive.m_LimeLight2.setCropY(-0.8, 1);
+    }
+    else{ drive.m_LimeLight2.setCropY(-1, 1); }
     autoAlignController =
         new AutoAlignController(
             drive,
