@@ -148,7 +148,7 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                     elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                    arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
+                    arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
         })));
     NamedCommands.registerCommand(
         "L3 Outtake", Commands.sequence(
@@ -225,10 +225,10 @@ public class RobotContainer {
         () -> {
            GyroIOPigeon2.pigeon.setYaw(0.0);
         }));
-    // controller.start().onTrue(Commands.runOnce(
-    //     () -> {
-    //        drive.rezeroModulesRelativeEncoders();
-    //     }));
+    controller.start().onTrue(Commands.runOnce(
+        () -> {
+           drive.rezeroModulesRelativeEncoders();
+        }));
     controller.
         leftBumper()
         .or(controller.rightBumper())
@@ -275,7 +275,7 @@ public class RobotContainer {
 
     //======== L3 ============
     controller
-        .y().or(()->leftButtonBoard.getRawButton(4))
+        .y().or(()->leftButtonBoard.getRawButton(1))
         .onTrue(
             Commands.sequence(
                 new InstantCommand(
@@ -294,7 +294,7 @@ public class RobotContainer {
                     })));
     //========== L2 ===============
     controller
-        .x().or(()->leftButtonBoard.getRawButton(8))
+        .x().or(()->leftButtonBoard.getRawButton(4))
         .onTrue(
             Commands.sequence(
                 new InstantCommand(
@@ -340,17 +340,27 @@ public class RobotContainer {
                             elevator.setElevatorPosition(Constants.Presets.liftIntake);
                             arm.setTargetAngle(Constants.Presets.armIntake, 0);
                         })));
-
+    //LOW INTAKE======================
+    OI.lowIntake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
+    });
     //BARGE===================
-    controller.start().or(()->OI.rightButtonBoard.getRawButton(1))
-        .onTrue(Commands.sequence(
-            new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
-            new WaitCommand(0.1),
-            new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
-            new WaitCommand(0.0),
-            new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
-            new WaitCommand(0.20),
-            new InstantCommand(() -> {intake.setSpeed(-1);})));
+    // controller.start().or(()->OI.rightButtonBoard.getRawButton(1))
+    //     .onTrue(Commands.sequence(
+    //         new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
+    //         new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
+    //         new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+    //         new WaitCommand(0.1),
+    //         new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+    //         new WaitCommand(0.0),
+    //         new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+    //         new WaitCommand(0.26),//WORKED at 0.2
+    //         new InstantCommand(() -> {intake.setSpeed(-1);}),
+    //         new WaitCommand(0.50),
+    //         new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
+    //         new InstantCommand(() -> {arm.setPIDlimits(-.45, 0.45);})));
+
     
   }
 

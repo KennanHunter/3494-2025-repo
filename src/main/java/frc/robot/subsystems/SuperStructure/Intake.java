@@ -8,12 +8,18 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import java.util.ArrayList;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
   private SparkMax intakeMotor;
   private SparkMaxConfig intakeConfig;
   private double intakeSpeed;
+
+  boolean hasNote = false;
+  ArrayList currents =  new ArrayList<>();
 
   public Intake() {
     Logger.recordOutput("Intake/Intake-Power", intakeSpeed);
@@ -28,5 +34,30 @@ public class Intake extends SubsystemBase {
 
   public void setSpeed(double speed) {
     intakeMotor.set(speed);
+  }
+  public double currentAverage(double currentCurrent){
+    currents.add(0, currentCurrent);
+
+    if (currents.size() >= 13){
+      currents.remove(currents.size() - 1);
+    }
+    double average = 0;
+    for(int i = 0; i<currents.size(); i++){
+      average+= (double)currents.get(i);
+    }
+    average /= currents.size();
+    return average;
+      
+  }
+
+  @Override
+  public void periodic(){
+    double Cavrg = currentAverage(intakeMotor.getOutputCurrent());
+    hasNote = (Cavrg>15);
+    Logger.recordOutput("Intake/Current-Average", Cavrg);
+  }
+
+  public boolean hasNote(){
+    return hasNote;
   }
 }

@@ -32,7 +32,7 @@ public class Arm extends SubsystemBase {
     armMotorConfig.inverted(false);
     // armMotorConfig.smartCurrentLimit(60s);
     armMotorConfig.closedLoop.pid(6 , 0, 0);
-    armMotorConfig.closedLoop.outputRange(-1, 1);
+    armMotorConfig.closedLoop.outputRange(-45, 45);
     armMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     encoder = armMotor.getEncoder();
     armMotor.configure(
@@ -87,5 +87,10 @@ public class Arm extends SubsystemBase {
 
   public double getTargetPosition() {
     return targetPosition;
+  }
+  public void setPIDlimits(double lowerBound, double upperBound){
+    armMotorConfig.closedLoop.outputRange(lowerBound, upperBound);
+    armMotor.configure(
+        armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 }

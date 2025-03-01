@@ -36,7 +36,7 @@ public class Elevator extends SubsystemBase {
     followerConfig.follow(leaderMotor, true);
     leaderConfig.smartCurrentLimit(30);
     leaderConfig.closedLoop.pid(0.5, 0, 0);
-    leaderConfig.closedLoop.outputRange(-1, 1);
+    leaderConfig.closedLoop.outputRange(-0.6, 0.6);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     
   
@@ -109,5 +109,10 @@ public class Elevator extends SubsystemBase {
 
   public double getTicks() {
     return leaderMotor.getEncoder().getPosition();
+  }
+  public void setPIDlimits(double lowerBound, double upperBound){
+    leaderConfig.closedLoop.outputRange(lowerBound, upperBound);
+    leaderMotor.configure(
+      leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 }

@@ -27,7 +27,7 @@ public class TeleopIntake extends Command {
     // TODO: might have to invert intake speeds/directions
     double intakePower = Math.copySign(Math.pow(OI.getIntakePower(), 2), OI.getIntakePower());
     if(intakePower == 0){
-      intakePower = 0.075* Math.copySign(1 ,lastPower) ;
+      intakePower = 0.1* Math.copySign(1 ,lastPower) ;
     }
     else{
       lastPower = intakePower;

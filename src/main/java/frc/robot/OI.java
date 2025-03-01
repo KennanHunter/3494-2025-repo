@@ -10,6 +10,8 @@ public final class OI {
   public static XboxController primaryController =
       new XboxController(Constants.OI.PRIMARY_CONTROLLER_PORT);
   public static Joystick rightButtonBoard = new Joystick(2);
+  
+  public static Joystick leftButtonBoard = new Joystick(1);
 
   public static XboxController getPrimaryController() {
     return primaryController;
@@ -57,6 +59,9 @@ public final class OI {
   }
   public static BooleanEvent bargeYeet(){
     return rightButtonBoard.button(1, eventLoop);
+  }
+  public static BooleanEvent lowIntake(){
+    return leftButtonBoard.button(7, eventLoop);
   }
 
 }

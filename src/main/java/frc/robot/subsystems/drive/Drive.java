@@ -50,11 +50,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
-  private static final double TRACK_WIDTH_X = Units.inchesToMeters(25.0); // TODO: FIX dimentions
-  private static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
+  private static final double TRACK_WIDTH_X = Units.inchesToMeters(20.75); 
+  private static final double TRACK_WIDTH_Y = Units.inchesToMeters(20.75);
   private static final double DRIVE_BASE_RADIUS =
       Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
   private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
@@ -74,8 +75,8 @@ public class Drive extends SubsystemBase {
       };
   public SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-  private Limelights m_LimeLight1 = new Limelights(this, "limelight-right");
-  private Limelights m_LimeLight2 = new Limelights(this, "limelight-left");
+  public Limelights m_LimeLight1 = new Limelights(this, "limelight-right");
+  public Limelights m_LimeLight2 = new Limelights(this, "limelight-left");
   public double rotationRate = 0;
 
   public Drive(
@@ -257,17 +258,17 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput(
           "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
-      if (m_LimeLight2.measurmentValid()) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
-        poseEstimator.addVisionMeasurement(
-            m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
-      }
-      else if (m_LimeLight1.measurmentValid()) {
+      
+      if (m_LimeLight1.measurmentValid()) {
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
         poseEstimator.addVisionMeasurement(
             m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
       } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
-      
+      else if (m_LimeLight2.measurmentValid()) {
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+        poseEstimator.addVisionMeasurement(
+            m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+      }
     }
   }
 
