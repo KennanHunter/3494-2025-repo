@@ -35,6 +35,12 @@ public class TeleopIntake extends Command {
     if(arm.getTargetPosition() == Constants.Presets.armOuttakeL1+Constants.Presets.globalArmOffset){
       intakePower *= 0.3;
     }
+    if (arm.getTargetPosition() == Constants.Presets.armCoral+Constants.Presets.globalArmOffset){
+      arm.setPIDlimits(-0.3, 0.3);
+    }
+    else{
+      arm.setPIDlimits(Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);
+    }
     if(intakePower != lastIntakePower){
       intake.setSpeed(intakePower);
     }
@@ -50,6 +56,7 @@ public class TeleopIntake extends Command {
         arm.setTargetAngle(arm.getTargetPosition()+armPower*Constants.Arm.manualPowerPOS-Constants.Presets.globalArmOffset,0);
     }
   }
+
 
   public boolean isFinished() {
     return false;
