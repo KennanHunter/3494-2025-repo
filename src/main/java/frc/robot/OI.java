@@ -58,7 +58,7 @@ public final class OI {
     return upPower+downPower;
   }
   public static BooleanEvent bargeYeet(){
-    return rightButtonBoard.button(1, eventLoop);
+    return leftButtonBoard.button(8, eventLoop);
   }
   public static BooleanEvent lowIntake(){
     return leftButtonBoard.button(7, eventLoop);

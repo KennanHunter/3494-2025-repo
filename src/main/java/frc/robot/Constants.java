@@ -62,7 +62,7 @@ public final class Constants {
 
     public static double armOuttakeL1 = 0.88;
     public static double armOuttakeL2 = 0.60; // -111.0;
-    public static double armOuttakeL3 = 0.615; // -106.0;
+    public static double armOuttakeL3 = 0.62; // -106.0;
 
     public static double armAlgeaL2 = 0.605;
     public static double armAlgeaL3 = 0.58; // -116.0;

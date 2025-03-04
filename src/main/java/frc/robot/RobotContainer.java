@@ -346,6 +346,20 @@ public class RobotContainer {
         arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
     });
     //BARGE===================
+    OI.bargeYeet().rising().ifHigh(()->{
+        Commands.sequence(
+            new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
+            new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
+            new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+            new WaitCommand(0.1),
+            new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+            new WaitCommand(0.0),
+            new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+            new WaitCommand(0.31),//WORKED at 0.2
+            new InstantCommand(() -> {intake.setSpeed(-1);}),
+            new WaitCommand(0.75),
+            new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
+            new InstantCommand(() -> {arm.setPIDlimits(-.45, 0.45);})).schedule();});
     // controller.start().or(()->OI.rightButtonBoard.getRawButton(1))
     //     .onTrue(Commands.sequence(
     //         new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),

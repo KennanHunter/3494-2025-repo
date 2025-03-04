@@ -19,6 +19,7 @@ public class Intake extends SubsystemBase {
   private double intakeSpeed;
 
   boolean hasNote = false;
+  private double currentSpeed = 0;
   ArrayList currents =  new ArrayList<>();
 
   public Intake() {
@@ -33,12 +34,13 @@ public class Intake extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
+    currentSpeed = speed;
     intakeMotor.set(speed);
   }
   public double currentAverage(double currentCurrent){
     currents.add(0, currentCurrent);
 
-    if (currents.size() >= 13){
+    if (currents.size() >= 20){
       currents.remove(currents.size() - 1);
     }
     double average = 0;
@@ -53,8 +55,14 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic(){
     double Cavrg = currentAverage(intakeMotor.getOutputCurrent());
-    hasNote = (Cavrg>15);
+    if(Cavrg >9){
+      hasNote = true;
+    }
     Logger.recordOutput("Intake/Current-Average", Cavrg);
+    Logger.recordOutput("Intake/Has-Coral", hasNote);
+    if(currentSpeed > 0.05){
+      hasNote = false;
+    }
   }
 
   public boolean hasNote(){

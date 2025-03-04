@@ -77,6 +77,7 @@ public class Drive extends SubsystemBase {
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   public Limelights m_LimeLight1 = new Limelights(this, "limelight-right");
   public Limelights m_LimeLight2 = new Limelights(this, "limelight-left");
+  public Limelights m_LimeLight3 = new Limelights(this, "limelight-swerve");
   public double rotationRate = 0;
 
   public Drive(
@@ -259,15 +260,28 @@ public class Drive extends SubsystemBase {
           "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
       
+      // if (m_LimeLight1.measurmentValid()) {
+      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));
+      //   poseEstimator.addVisionMeasurement(
+      //       m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
+      // } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
+      // else if (m_LimeLight2.measurmentValid()) {
+      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Switched from 0.7 to 0.1 after have a great conversation with the lead programmer on 5188
+      //   poseEstimator.addVisionMeasurement(
+      //       m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+      // }
+      poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));
       if (m_LimeLight1.measurmentValid()) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+          poseEstimator.addVisionMeasurement(
+              m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
+      }
+      if (m_LimeLight2.measurmentValid()) {
         poseEstimator.addVisionMeasurement(
-            m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
-      } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
-      else if (m_LimeLight2.measurmentValid()) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+              m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+      }
+      if (m_LimeLight3.measurmentValid()) {
         poseEstimator.addVisionMeasurement(
-            m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+              m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
       }
     }
   }
