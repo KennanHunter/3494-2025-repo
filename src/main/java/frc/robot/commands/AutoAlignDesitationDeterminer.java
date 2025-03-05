@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 
 public class AutoAlignDesitationDeterminer {
+    public static boolean placingAtL1 = false;
+    public static boolean seekingAlgea = false;
     public static Supplier<Pose2d> destination(Pose2d robotPosition, boolean leftSide){
         Supplier<Pose2d> targetSupplier =
         () -> {
@@ -44,6 +46,15 @@ public class AutoAlignDesitationDeterminer {
             else{
           
                  targetPose = Constants.Field.Reef.rightLocations[minIndex];
+            }
+            if(placingAtL1){ //Rotates us to auto align to the other side if we are placing at L1, need to test if we can use the same reef postions or if I need to offset us a bit due to how accurate the odo is :)
+                targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), new Rotation2d(targetPose.getRotation().getRadians()+Math.PI));
+            }
+            else if(seekingAlgea){//if we want algea just average the left and righ positions
+                Pose2d leftPos =  Constants.Field.Reef.leftLocations[minIndex];
+                Pose2d rightPos = Constants.Field.Reef.rightLocations[minIndex];
+                Pose2d averagePos = new Pose2d((leftPos.getX()+rightPos.getX())/2.0, (leftPos.getY()+rightPos.getY())/2.0, new Rotation2d((leftPos.getRotation().getRadians()+rightPos.getRotation().getRadians())/2.0));
+                targetPose = averagePos;
             }
             if(ally.get() == DriverStation.Alliance.Red){
                 targetPose = pose2red(targetPose);

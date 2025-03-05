@@ -305,7 +305,7 @@ public class Drive extends SubsystemBase {
         m_LimeLight2.setMegatag(false);
         m_LimeLight3.setMegatag(false);
       }
-      Logger.recordOutput("Drive/limelight3Distance", m_LimeLight3.getMeasurement().avgTagDist());
+      // Logger.recordOutput("Drive/limelight3Distance", m_LimeLight3.getMeasurement().avgTagDist());
       if (m_LimeLight1.measurmentValid()) {
           poseEstimator.addVisionMeasurement(
               m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());

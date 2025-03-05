@@ -34,6 +34,10 @@ public class TeleopIntake extends Command {
     }
     if(arm.getTargetPosition() == Constants.Presets.armOuttakeL1+Constants.Presets.globalArmOffset){
       intakePower *= 0.3;
+      AutoAlignDesitationDeterminer.placingAtL1 = true;
+    }
+    else{
+      AutoAlignDesitationDeterminer.placingAtL1 = false;
     }
     if (arm.getTargetPosition() == Constants.Presets.armCoral+Constants.Presets.globalArmOffset){
       arm.setPIDlimits(-0.3, 0.3);

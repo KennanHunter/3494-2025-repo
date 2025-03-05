@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoAlignDesitationDeterminer;
 import frc.robot.commands.AutoIntakePower;
 import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
@@ -220,7 +221,13 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(), // used to be -
             () -> -controller.getRightX())); // used to be -
-    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.b().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.y().onTrue(Commands.runOnce(()->{
+        AutoAlignDesitationDeterminer.seekingAlgea = !AutoAlignDesitationDeterminer.seekingAlgea;
+    }));
+    // controller.y().onFalse(Commands.runOnce(()->{
+    //     AutoAlignDesitationDeterminer.seekingAlgea = false;
+    // }));
     controller.back().onTrue(Commands.runOnce(
         () -> {
            GyroIOPigeon2.pigeon.setYaw(0.0);
@@ -274,24 +281,18 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     //======== L3 ============
-    controller
-        .y().or(()->leftButtonBoard.getRawButton(1))
-        .onTrue(
-            Commands.sequence(
-                new InstantCommand(
-                    () -> {
-                      elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
-                      arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
-                    })));
-    controller
-        .y().or(()->leftButtonBoard.getRawButton(2)).or(() -> leftButtonBoard.getRawButtonReleased(1))
-        .onFalse(
-            Commands.sequence(
-                new InstantCommand(
-                    () -> {
-                      elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
-                      arm.setTargetAngle(Constants.Presets.armOuttakeL3, 0);
-                    })));
+    OI.L3Algea().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+        arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
+    });
+    OI.L3Algea().falling().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+        arm.setTargetAngle(Constants.Presets.armOuttakeL3, 0);
+    });
+    OI.L3Coral().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+        arm.setTargetAngle(Constants.Presets.armOuttakeL3, 0);
+    });
     //========== L2 ===============
     controller
         .x().or(()->leftButtonBoard.getRawButton(4))
@@ -322,25 +323,14 @@ public class RobotContainer {
                         arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
                     })));
     //========= Intake ==============
-    controller
-        .b().or(()->leftButtonBoard.getRawButton(8))
-            .onTrue(
-                Commands.sequence(
-                    new InstantCommand(
-                        () -> {
-                            
-                            elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                            arm.setTargetAngle(Constants.Presets.armCoral, 0);
-                        })));
-    controller
-        .b().or(()->leftButtonBoard.getRawButton(6))
-            .onFalse(
-                Commands.sequence(
-                    new InstantCommand(
-                        () -> {
-                            elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                            arm.setTargetAngle(Constants.Presets.armIntake, 0);
-                        })));
+    OI.Intake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntake, 0);
+    });
+    OI.Processor().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armCoral, 0);
+    });
     OI.lolipop().rising().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armLoliPop, 0);
@@ -368,23 +358,7 @@ public class RobotContainer {
             new InstantCommand(() -> {intake.setSpeed(-1);}),
             new WaitCommand(0.75),
             new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
-            new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})).schedule();});
-    // controller.start().or(()->OI.rightButtonBoard.getRawButton(1))
-    //     .onTrue(Commands.sequence(
-    //         new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
-    //         new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
-    //         new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
-    //         new WaitCommand(0.1),
-    //         new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
-    //         new WaitCommand(0.0),
-    //         new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
-    //         new WaitCommand(0.26),//WORKED at 0.2
-    //         new InstantCommand(() -> {intake.setSpeed(-1);}),
-    //         new WaitCommand(0.50),
-    //         new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
-    //         new InstantCommand(() -> {arm.setPIDlimits(-.45, 0.45);})));
-
-    
+            new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})).schedule();});    
   }
 
   /**

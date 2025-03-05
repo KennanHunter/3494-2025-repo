@@ -69,5 +69,16 @@ public final class OI {
   public static BooleanEvent lolipop(){
     return rightButtonBoard.button(1, eventLoop);
   }
-
+  public static BooleanEvent Intake(){
+    return leftButtonBoard.button(6, eventLoop);
+  }
+  public static BooleanEvent Processor(){
+    return leftButtonBoard.button(8, eventLoop);
+  }
+  public static BooleanEvent L3Algea(){
+    return leftButtonBoard.button(1,eventLoop);
+  }
+  public static BooleanEvent L3Coral(){
+    return leftButtonBoard.button(2,eventLoop);
+  }
 }
