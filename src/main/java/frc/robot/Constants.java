@@ -74,6 +74,9 @@ public final class Constants {
     public static double liftOuttakeL3 = 44.0;
 
     public static double armLoliPop = 0.847;
+    
+    public static double liftClimb = 20;
+    public static double armClimb = 0.56;
   }
 
   public static class OI {

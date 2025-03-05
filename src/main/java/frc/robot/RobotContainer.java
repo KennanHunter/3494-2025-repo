@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import com.google.googlejavaformat.Indent.Const;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -359,6 +360,11 @@ public class RobotContainer {
             new WaitCommand(0.75),
             new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
             new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})).schedule();});    
+    //CLIMB===========================
+    OI.startClimb().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftClimb);
+        arm.setTargetAngle(Constants.Presets.armClimb, 0);
+    });
   }
 
   /**

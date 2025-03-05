@@ -81,4 +81,7 @@ public final class OI {
   public static BooleanEvent L3Coral(){
     return leftButtonBoard.button(2,eventLoop);
   }
+  public static BooleanEvent startClimb(){
+    return rightButtonBoard.button(2, eventLoop);
+  }
 }
