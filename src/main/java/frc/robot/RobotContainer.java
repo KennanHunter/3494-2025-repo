@@ -284,7 +284,7 @@ public class RobotContainer {
                       arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
                     })));
     controller
-        .y().or(()->leftButtonBoard.getRawButton(2))
+        .y().or(()->leftButtonBoard.getRawButton(2)).or(() -> leftButtonBoard.getRawButtonReleased(1))
         .onFalse(
             Commands.sequence(
                 new InstantCommand(
@@ -303,7 +303,7 @@ public class RobotContainer {
                         arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
                     })));
     controller
-        .x().or(()->leftButtonBoard.getRawButton(5))
+        .x().or(()->leftButtonBoard.getRawButton(5)).or(() -> leftButtonBoard.getRawButtonReleased(4))
         .onFalse(
             Commands.sequence(
                 new InstantCommand(
@@ -323,7 +323,7 @@ public class RobotContainer {
                     })));
     //========= Intake ==============
     controller
-        .b().or(()->leftButtonBoard.getRawButton(10))
+        .b().or(()->leftButtonBoard.getRawButton(8))
             .onTrue(
                 Commands.sequence(
                     new InstantCommand(
@@ -341,10 +341,18 @@ public class RobotContainer {
                             elevator.setElevatorPosition(Constants.Presets.liftIntake);
                             arm.setTargetAngle(Constants.Presets.armIntake, 0);
                         })));
+    OI.lolipop().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armLoliPop, 0);
+    });
     //LOW INTAKE======================
     OI.lowIntake().rising().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
+    });
+    OI.lowLowIntake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntakeLowLow, 0);
     });
     //BARGE===================
     OI.bargeYeet().rising().ifHigh(()->{
@@ -360,7 +368,7 @@ public class RobotContainer {
             new InstantCommand(() -> {intake.setSpeed(-1);}),
             new WaitCommand(0.75),
             new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
-            new InstantCommand(() -> {arm.setPIDlimits(-.45, 0.45);})).schedule();});
+            new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})).schedule();});
     // controller.start().or(()->OI.rightButtonBoard.getRawButton(1))
     //     .onTrue(Commands.sequence(
     //         new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),

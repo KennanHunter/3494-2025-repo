@@ -37,10 +37,11 @@ public class TeleopIntake extends Command {
     }
     if (arm.getTargetPosition() == Constants.Presets.armCoral+Constants.Presets.globalArmOffset){
       arm.setPIDlimits(-0.3, 0.3);
+      System.out.println("limiting!!!!!!!!!");
     }
-    else{
-      arm.setPIDlimits(Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);
-    }
+    // else{
+    //   arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);
+    // }
     if(intakePower != lastIntakePower){
       intake.setSpeed(intakePower);
     }

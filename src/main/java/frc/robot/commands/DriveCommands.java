@@ -92,10 +92,10 @@ public class DriveCommands {
     Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide);
     if(leftSide){
       drive.m_LimeLight1.setCropY(-1, 1);
-      drive.m_LimeLight1.setMegatag(true);
+      // drive.m_LimeLight1.setMegatag(true);
     }
     else{ drive.m_LimeLight1.setCropY(-1, 1);
-      drive.m_LimeLight1.setMegatag(false); 
+      // drive.m_LimeLight1.setMegatag(false); 
     }
     autoAlignController =
         new AutoAlignController(

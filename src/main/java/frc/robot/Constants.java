@@ -58,10 +58,11 @@ public final class Constants {
     public static double globalArmOffset = -0.005; // -0.01
     public static double armIntake = 0.822; // -34.0;
     public static double armIntakeLow = 0.833;
+    public static double armIntakeLowLow = 0.846;
     public static double armCoral = 0.85; // -136.0;
 
     public static double armOuttakeL1 = 0.88;
-    public static double armOuttakeL2 = 0.60; // -111.0;
+    public static double armOuttakeL2 = 0.605; // -111.0;
     public static double armOuttakeL3 = 0.62; // -106.0;
 
     public static double armAlgeaL2 = 0.605;
@@ -71,6 +72,8 @@ public final class Constants {
     public static double liftIntake = 0;
     public static double liftOuttakeL2 = 20;
     public static double liftOuttakeL3 = 44.0;
+
+    public static double armLoliPop = 0.847;
   }
 
   public static class OI {
@@ -86,6 +89,7 @@ public final class Constants {
   public static class Arm {
     public static int armMotor = 15;
     public static double manualPowerPOS = 0.006;
+    public static double normalPIDRange = 0.45;
   }
 
   public static class Intake {
@@ -173,21 +177,22 @@ public final class Constants {
         new Pose2d(5.737, 4.112, new Rotation2d(Math.PI-Math.PI/2.0)),//6
         new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
         new Pose2d(1.312, 0.948, new Rotation2d(0.3*Math.PI-Math.PI/2.0)),//8
-        new Pose2d(1.101, 7.042, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
+        new Pose2d(1.276, 7.124, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
       };
 
       public static final Pose2d[] rightLocations = { //Placeholder currently using the center positions
         new Pose2d(3.256, 3.894, new Rotation2d(0.0-Math.PI/2.0)), //1
         new Pose2d(3.760, 5.035, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
         new Pose2d(3.988, 2.888,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
-        new Pose2d(5.294, 4.970,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
+        new Pose2d(5.297, 5.008,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
         new Pose2d(4.933, 2.837,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
         new Pose2d(5.700, 3.812, new Rotation2d(Math.PI-Math.PI/2.0)),//6
         new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
         new Pose2d(1.702, 0.613, new Rotation2d(0.3*Math.PI-Math.PI/2.0)),//8
-        new Pose2d(1.101, 7.375, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
+        new Pose2d(0.685, 6.703, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
 
       };
+      public static final Translation2d reefCenter = new Translation2d(4.59, 4.026);
     }
   }
 }

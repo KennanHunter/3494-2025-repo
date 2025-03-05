@@ -26,7 +26,7 @@ public class Limelights {
   private Pose2d measurementPosition;
 
   private boolean useMegatag1 = false;
-
+  private LimelightHelpers.PoseEstimate limelightLeftMeasurment;
   public Limelights(Drive drivetrain, String limeLightName) {
     this.drivetrain = drivetrain;
     this.limelightName = limeLightName;
@@ -41,7 +41,7 @@ public class Limelights {
       LimelightHelpers.SetRobotOrientation(
         limelightName, drivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
       
-        LimelightHelpers.PoseEstimate limelightLeftMeasurment =
+        limelightLeftMeasurment =
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
 
 
@@ -53,11 +53,12 @@ public class Limelights {
       
     boolean leftLimelightEmpty = limelightLeftMeasurment == null;
     boolean rotationRateTooHigh = drivetrain.rotationRate > 4.0 * Math.PI;
-    boolean tooFarAway = limelightLeftMeasurment.avgTagDist() > 3.25;
-    boolean noTagsFound = true;
     
+    boolean noTagsFound = true;
+    boolean tooFarAway = true;
     if(!leftLimelightEmpty){
       noTagsFound = limelightLeftMeasurment.tagCount() == 0;
+      tooFarAway = limelightLeftMeasurment.avgTagDist() > 3.1;// 3.25;
     }
     if (leftLimelightEmpty || rotationRateTooHigh || noTagsFound || tooFarAway) {
       //System.out.println(limelightName + "|" + leftLimelightEmpty + "|" + rotationRateTooHigh + "|" +  noTagsFound + "|" + limelightLeftMeasurment.avgTagDist());
@@ -75,6 +76,9 @@ public class Limelights {
   // returns validity of last measurment
   public boolean measurmentValid() {
     return validMeasurment;
+  }
+  public LimelightHelpers.PoseEstimate getMeasurement(){
+    return limelightLeftMeasurment;
   }
 
   public double getMeasurementTimeStamp() {
