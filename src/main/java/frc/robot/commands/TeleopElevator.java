@@ -18,7 +18,7 @@ public class TeleopElevator extends Command {
     @Override
     public void execute() {
         // elevatorPower = OI.deadband(OI.getElevatorPower(), 0.05);
-        double elevatorPower = RobotContainer.leftButtonBoard.getRawAxis(1);
+        double elevatorPower = -RobotContainer.leftButtonBoard.getRawAxis(1);
         elevatorPower = OI.deadband(elevatorPower, 0.1);
         Logger.recordOutput("Elevator/Manual-Power", elevatorPower);
         if(elevatorPower != 0 ){

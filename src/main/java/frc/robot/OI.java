@@ -10,6 +10,8 @@ public final class OI {
   public static XboxController primaryController =
       new XboxController(Constants.OI.PRIMARY_CONTROLLER_PORT);
   public static Joystick rightButtonBoard = new Joystick(2);
+  
+  public static Joystick leftButtonBoard = new Joystick(1);
 
   public static XboxController getPrimaryController() {
     return primaryController;
@@ -46,8 +48,8 @@ public final class OI {
   }
 
   public static double getArmPower() {
-    double leftPower = (primaryController.povLeft(eventLoop).getAsBoolean()? 0.1: 0.0);
-    double rightPower = (primaryController.povRight(eventLoop).getAsBoolean()? -0.1 : 0.0);
+    double leftPower = (primaryController.povLeft(eventLoop).getAsBoolean()? 1: 0.0);
+    double rightPower = (primaryController.povRight(eventLoop).getAsBoolean()? -1 : 0.0);
     return leftPower+rightPower;
   }
   public static double getClimberPower(){
@@ -55,5 +57,31 @@ public final class OI {
     double downPower = (primaryController.povDown(eventLoop).getAsBoolean()? -0.25 : 0.0);
     return upPower+downPower;
   }
-
+  public static BooleanEvent bargeYeet(){
+    return leftButtonBoard.button(7, eventLoop);
+  }
+  public static BooleanEvent lowIntake(){
+    return leftButtonBoard.button(10, eventLoop);
+  }
+  public static BooleanEvent lowLowIntake(){
+    return rightButtonBoard.button(2, eventLoop);
+  }
+  public static BooleanEvent lolipop(){
+    return rightButtonBoard.button(1, eventLoop);
+  }
+  public static BooleanEvent Intake(){
+    return leftButtonBoard.button(6, eventLoop);
+  }
+  public static BooleanEvent Processor(){
+    return leftButtonBoard.button(8, eventLoop);
+  }
+  public static BooleanEvent L3Algea(){
+    return leftButtonBoard.button(1,eventLoop);
+  }
+  public static BooleanEvent L3Coral(){
+    return leftButtonBoard.button(2,eventLoop);
+  }
+  public static BooleanEvent startClimb(){
+    return rightButtonBoard.button(3, eventLoop);
+  }
 }

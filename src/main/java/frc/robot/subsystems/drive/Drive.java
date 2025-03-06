@@ -22,6 +22,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -39,11 +41,15 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.drive.GyroIO.GyroIOInputs;
+import frc.robot.Constants;
+import frc.robot.commands.AutoAlignDesitationDeterminer;
 import frc.robot.subsystems.limelights.Limelights;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.SeanMathUtil;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -51,16 +57,17 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
-  private static final double TRACK_WIDTH_X = Units.inchesToMeters(25.0); // TODO: FIX dimentions
-  private static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
+  private static final double TRACK_WIDTH_X = Units.inchesToMeters(20.75); 
+  private static final double TRACK_WIDTH_Y = Units.inchesToMeters(20.75);
   private static final double DRIVE_BASE_RADIUS =
       Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
   private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
 
+
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
 
-  private final GyroIOInputs gyroInputs = new GyroIOInputs();
+  private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
 
@@ -75,9 +82,13 @@ public class Drive extends SubsystemBase {
       };
   public SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-  private Limelights m_LimeLight1 = new Limelights(this, "limelight-right");
-  private Limelights m_LimeLight2 = new Limelights(this, "limelight-left");
+  public Limelights m_LimeLight1 = new Limelights(this, "limelight-right");
+  public Limelights m_LimeLight2 = new Limelights(this, "limelight-left");
+  public Limelights m_LimeLight3 = new Limelights(this, "limelight-swerve");
   public double rotationRate = 0;
+  public boolean specialPoseEstimation = false;
+  public double reefRadiusToSpecialPoseActivation = 3.0;
+  double currentRadiusFromReef;
 
   public Drive(
       GyroIO gyroIO,
@@ -169,6 +180,7 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     m_LimeLight1.periodic();
     m_LimeLight2.periodic();
+    m_LimeLight3.periodic();
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
 
@@ -176,7 +188,7 @@ public class Drive extends SubsystemBase {
       module.updateInputs();
     }
 
-    // Logger.processInputs("Drive/Gyro", gyroInputs); //sad auto log removalk
+    Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
       module.periodic();
     }
@@ -187,6 +199,26 @@ public class Drive extends SubsystemBase {
         module.stop();
       }
     }
+
+    SparkMaxOdometryThread odo = SparkMaxOdometryThread.getInstance();
+
+    // As the queue can change size between this call and the following standard err logging calls
+    // this value does not represent the actual amount of errors logged, just how many at this
+    // point in the program
+    Logger.recordOutput("SparkMaxOdometryThread/DriveErrorCount", odo.pastDriveErrors.size());
+
+    // odo.pastDriveErrors
+    //     .iterator()
+    //     .forEachRemaining(
+    //         (err) -> {
+    //           System.err.println("Drive Spark Max error: " + err.toString());
+    //         });
+    // odo.pastTurnErrors
+    //     .iterator()
+    //     .forEachRemaining(
+    //         (err) -> {
+    //           System.err.println("Turn Spark Max error: " + err.toString());
+    //         });
 
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {
@@ -238,15 +270,53 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput(
           "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
+      
+      // if (m_LimeLight1.measurmentValid()) {
+      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));
+      //   poseEstimator.addVisionMeasurement(
+      //       m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
+      // } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
+      // else if (m_LimeLight2.measurmentValid()) {
+      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Switched from 0.7 to 0.1 after have a great conversation with the lead programmer on 5188
+      //   poseEstimator.addVisionMeasurement(
+      //       m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+      // }
+
+      
+      
+      Optional<Alliance> ally = DriverStation.getAlliance();
+      if(ally.get() == DriverStation.Alliance.Red){
+        currentRadiusFromReef = SeanMathUtil.distance(poseEstimator.getEstimatedPosition(), new Pose2d(AutoAlignDesitationDeterminer.transform2red(Constants.Field.Reef.reefCenter), new Rotation2d(0.0)));
+      }
+      else{
+      currentRadiusFromReef = SeanMathUtil.distance(poseEstimator.getEstimatedPosition(), new Pose2d(Constants.Field.Reef.reefCenter, new Rotation2d(0.0)));
+      }
+      specialPoseEstimation = currentRadiusFromReef < 2.0;
+      Logger.recordOutput("Drive/DistanceFromReef", currentRadiusFromReef);
+      Logger.recordOutput("Drive/InSpecialMode", specialPoseEstimation);
+      poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Was 0.7, limelight recommends 0.5, 5188 0.1, and Sonic squirels 0.9
+      if(specialPoseEstimation){
+        m_LimeLight1.setMegatag(true);
+        m_LimeLight2.setMegatag(true);
+        m_LimeLight3.setMegatag(true);
+      }
+      else{
+        m_LimeLight1.setMegatag(false);
+        m_LimeLight2.setMegatag(false);
+        m_LimeLight3.setMegatag(false);
+      }
+      // Logger.recordOutput("Drive/limelight3Distance", m_LimeLight3.getMeasurement().avgTagDist());
       if (m_LimeLight1.measurmentValid()) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+          poseEstimator.addVisionMeasurement(
+              m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
+      }
+      if (m_LimeLight2.measurmentValid() && !specialPoseEstimation) {
         poseEstimator.addVisionMeasurement(
-            m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
-      } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
-      else if (m_LimeLight2.measurmentValid()) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+              m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+      }
+      if (m_LimeLight3.measurmentValid() && !specialPoseEstimation) {
         poseEstimator.addVisionMeasurement(
-            m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+              m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
       }
     }
   }

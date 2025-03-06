@@ -13,6 +13,7 @@
 
 package frc.robot.subsystems.drive;
 
+import com.revrobotics.REVLibError;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import java.util.ArrayList;
@@ -20,7 +21,9 @@ import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
+import javax.annotation.Nullable;
 
 /**
  * Provides an interface for asynchronously reading high-frequency measurements to a set of queues.
@@ -35,6 +38,15 @@ public class SparkMaxOdometryThread {
 
   private final Notifier notifier;
   private static SparkMaxOdometryThread instance = null;
+
+  private @Nullable REVLibError lastDriveError;
+  private @Nullable REVLibError lastTurnError;
+
+  // TODO: Experiment with different capacities, if a motor dies completely it will fill up
+  // this queue and potentially slow down the main loop
+  public LinkedBlockingQueue<REVLibError> pastDriveErrors =
+      new LinkedBlockingQueue<REVLibError>(20);
+  public LinkedBlockingQueue<REVLibError> pastTurnErrors = new LinkedBlockingQueue<REVLibError>(20);
 
   public static SparkMaxOdometryThread getInstance() {
     if (instance == null) {
@@ -106,5 +118,19 @@ public class SparkMaxOdometryThread {
     } finally {
       Drive.odometryLock.unlock();
     }
+  }
+
+  public synchronized void addDriveError(REVLibError err) {
+    if (this.lastDriveError != null && err.value == this.lastDriveError.value) return;
+
+    this.lastDriveError = err;
+    pastDriveErrors.offer(err);
+  }
+
+  public synchronized void addTurnError(REVLibError err) {
+    if (this.lastTurnError != null && err.value == this.lastTurnError.value) return;
+
+    this.lastTurnError = err;
+    pastDriveErrors.offer(err);
   }
 }
