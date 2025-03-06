@@ -121,7 +121,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
             "Intake", new AutoIntakePower(intake, -1));
     NamedCommands.registerCommand(
-            "Outtake", new AutoIntakePower(intake, 0.5));
+            "Outtake", new AutoIntakePower(intake, 1));
     NamedCommands.registerCommand(
                 "Outtake Fast", new AutoIntakePower(intake, 0.5));
     NamedCommands.registerCommand(
@@ -143,7 +143,7 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> {
                         elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
-                        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+                        arm.setTargetAngle(Constants.Presets.armOuttakeL2Auto, 0);
         })));
     NamedCommands.registerCommand(
         "L2 Algea", Commands.sequence(
@@ -355,7 +355,7 @@ public class RobotContainer {
             new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
             new WaitCommand(0.0),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
-            new WaitCommand(0.31),//WORKED at 0.2
+            new WaitCommand(0.36),//WORKED at 0.2
             new InstantCommand(() -> {intake.setSpeed(-1);}),
             new WaitCommand(0.75),
             new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),

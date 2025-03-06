@@ -82,6 +82,6 @@ public final class OI {
     return leftButtonBoard.button(2,eventLoop);
   }
   public static BooleanEvent startClimb(){
-    return rightButtonBoard.button(2, eventLoop);
+    return rightButtonBoard.button(3, eventLoop);
   }
 }

@@ -161,9 +161,22 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "L2 Algea"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L2 Algea"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -173,6 +186,12 @@
           "type": "wait",
           "data": {
             "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Gunit"
           }
         }
       ]
