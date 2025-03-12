@@ -150,7 +150,7 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                     elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                    arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+                    arm.setTargetAngle(Constants.Presets.armAlgeaL2Auto, 0);
         })));
     NamedCommands.registerCommand(
         "L3 Outtake", Commands.sequence(
