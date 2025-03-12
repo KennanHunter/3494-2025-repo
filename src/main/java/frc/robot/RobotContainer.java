@@ -365,6 +365,18 @@ public class RobotContainer {
         elevator.setElevatorPosition(Constants.Presets.liftClimb);
         arm.setTargetAngle(Constants.Presets.armClimb, 0);
     });
+    
+    OI.ClimbStage0().rising().ifHigh(()->{
+        climber.setTargetAngle(Constants.Presets.climberStage0, 0);
+    });
+
+    OI.ClimbStage1().rising().ifHigh(()->{
+        climber.setTargetAngle(Constants.Presets.climberStage1, 0);
+    });
+
+    OI.ClimbStage2().rising().ifHigh(()->{
+        climber.setTargetAngle(Constants.Presets.climberStage2, 0);
+    });
   }
 
   /**

@@ -42,6 +42,10 @@ public class AutoAlignDesitationDeterminer {
             Pose2d targetPose = new Pose2d();
             if(leftSide){
                  targetPose = Constants.Field.Reef.leftLocations[minIndex];
+                 Translation2d targetTrans = new Translation2d(targetPose.getX(),targetPose.getY());
+                 Translation2d distanceFromReefCenter = Constants.Field.Reef.reefCenter.minus(targetTrans);
+                 targetTrans= targetTrans.plus(distanceFromReefCenter.times(Constants.Drivetrain.L1autoAlignOffset));
+                 targetPose = new Pose2d(targetTrans, new Rotation2d(targetPose.getRotation().getRadians()));
             }
             else{
           
