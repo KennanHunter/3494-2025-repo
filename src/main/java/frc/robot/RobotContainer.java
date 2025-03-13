@@ -342,9 +342,13 @@ public class RobotContainer {
                         arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
                     })));
     //========= Intake ==============
-    OI.Intake().rising().ifHigh(()->{
+    OI.Intake().falling().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armIntake, 0);
+    });
+    OI.Intake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
     });
     OI.Processor().rising().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
@@ -355,9 +359,13 @@ public class RobotContainer {
         arm.setTargetAngle(Constants.Presets.armLoliPop, 0);
     });
     //LOW INTAKE======================
-    OI.lowIntake().rising().ifHigh(()->{
+    OI.lowIntake().falling().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
+    });
+    OI.lowIntake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntakeLowLow, 0);
     });
     OI.lowLowIntake().rising().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
