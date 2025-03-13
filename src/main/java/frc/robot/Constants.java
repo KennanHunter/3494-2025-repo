@@ -83,6 +83,8 @@ public final class Constants {
     public static double climberStage0 = 0.0;
     public static double climberStage1 = -25.0;
     public static double climberStage2 = -49.0;
+
+    public static double armBargeYeetRelease = 0.8;//0.7965;
   }
 
   public static class OI {

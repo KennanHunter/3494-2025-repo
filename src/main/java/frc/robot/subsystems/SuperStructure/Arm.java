@@ -81,8 +81,8 @@ public class Arm extends SubsystemBase {
   }
 
   public double getAbsoluteTicks() {
-    return armMotor.getEncoder().getPosition();
-    // return armMotor.getAbsoluteEncoder().getPosition();
+    // return armMotor.getEncoder().getPosition();
+    return armMotor.getAbsoluteEncoder().getPosition();
   }
 
   public double getTargetPosition() {

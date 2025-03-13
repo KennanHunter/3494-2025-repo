@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAlignDesitationDeterminer;
 import frc.robot.commands.AutoIntakePower;
+import frc.robot.commands.BargFligIntake;
 import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopClimber;
@@ -190,6 +191,22 @@ public class RobotContainer {
                         elevator.setElevatorPosition(Constants.Presets.liftIntake);
                         arm.setTargetAngle(Constants.Presets.armCoral, 0);
                     })));
+    NamedCommands.registerCommand(
+            "Barge", Commands.sequence(
+                        new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
+                        new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
+                        new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+                        new WaitCommand(0.1),
+                        new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+                        new WaitCommand(0.0),
+                        new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+                        // new BargFligIntake(arm, intake, Constants.Presets.armBargeYeetRelease),
+                        new WaitCommand(0.36),//WORKED at 0.2
+                        new InstantCommand(() -> {intake.setSpeed(-1);}),
+                        new WaitCommand(0.75),
+                        new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
+                        new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}))); 
+
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // Set up SysId routines
@@ -356,6 +373,7 @@ public class RobotContainer {
             new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
             new WaitCommand(0.0),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+            // new BargFligIntake(arm, intake, Constants.Presets.armBargeYeetRelease),
             new WaitCommand(0.36),//WORKED at 0.2
             new InstantCommand(() -> {intake.setSpeed(-1);}),
             new WaitCommand(0.75),
@@ -365,6 +383,7 @@ public class RobotContainer {
     OI.startClimb().rising().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftClimb);
         arm.setTargetAngle(Constants.Presets.armClimb, 0);
+        climber.setTargetAngle(0, 0);
     });
     
     OI.ClimbStage0().rising().ifHigh(()->{

@@ -44,12 +44,12 @@ public class Climber extends SubsystemBase {
 
     if (inputs.mode == ClimberMode.Automatic) {
       // Only update if it's a new value to not fill up can bus
-      if (inputs.targetPosition != prevTicks) {
+      // if (inputs.targetPosition != prevTicks) {
         climberMotor
             .getClosedLoopController()
             .setReference(
                 inputs.targetPosition, SparkMax.ControlType.kPosition, ClosedLoopSlot.kSlot0);
-      }
+      // }
     }
 
     if (inputs.mode == ClimberMode.Manual) {
