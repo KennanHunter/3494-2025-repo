@@ -29,7 +29,7 @@ public class Climber extends SubsystemBase {
     climberMotorConfig.closedLoop.pid(2, 0, 0);
     climberMotorConfig.closedLoop.outputRange(-1, 1);
     climberMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    climberMotorConfig.smartCurrentLimit(100);
+    climberMotorConfig.smartCurrentLimit(10);//100 works
 
     climberMotor.configure(
         climberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -52,11 +52,9 @@ public class Climber extends SubsystemBase {
       }
     }
 
-    // if (inputs.mode == ClimberMode.Manual) {
-    //   if (inputs.climberPosition > -1) {
-    //     climberMotor.set(inputs.power);
-    //   }
-    // }
+    if (inputs.mode == ClimberMode.Manual) {
+        climberMotor.set(inputs.power);
+    }
 
     prevTicks = inputs.targetPosition;
   }
@@ -64,6 +62,7 @@ public class Climber extends SubsystemBase {
   public void setMotorPower(double power) {
     inputs.mode = ClimberMode.Manual;
     inputs.power = Math.max(Math.min(power, 1), -1);
+    climberMotor.set(inputs.power);
   }
 
   public void setTargetAngle(double ticks, double arbFFVoltage) {

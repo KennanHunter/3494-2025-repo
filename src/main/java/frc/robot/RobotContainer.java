@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -367,7 +368,15 @@ public class RobotContainer {
     });
     
     OI.ClimbStage0().rising().ifHigh(()->{
-        climber.setTargetAngle(Constants.Presets.climberStage0, 0);
+        Commands.sequence(
+            new PrintCommand("UNOVERCENTERING------------------"),
+            new InstantCommand(()->{climber.setMotorPower(0.2);}),
+            new WaitCommand(0.5),
+            new InstantCommand(()->{climber.setMotorPower(-0.1);}),
+            new WaitCommand(0.3),
+            new InstantCommand(()->{climber.setMotorPower(0);})
+        ).schedule();
+        //climber.setTargetAngle(Constants.Presets.climberStage0, 0);
     });
 
     OI.ClimbStage1().rising().ifHigh(()->{
