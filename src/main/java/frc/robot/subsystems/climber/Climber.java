@@ -20,10 +20,12 @@ public class Climber extends SubsystemBase {
   public ClimberIO climberIO;
   public double prevTicks;
 
+  private SparkMaxConfig climberMotorConfig;
+
   public Climber() {
     climberMotor = new SparkMax(Constants.Climber.CLIMBER_MOTOR_CAN_ID, MotorType.kBrushless);
 
-    SparkMaxConfig climberMotorConfig = new SparkMaxConfig();
+    climberMotorConfig = new SparkMaxConfig();
     climberMotorConfig.idleMode(IdleMode.kCoast);
     climberMotorConfig.inverted(false);
     climberMotorConfig.closedLoop.pid(2, 0, 0);
@@ -68,5 +70,11 @@ public class Climber extends SubsystemBase {
   public void setTargetAngle(double ticks, double arbFFVoltage) {
     inputs.mode = ClimberMode.Automatic;
     inputs.targetPosition = ticks;
+  }
+
+  public void setCurrentLimit(int limit){
+    climberMotorConfig.smartCurrentLimit(limit);
+    climberMotor.configure(
+        climberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 }

@@ -47,6 +47,9 @@ public class Arm extends SubsystemBase {
 
   public void setTargetAngle(double ticks, double arbFFVoltage) {
     targetPosition = ticks+Constants.Presets.globalArmOffset;
+    if (targetPosition < 0){
+      
+    }
     
     armMotor.getClosedLoopController().setReference(ticks+Constants.Presets.globalArmOffset, SparkMax.ControlType.kPosition, ClosedLoopSlot.kSlot0);
     
