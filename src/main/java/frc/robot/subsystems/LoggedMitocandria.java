@@ -2,11 +2,10 @@ package frc.robot.subsystems;
 
 import au.grapplerobotics.CouldNotGetException;
 import au.grapplerobotics.MitoCANdria;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 
-public class LoggedMitocandria extends SubsystemBase {
+public class LoggedMitocandria {
   MitoCANdria mito;
 
   public LoggedMitocandria() {
@@ -20,7 +19,6 @@ public class LoggedMitocandria extends SubsystemBase {
     }
   }
 
-  @Override
   public void periodic() {
     logChannel("Limelight", Constants.Mitocandria.LIMELIGHT_CHANNEL);
     logChannel("Pigeon", Constants.Mitocandria.PIGEON_CHANNEL);

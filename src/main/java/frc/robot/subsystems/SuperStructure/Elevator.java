@@ -34,7 +34,9 @@ public class Elevator extends SubsystemBase {
     leaderConfig = new SparkMaxConfig();
     followerConfig = new SparkMaxConfig();
     followerConfig.follow(leaderMotor, true);
+    followerConfig.smartCurrentLimit(80);
     leaderConfig.smartCurrentLimit(80);
+
     leaderConfig.closedLoop.pid(0.5, 0, 0);
     leaderConfig.closedLoop.outputRange(-0.6, 0.6);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);

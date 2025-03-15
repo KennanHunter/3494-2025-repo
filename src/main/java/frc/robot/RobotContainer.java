@@ -411,7 +411,7 @@ public class RobotContainer {
     });
 
     OI.ClimbStage2().rising().ifHigh(()->{
-        climber.setCurrentLimit(35);
+        climber.setCurrentLimit(80);
         climber.setTargetAngle(Constants.Presets.climberStage2, 0);
     });
   }

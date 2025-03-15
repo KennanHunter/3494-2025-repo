@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.checkerframework.checker.units.qual.min;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.estimator.ExtendedKalmanFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -49,7 +50,7 @@ public class Limelights {
       limelightLeftMeasurment =
           LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
     }
-
+    
       
     boolean leftLimelightEmpty = limelightLeftMeasurment == null;
     boolean rotationRateTooHigh = drivetrain.rotationRate > 4.0 * Math.PI;
@@ -60,14 +61,20 @@ public class Limelights {
       noTagsFound = limelightLeftMeasurment.tagCount() == 0;
       tooFarAway = limelightLeftMeasurment.avgTagDist() > 3.1;// 3.25;
     }
+    // Logger.recordOutput(limelightName+"/noTagsFound", noTagsFound);
+    // Logger.recordOutput(limelightName+"/tooFarAway", tooFarAway);
+    // Logger.recordOutput(limelightName+"/limelightLeftMeasurment", limelightLeftMeasurment);
+    
+    
     if (leftLimelightEmpty || rotationRateTooHigh || noTagsFound || tooFarAway) {
-      //System.out.println(limelightName + "|" + leftLimelightEmpty + "|" + rotationRateTooHigh + "|" +  noTagsFound + "|" + limelightLeftMeasurment.avgTagDist());
+      // System.out.println(limelightName + "|" + leftLimelightEmpty + "|" + rotationRateTooHigh + "|" +  noTagsFound + "|" + limelightLeftMeasurment.avgTagDist());
       validMeasurment = false;
       // System.out.println("Invalid Measurement");
-      return;
+      return;      
     }
 
     validMeasurment = true;
+    // Logger.recordOutput(limelightName+"/Valid", validMeasurment);
     // System.out.println("READING-------------");
     measurementTimeStamp = limelightLeftMeasurment.timestampSeconds();
     measurementPosition = limelightLeftMeasurment.pose();
