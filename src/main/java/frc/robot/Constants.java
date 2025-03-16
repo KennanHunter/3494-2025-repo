@@ -66,9 +66,9 @@ public final class Constants {
     public static double armOuttakeL2Auto = 0.595;
     public static double armOuttakeL3 = 0.62; // -106.0;
 
-    public static double armAlgeaL2 = 0.605;
+    public static double armAlgeaL2 = 0.6125;//0.605
     public static double armAlgeaL2Auto = 0.6125;
-    public static double armAlgeaL3 = 0.58; // -116.0;
+    public static double armAlgeaL3 = 0.585;//0.58 // -116.0;
     public static double armBargeYeet = 0.66;
 
     public static double liftIntake = 0;

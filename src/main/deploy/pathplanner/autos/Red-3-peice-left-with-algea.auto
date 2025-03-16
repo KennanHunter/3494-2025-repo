@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1st-peice-left"
+            "pathName": "Red-1st-peice-left"
           }
         },
         {
@@ -41,7 +41,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Intake-from-1st-peice"
+                  "pathName": "Red-Intake-from-1st-peice"
                 }
               },
               {
@@ -91,7 +91,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2nd-peice"
+                  "pathName": "Red-2nd-peice"
                 }
               },
               {
@@ -147,7 +147,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Intake-from-2nd-peice"
+                  "pathName": "Red-Intake-from-2nd-peice"
                 }
               }
             ]
@@ -172,7 +172,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3rd-peice"
+                  "pathName": "Red-3rd-peice"
                 }
               },
               {
@@ -203,7 +203,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3rd-peice-algea"
+                  "pathName": "Red-3rd-peice-algea"
                 }
               },
               {
@@ -249,7 +249,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Gunit"
+            "pathName": "Red-Gunit"
           }
         }
       ]

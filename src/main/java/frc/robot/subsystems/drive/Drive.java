@@ -145,8 +145,9 @@ public class Drive extends SubsystemBase {
             ),
         config,
         () ->
-            DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == Alliance.Red,
+          false,
+            // DriverStation.getAlliance().isPresent()
+            //     && DriverStation.getAlliance().get() == Alliance.Red,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
