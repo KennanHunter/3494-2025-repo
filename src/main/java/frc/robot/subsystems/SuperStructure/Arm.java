@@ -55,6 +55,12 @@ public class Arm extends SubsystemBase {
     
   }
 
+  public void setPID(double p, double i, double d){
+    armMotorConfig.closedLoop.pid(p , i, d);
+    armMotor.configure(
+        armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
   @Override
   public void periodic() {
     // if (DriverStation.isEnabled()) this.setBrakes(IdleMode.kBrake);

@@ -195,6 +195,7 @@ public class RobotContainer {
             "Barge", Commands.sequence(
                         new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
                         new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
+                        new InstantCommand(() -> {arm.setPID(12, 0, 0);}),
                         new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
                         new WaitCommand(0.1),
                         new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
@@ -205,6 +206,7 @@ public class RobotContainer {
                         new InstantCommand(() -> {intake.setSpeed(-1);}),
                         new WaitCommand(0.75),
                         new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
+                        new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
                         new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}))); 
 
 
@@ -376,14 +378,15 @@ public class RobotContainer {
         Commands.sequence(
             new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
+            new InstantCommand(() -> {arm.setPID(18, 0, 0);}),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
             new WaitCommand(0.1),
-            new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+            new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
             new WaitCommand(0.0),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
-            // new BargFligIntake(arm, intake, Constants.Presets.armBargeYeetRelease),
-            new WaitCommand(0.36),//WORKED at 0.2
-            new InstantCommand(() -> {intake.setSpeed(-1);}),
+            new BargFligIntake(arm, intake, Constants.Presets.armBargeYeetRelease),
+            // new WaitCommand(0.39),//WORKED at 0.2
+            // new InstantCommand(() -> {intake.setSpeed(-1);}),
             new WaitCommand(0.75),
             new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
             new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})).schedule();});    
@@ -397,16 +400,17 @@ public class RobotContainer {
     OI.ClimbStage0().rising().ifHigh(()->{
         Commands.sequence(
             new PrintCommand("UNOVERCENTERING------------------"),
-            new InstantCommand(()->{climber.setMotorPower(0.2);}),
-            new WaitCommand(0.5),
-            new InstantCommand(()->{climber.setMotorPower(-0.1);}),
-            new WaitCommand(0.3),
+            new InstantCommand(()->{climber.setMotorPower(0.3);}),
+            new WaitCommand(0.7),
+            new InstantCommand(()->{climber.setMotorPower(-0.4);}),
+            new WaitCommand(0.4),
             new InstantCommand(()->{climber.setMotorPower(0);})
         ).schedule();
         //climber.setTargetAngle(Constants.Presets.climberStage0, 0);
     });
 
     OI.ClimbStage1().rising().ifHigh(()->{
+        climber.setCurrentLimit(20);
         climber.setTargetAngle(Constants.Presets.climberStage1, 0);
     });
 

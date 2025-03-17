@@ -63,7 +63,7 @@ public final class Constants {
 
     public static double armOuttakeL1 = 0.88;
     public static double armOuttakeL2 = 0.605; // -111.0;
-    public static double armOuttakeL2Auto = 0.595;
+    public static double armOuttakeL2Auto = 0.61;//0.595;
     public static double armOuttakeL3 = 0.62; // -106.0;
 
     public static double armAlgeaL2 = 0.6125;//0.605
@@ -84,7 +84,7 @@ public final class Constants {
     public static double climberStage1 = -25.0;
     public static double climberStage2 = -49.0;
 
-    public static double armBargeYeetRelease = 0.8;//0.7965;
+    public static double armBargeYeetRelease = 0.70;//0.8;//0.7965;
   }
 
   public static class OI {
