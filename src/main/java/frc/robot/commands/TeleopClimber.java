@@ -3,8 +3,8 @@ package frc.robot.commands;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
+import frc.robot.subsystems.SuperStructure.Arm.Arm;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.SuperStructure.Arm;
 
 public class TeleopClimber extends Command {
     Climber climber;

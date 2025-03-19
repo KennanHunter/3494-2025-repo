@@ -31,7 +31,7 @@ public class Climber extends SubsystemBase {
     climberMotorConfig.closedLoop.pid(2, 0, 0);
     climberMotorConfig.closedLoop.outputRange(-1, 1);
     climberMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    climberMotorConfig.smartCurrentLimit(13);//100 works
+    climberMotorConfig.smartCurrentLimit(13); // 100 works
 
     climberMotor.configure(
         climberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -47,15 +47,15 @@ public class Climber extends SubsystemBase {
     if (inputs.mode == ClimberMode.Automatic) {
       // Only update if it's a new value to not fill up can bus
       // if (inputs.targetPosition != prevTicks) {
-        climberMotor
-            .getClosedLoopController()
-            .setReference(
-                inputs.targetPosition, SparkMax.ControlType.kPosition, ClosedLoopSlot.kSlot0);
+      climberMotor
+          .getClosedLoopController()
+          .setReference(
+              inputs.targetPosition, SparkMax.ControlType.kPosition, ClosedLoopSlot.kSlot0);
       // }
     }
 
     if (inputs.mode == ClimberMode.Manual) {
-        climberMotor.set(inputs.power);
+      climberMotor.set(inputs.power);
     }
 
     prevTicks = inputs.targetPosition;
@@ -72,7 +72,7 @@ public class Climber extends SubsystemBase {
     inputs.targetPosition = ticks;
   }
 
-  public void setCurrentLimit(int limit){
+  public void setCurrentLimit(int limit) {
     climberMotorConfig.smartCurrentLimit(limit);
     climberMotor.configure(
         climberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

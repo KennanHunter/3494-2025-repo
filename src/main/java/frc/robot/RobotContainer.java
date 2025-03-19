@@ -38,9 +38,10 @@ import frc.robot.commands.TeleopElevator;
 import frc.robot.commands.TeleopIntake;
 import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.commands.WheelRadiusCharacterization;
-import frc.robot.subsystems.SuperStructure.Arm;
 import frc.robot.subsystems.SuperStructure.Elevator;
 import frc.robot.subsystems.SuperStructure.Intake;
+import frc.robot.subsystems.SuperStructure.Arm.Arm;
+import frc.robot.subsystems.SuperStructure.Arm.ArmIOSpark;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -73,7 +74,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     elevator = new Elevator();
-    arm = new Arm();
+    arm = new Arm(new ArmIOSpark());
     intake = new Intake();
     climber = new Climber();
     //arm.setDefaultCommand(new TeleopArm(arm)); the intake command overrides this so for now its content is going in the intake command

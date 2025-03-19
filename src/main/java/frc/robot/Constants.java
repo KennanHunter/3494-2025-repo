@@ -32,7 +32,7 @@ public final class Constants {
 
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
-
+  public static final boolean tuningMode = false;
 
   public static final int POWER_DISTRIBUTION_PANEL_CAN_ID = 28;
 
@@ -98,7 +98,7 @@ public final class Constants {
   }
 
   public static class Arm {
-    public static int armMotor = 15;
+    public static int ARM_MOTOR_CAN_ID = 15;
     public static double manualPowerPOS = 0.006;
     public static double normalPIDRange = 0.45;
   }
