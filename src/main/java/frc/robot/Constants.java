@@ -69,7 +69,7 @@ public final class Constants {
     public static double armAlgeaL2 = 0.6125;//0.605
     public static double armAlgeaL2Auto = 0.6125;
     public static double armAlgeaL3 = 0.585;//0.58 // -116.0;
-    public static double armBargeYeet = 0.66;
+    public static double armBargeYeet = 0.65;
 
     public static double liftIntake = 0;
     public static double liftOuttakeL2 = 20;
@@ -84,7 +84,7 @@ public final class Constants {
     public static double climberStage1 = -25.0;
     public static double climberStage2 = -49.0;
 
-    public static double armBargeYeetRelease = 0.70;//0.8;//0.7965;
+    public static double armBargeYeetRelease = 0.8;//0.8;//0.7965;
   }
 
   public static class OI {
@@ -93,10 +93,12 @@ public final class Constants {
 
   public static class Elevator {
     public static int bottomMagSensorDIO = 9;
-    public static int leaderMotor = 12;
-    public static int followerMotor = 13;
+    public static int leaderMotor =12; //12;
+    public static int followerMotor =13; //13;
   }
 
+
+  
   public static class Arm {
     public static int armMotor = 15;
     public static double manualPowerPOS = 0.006;
@@ -130,23 +132,23 @@ public final class Constants {
     public static final int FRONT_LEFT_DRIVE_ID = 18; // 18
     public static final int FRONT_LEFT_STEER_ID = 16; // 16
     public static final int FRONT_LEFT_TURN_ENCODER_ID = 3; // 3
-    public static final double FRONT_LEFT_OFFSET = Math.toRadians(204.4);
+    public static final double FRONT_LEFT_OFFSET = Math.toRadians(70);
 
     public static final int FRONT_RIGHT_DRIVE_ID = 19; // 19
     public static final int FRONT_RIGHT_STEER_ID = 17; // 17
     public static final int FRONT_RIGHT_TURN_ENCODER_ID = 2; // 2
     
-    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(237.9);
+    public static final double FRONT_RIGHT_OFFSET = Math.toRadians(150.5);
 
     public static final int BACK_LEFT_DRIVE_ID = 30; // 30
     public static final int BACK_LEFT_STEER_ID = 2; // 2
     public static final int BACK_LEFT_TURN_ENCODER_ID = 1; // 1
-    public static final double BACK_LEFT_OFFSET = Math.toRadians(264.5);
+    public static final double BACK_LEFT_OFFSET = Math.toRadians(12.3);
 
     public static final int BACK_RIGHT_DRIVE_ID = 1; // 1
     public static final int BACK_RIGHT_STEER_ID = 3; // 3
     public static final int BACK_RIGHT_TURN_ENCODER_ID = 0; // 0
-    public static final double BACK_RIGHT_OFFSET = Math.toRadians(146.8);
+    public static final double BACK_RIGHT_OFFSET = Math.toRadians(224.4);
   }
 
   public static class Field {

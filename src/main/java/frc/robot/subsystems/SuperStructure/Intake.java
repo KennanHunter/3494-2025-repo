@@ -60,6 +60,7 @@ public class Intake extends SubsystemBase {
     }
     Logger.recordOutput("Intake/Current-Average", Cavrg);
     Logger.recordOutput("Intake/Has-Coral", hasNote);
+    Logger.recordOutput("Intake/Current-SPeed", currentSpeed);
     if(currentSpeed > 0.05){
       hasNote = false;
     }

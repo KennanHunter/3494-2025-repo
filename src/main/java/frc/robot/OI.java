@@ -94,4 +94,9 @@ public final class OI {
   public static BooleanEvent ClimbStage2(){
     return rightButtonBoard.button(7, eventLoop);
   }
+  public static double powerCurved(double inputPower){
+    double newValue = Math.pow(inputPower, 2);
+    if(inputPower<0) return -newValue;
+    return newValue;
+  }
 }

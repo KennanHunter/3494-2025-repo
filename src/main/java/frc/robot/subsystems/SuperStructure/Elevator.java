@@ -33,17 +33,24 @@ public class Elevator extends SubsystemBase {
     followerMotor = new SparkMax(Constants.Elevator.followerMotor, MotorType.kBrushless);
     leaderConfig = new SparkMaxConfig();
     followerConfig = new SparkMaxConfig();
-    followerConfig.follow(leaderMotor, true);
+    // followerConfig.follow(leaderMotor, true);
     followerConfig.smartCurrentLimit(80);
     leaderConfig.smartCurrentLimit(80);
 
-    leaderConfig.closedLoop.pid(0.5, 0, 0);
+    leaderConfig.closedLoop.pid(0.8, 0, 0);
     leaderConfig.closedLoop.outputRange(-0.6, 0.6);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+
+    followerConfig.closedLoop.pid(0.8, 0, 0);
+    followerConfig.closedLoop.outputRange(-0.6, 0.6);
+    followerConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     
   
+    
     leaderConfig.idleMode(IdleMode.kCoast);
-    leaderConfig.inverted(true);
+    followerConfig.idleMode(IdleMode.kCoast);
+    leaderConfig.inverted(true);//true
+    followerConfig.inverted(false);//true
     
 
     leaderMotor.configure(
@@ -58,16 +65,22 @@ public class Elevator extends SubsystemBase {
     power = Math.max(Math.min(power, 1), -1);
     manualPower = power;
     leaderMotor.set(manualPower);
+    followerMotor.set(manualPower);
   }
 
   public void setElevatorVoltage(double voltage) {
     leaderMotor.getClosedLoopController().setReference(voltage, SparkBase.ControlType.kVoltage);
+    followerMotor.getClosedLoopController().setReference(voltage, SparkBase.ControlType.kVoltage);
   }
 
   public void setBrakes(IdleMode newIdleMode) {
     leaderConfig.idleMode(newIdleMode);
     leaderMotor.configure(
         leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    followerConfig.idleMode(newIdleMode);
+    followerMotor.configure(
+            leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -78,11 +91,14 @@ public class Elevator extends SubsystemBase {
 
     if (getElevatorSensorState() == ElevatorSensorState.BOTTOM) {
       leaderMotor.getEncoder().setPosition(0);
+      followerMotor.getEncoder().setPosition(0);
     }
 
     Logger.recordOutput("Elevator/Encoder-Position", leaderMotor.getEncoder().getPosition());
     Logger.recordOutput("Elevator/Sensor-Tripped", getElevatorSensorState());
     Logger.recordOutput("Elevator/Target-Position", targetPosition);
+    Logger.recordOutput("Elevator/AppliedPOwer-Leader", leaderMotor.getAppliedOutput());
+    Logger.recordOutput("Elevator/AppliedPower-Follower", followerMotor.getAppliedOutput());
   }
 
   /**
@@ -98,6 +114,7 @@ public class Elevator extends SubsystemBase {
 
   public void setElevatorPosition(double position) {
     leaderMotor.getClosedLoopController().setReference(position, SparkBase.ControlType.kPosition);
+    followerMotor.getClosedLoopController().setReference(position, SparkBase.ControlType.kPosition);
     targetPosition = position;
   }
 
@@ -116,5 +133,9 @@ public class Elevator extends SubsystemBase {
     leaderConfig.closedLoop.outputRange(lowerBound, upperBound);
     leaderMotor.configure(
       leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
+    followerConfig.closedLoop.outputRange(lowerBound, upperBound);
+    followerMotor.configure(
+      followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 }
