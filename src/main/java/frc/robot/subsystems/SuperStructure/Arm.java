@@ -26,7 +26,7 @@ public class Arm extends SubsystemBase {
     armMotorConfig = new SparkFlexConfig();
     armMotorConfig.idleMode(IdleMode.kCoast);
     armMotorConfig.inverted(false);
-    armMotorConfig.smartCurrentLimit(60);
+    armMotorConfig.smartCurrentLimit(100);
     armMotorConfig.closedLoop.pid(6, 0, 0);
     armMotorConfig.closedLoop.outputRange(
         -Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange); // -.45, .45);
