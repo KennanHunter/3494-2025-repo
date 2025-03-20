@@ -13,9 +13,11 @@
 
 package frc.robot;
 
-import com.google.googlejavaformat.Indent.Const;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -48,7 +50,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -377,6 +378,7 @@ public class RobotContainer {
     //BARGE===================
     OI.bargeYeet().rising().ifHigh(()->{
         Commands.sequence(
+            new InstantCommand(() -> {arm.setCurrentLimit(100);}),
             new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
@@ -393,8 +395,10 @@ public class RobotContainer {
             new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
             new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
             new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
-
-            new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})).schedule();});    
+            new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}),
+            new InstantCommand(() -> {arm.setCurrentLimit(60);})
+        ).schedule();
+    });    
     //CLIMB===========================
     OI.startClimb().rising().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftClimb);
