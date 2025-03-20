@@ -1,5 +1,7 @@
 package frc.robot.subsystems.SuperStructure;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -10,9 +12,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
   SparkFlex armMotor;
@@ -26,7 +28,7 @@ public class Arm extends SubsystemBase {
     armMotorConfig = new SparkFlexConfig();
     armMotorConfig.idleMode(IdleMode.kCoast);
     armMotorConfig.inverted(false);
-    armMotorConfig.smartCurrentLimit(100);
+    armMotorConfig.smartCurrentLimit(60); // TODO: need to confirm what it was before change to 100
     armMotorConfig.closedLoop.pid(6, 0, 0);
     armMotorConfig.closedLoop.outputRange(
         -Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange); // -.45, .45);
@@ -101,6 +103,12 @@ public class Arm extends SubsystemBase {
 
   public void setPIDlimits(double lowerBound, double upperBound) {
     armMotorConfig.closedLoop.outputRange(lowerBound, upperBound);
+    armMotor.configure(
+        armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+  public void setCurrentLimit(int limit) {
+    armMotorConfig.smartCurrentLimit(limit);
     armMotor.configure(
         armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
