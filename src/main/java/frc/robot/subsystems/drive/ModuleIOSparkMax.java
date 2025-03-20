@@ -21,6 +21,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -48,7 +49,7 @@ public class ModuleIOSparkMax implements ModuleIO {
   private static final double TURN_GEAR_RATIO = 150.0 / 7.0;
 
   private final SparkFlex driveSparkFlex;
-  private final SparkMax turnSparkMax;
+  private final SparkFlex turnSparkFlex;
 
   private final RelativeEncoder driveEncoder;
   private final RelativeEncoder turnRelativeEncoder;
@@ -62,8 +63,8 @@ public class ModuleIOSparkMax implements ModuleIO {
 
   private Rotation2d lastRawTurnEncoderPosition;
 
-  private SparkMaxConfig driveSparkMaxConfig = new SparkMaxConfig();
-  private SparkMaxConfig turnSparkMaxConfig = new SparkMaxConfig();
+  private SparkFlexConfig driveSparkFlexConfig = new SparkFlexConfig();
+  private SparkFlexConfig turnSparkFlexConfig = new SparkFlexConfig();
 
   private int index;
 
@@ -74,7 +75,7 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 0:
         driveSparkFlex =
             new SparkFlex(Constants.Drivetrain.FRONT_LEFT_DRIVE_ID, MotorType.kBrushless);
-        turnSparkMax = new SparkMax(Constants.Drivetrain.FRONT_LEFT_STEER_ID, MotorType.kBrushless);
+        turnSparkFlex = new SparkFlex(Constants.Drivetrain.FRONT_LEFT_STEER_ID, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogInput(Constants.Drivetrain.FRONT_LEFT_TURN_ENCODER_ID);
         absoluteEncoderOffset =
             new Rotation2d(Constants.Drivetrain.FRONT_LEFT_OFFSET); // MUST BE CALIBRATED
@@ -82,8 +83,8 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 1:
         driveSparkFlex =
             new SparkFlex(Constants.Drivetrain.FRONT_RIGHT_DRIVE_ID, MotorType.kBrushless);
-        turnSparkMax =
-            new SparkMax(Constants.Drivetrain.FRONT_RIGHT_STEER_ID, MotorType.kBrushless);
+        turnSparkFlex =
+            new SparkFlex(Constants.Drivetrain.FRONT_RIGHT_STEER_ID, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogInput(Constants.Drivetrain.FRONT_RIGHT_TURN_ENCODER_ID);
         absoluteEncoderOffset =
             new Rotation2d(Constants.Drivetrain.FRONT_RIGHT_OFFSET); // MUST BE CALIBRATED
@@ -91,7 +92,7 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 2:
         driveSparkFlex =
             new SparkFlex(Constants.Drivetrain.BACK_LEFT_DRIVE_ID, MotorType.kBrushless);
-        turnSparkMax = new SparkMax(Constants.Drivetrain.BACK_LEFT_STEER_ID, MotorType.kBrushless);
+        turnSparkFlex = new SparkFlex(Constants.Drivetrain.BACK_LEFT_STEER_ID, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogInput(Constants.Drivetrain.BACK_LEFT_TURN_ENCODER_ID);
         absoluteEncoderOffset =
             new Rotation2d(Constants.Drivetrain.BACK_LEFT_OFFSET); // MUST BE CALIBRATED
@@ -99,7 +100,7 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 3:
         driveSparkFlex =
             new SparkFlex(Constants.Drivetrain.BACK_RIGHT_DRIVE_ID, MotorType.kBrushless);
-        turnSparkMax = new SparkMax(Constants.Drivetrain.BACK_RIGHT_STEER_ID, MotorType.kBrushless);
+        turnSparkFlex = new SparkFlex(Constants.Drivetrain.BACK_RIGHT_STEER_ID, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogInput(Constants.Drivetrain.BACK_RIGHT_TURN_ENCODER_ID);
         absoluteEncoderOffset =
             new Rotation2d(Constants.Drivetrain.BACK_RIGHT_OFFSET); // MUST BE CALIBRATED
@@ -107,30 +108,30 @@ public class ModuleIOSparkMax implements ModuleIO {
       default:
         throw new RuntimeException("Invalid module index");
     }
-    driveSparkMaxConfig.voltageCompensation(12);
-    driveSparkMaxConfig.smartCurrentLimit(40);
-    driveSparkMaxConfig.signals.primaryEncoderPositionPeriodMs(
+    driveSparkFlexConfig.voltageCompensation(12);
+    driveSparkFlexConfig.smartCurrentLimit(40);
+    driveSparkFlexConfig.signals.primaryEncoderPositionPeriodMs(
         (int) (1000.0 / Module.ODOMETRY_FREQUENCY));
 
-    turnSparkMaxConfig.smartCurrentLimit(30);
-    turnSparkMaxConfig.voltageCompensation(12);
-    turnSparkMaxConfig.signals.primaryEncoderPositionPeriodMs(
+    turnSparkFlexConfig.smartCurrentLimit(30);
+    turnSparkFlexConfig.voltageCompensation(12);
+    turnSparkFlexConfig.signals.primaryEncoderPositionPeriodMs(
         (int) (1000.0 / Module.ODOMETRY_FREQUENCY));
-    turnSparkMaxConfig.inverted(isTurnMotorInverted);
+    turnSparkFlexConfig.inverted(isTurnMotorInverted);
 
     driveSparkFlex.configure(
-        driveSparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    turnSparkMax.configure(
-        turnSparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        driveSparkFlexConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    turnSparkFlex.configure(
+        turnSparkFlexConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     driveSparkFlex.setCANTimeout(250);
-    turnSparkMax.setCANTimeout(250);
+    turnSparkFlex.setCANTimeout(250);
 
     driveEncoder = driveSparkFlex.getEncoder();
-    turnRelativeEncoder = turnSparkMax.getEncoder();
+    turnRelativeEncoder = turnSparkFlex.getEncoder();
 
     // TODO: Test the removal of these two lines
-    turnSparkMax.setInverted(isTurnMotorInverted);
+    turnSparkFlex.setInverted(isTurnMotorInverted);
     driveSparkFlex.setInverted(true);
 
     driveEncoder.setPosition(0.0);
@@ -142,7 +143,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     // turnRelativeEncoder.setAverageDepth(2);
 
     driveSparkFlex.setCANTimeout(0);
-    turnSparkMax.setCANTimeout(0);
+    turnSparkFlex.setCANTimeout(0);
 
     timestampQueue = SparkMaxOdometryThread.getInstance().makeTimestampQueue();
 
@@ -166,7 +167,7 @@ public class ModuleIOSparkMax implements ModuleIO {
                 () -> {
                   double value = turnRelativeEncoder.getPosition();
 
-                  REVLibError lastError = turnSparkMax.getLastError();
+                  REVLibError lastError = turnSparkFlex.getLastError();
 
                   // if (lastError != REVLibError.kOk) {
                   //   SparkMaxOdometryThread.getInstance().addTurnError(lastError);
@@ -196,8 +197,8 @@ public class ModuleIOSparkMax implements ModuleIO {
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
             / TURN_GEAR_RATIO;
-    inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
-    inputs.turnCurrentAmps = new double[] {turnSparkMax.getOutputCurrent()};
+    inputs.turnAppliedVolts = turnSparkFlex.getAppliedOutput() * turnSparkFlex.getBusVoltage();
+    inputs.turnCurrentAmps = new double[] {turnSparkFlex.getOutputCurrent()};
 
     inputs.odometryTimestamps =
         timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
@@ -222,21 +223,21 @@ public class ModuleIOSparkMax implements ModuleIO {
 
   @Override
   public void setTurnVoltage(double volts) {
-    turnSparkMax.setVoltage(volts);
+    turnSparkFlex.setVoltage(volts);
   }
 
   @Override
   public void setDriveBrakeMode(boolean enable) {
-    driveSparkMaxConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+    driveSparkFlexConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     driveSparkFlex.configure(
-        driveSparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        driveSparkFlexConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
   public void setTurnBrakeMode(boolean enable) {
-    turnSparkMaxConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
-    turnSparkMax.configure(
-        turnSparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    turnSparkFlexConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+    turnSparkFlex.configure(
+        turnSparkFlexConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
