@@ -380,7 +380,6 @@ public class RobotContainer {
             new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
-            new InstantCommand(() -> {arm.bargging = true;}), 
             new InstantCommand(() -> {intake.setSpeed(0.3);}),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
             new WaitCommand(0.1),
@@ -393,7 +392,6 @@ public class RobotContainer {
             new WaitCommand(0.75),
             new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
             new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
-            new InstantCommand(() -> {arm.bargging = false;}),
             new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
 
             new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})).schedule();});    
