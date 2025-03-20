@@ -124,7 +124,7 @@ public final class Constants {
     public static final double trackWidthY = 0.574675;
 
     public static final double maxLinearVelocity = 4.5; // TODO: I made this number up
-    public static final double maxLinearAcceleration = 20.0; // TODO: I made this number up
+    public static final double maxLinearAcceleration = 9.0; // TODO: I made this number up
     public static final double maxAngularVelocity = 6;
     public static final double maxAngularAcceleration = 12;
 

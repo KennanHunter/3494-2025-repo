@@ -50,6 +50,7 @@ import frc.robot.util.SeanMathUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -286,11 +287,16 @@ public class Drive extends SubsystemBase {
       
       
       Optional<Alliance> ally = DriverStation.getAlliance();
+      try{
       if(ally.get() == DriverStation.Alliance.Red){
         currentRadiusFromReef = SeanMathUtil.distance(poseEstimator.getEstimatedPosition(), new Pose2d(AutoAlignDesitationDeterminer.transform2red(Constants.Field.Reef.reefCenter), new Rotation2d(0.0)));
       }
       else{
       currentRadiusFromReef = SeanMathUtil.distance(poseEstimator.getEstimatedPosition(), new Pose2d(Constants.Field.Reef.reefCenter, new Rotation2d(0.0)));
+      }
+      }
+      catch(Exception e){
+        
       }
       specialPoseEstimation = currentRadiusFromReef < 1.8;
       Logger.recordOutput("Drive/DistanceFromReef", currentRadiusFromReef);

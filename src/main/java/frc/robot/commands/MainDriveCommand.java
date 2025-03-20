@@ -82,8 +82,10 @@ public class MainDriveCommand extends Command{
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
                       : drive.getRotation()));
         if(linearVelocity != null && pastLinearVelocity != null){
+
+          double targetVelocity = Math.sqrt((linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() * linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec()) + (linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec()*linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec()));
           Logger.recordOutput("Drive/CurrentLinearV", (currentLinearVelocity));
-          Logger.recordOutput("Drive/TargetLinearV", (linearVelocity.getNorm()));
+          Logger.recordOutput("Drive/TargetLinearV", targetVelocity);
           Logger.recordOutput("Drive/LinearAcceleration", (linearVelocity.getNorm()-currentLinearVelocity)/(timer.get()-timeAtLastRead));
         }
         pastLinearVelocity = linearVelocity;  
