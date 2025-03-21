@@ -378,7 +378,7 @@ public class RobotContainer {
     //BARGE===================
     OI.bargeYeet().rising().ifHigh(()->{
         Commands.sequence(
-            new InstantCommand(() -> {arm.setCurrentLimit(100);}),
+            new InstantCommand(() -> {arm.setCurrentLimit(95);}),
             new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
@@ -396,7 +396,7 @@ public class RobotContainer {
             new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
             new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
             new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}),
-            new InstantCommand(() -> {arm.setCurrentLimit(60);})
+            new InstantCommand(() -> {arm.setCurrentLimit(Constants.Arm.normalCurrentLimit);})
         ).schedule();
     });    
     //CLIMB===========================

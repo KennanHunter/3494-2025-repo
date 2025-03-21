@@ -19,10 +19,8 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -30,6 +28,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import java.util.OptionalDouble;
 import java.util.Queue;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Module IO implementation for SparkMax drive motor controller, SparkMax turn motor controller (NEO
@@ -45,7 +44,7 @@ import java.util.Queue;
  */
 public class ModuleIOSparkMax implements ModuleIO {
   // Gear ratios for SDS MK4i L1, adjust as necessary
-  private static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (19.0 / 25.0) * (45.0 / 15.0);
+  private static double DRIVE_GEAR_RATIO = Constants.Drivetrain.L2_GEAR_RATIO;
   private static final double TURN_GEAR_RATIO = 150.0 / 7.0;
 
   private final SparkFlex driveSparkFlex;
@@ -75,7 +74,8 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 0:
         driveSparkFlex =
             new SparkFlex(Constants.Drivetrain.FRONT_LEFT_DRIVE_ID, MotorType.kBrushless);
-        turnSparkFlex = new SparkFlex(Constants.Drivetrain.FRONT_LEFT_STEER_ID, MotorType.kBrushless);
+        turnSparkFlex =
+            new SparkFlex(Constants.Drivetrain.FRONT_LEFT_STEER_ID, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogInput(Constants.Drivetrain.FRONT_LEFT_TURN_ENCODER_ID);
         absoluteEncoderOffset =
             new Rotation2d(Constants.Drivetrain.FRONT_LEFT_OFFSET); // MUST BE CALIBRATED
@@ -92,7 +92,8 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 2:
         driveSparkFlex =
             new SparkFlex(Constants.Drivetrain.BACK_LEFT_DRIVE_ID, MotorType.kBrushless);
-        turnSparkFlex = new SparkFlex(Constants.Drivetrain.BACK_LEFT_STEER_ID, MotorType.kBrushless);
+        turnSparkFlex =
+            new SparkFlex(Constants.Drivetrain.BACK_LEFT_STEER_ID, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogInput(Constants.Drivetrain.BACK_LEFT_TURN_ENCODER_ID);
         absoluteEncoderOffset =
             new Rotation2d(Constants.Drivetrain.BACK_LEFT_OFFSET); // MUST BE CALIBRATED
@@ -100,7 +101,8 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 3:
         driveSparkFlex =
             new SparkFlex(Constants.Drivetrain.BACK_RIGHT_DRIVE_ID, MotorType.kBrushless);
-        turnSparkFlex = new SparkFlex(Constants.Drivetrain.BACK_RIGHT_STEER_ID, MotorType.kBrushless);
+        turnSparkFlex =
+            new SparkFlex(Constants.Drivetrain.BACK_RIGHT_STEER_ID, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogInput(Constants.Drivetrain.BACK_RIGHT_TURN_ENCODER_ID);
         absoluteEncoderOffset =
             new Rotation2d(Constants.Drivetrain.BACK_RIGHT_OFFSET); // MUST BE CALIBRATED
@@ -243,5 +245,10 @@ public class ModuleIOSparkMax implements ModuleIO {
   @Override
   public Rotation2d getRawTurnEncoderPosition() {
     return lastRawTurnEncoderPosition;
+  }
+
+  public static void setGearRatio(double ratio) {
+    DRIVE_GEAR_RATIO = ratio;
+    Logger.recordOutput("Set_Drive_Gear", DRIVE_GEAR_RATIO);
   }
 }

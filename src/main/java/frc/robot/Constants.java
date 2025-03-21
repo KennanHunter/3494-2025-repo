@@ -33,7 +33,6 @@ public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
-
   public static final int POWER_DISTRIBUTION_PANEL_CAN_ID = 28;
 
   public static enum Mode {
@@ -63,12 +62,12 @@ public final class Constants {
 
     public static double armOuttakeL1 = 0.88;
     public static double armOuttakeL2 = 0.605; // -111.0;
-    public static double armOuttakeL2Auto = 0.61;//0.595;
+    public static double armOuttakeL2Auto = 0.61; // 0.595;
     public static double armOuttakeL3 = 0.62; // -106.0;
 
-    public static double armAlgeaL2 = 0.6125;//0.605
+    public static double armAlgeaL2 = 0.6125; // 0.605
     public static double armAlgeaL2Auto = 0.6125;
-    public static double armAlgeaL3 = 0.585;//0.58 // -116.0;
+    public static double armAlgeaL3 = 0.585; // 0.58 // -116.0;
     public static double armBargeYeet = 0.65;
 
     public static double liftIntake = 0;
@@ -76,7 +75,7 @@ public final class Constants {
     public static double liftOuttakeL3 = 44.0;
 
     public static double armLoliPop = 0.847;
-    
+
     public static double liftClimb = 20;
     public static double armClimb = 0.56;
 
@@ -84,7 +83,7 @@ public final class Constants {
     public static double climberStage1 = -25.0;
     public static double climberStage2 = -49.0;
 
-    public static double armBargeYeetRelease = 0.8;//0.8;//0.7965;
+    public static double armBargeYeetRelease = 0.8; // 0.8;//0.7965;
   }
 
   public static class OI {
@@ -93,16 +92,16 @@ public final class Constants {
 
   public static class Elevator {
     public static int bottomMagSensorDIO = 9;
-    public static int leaderMotor =12; //12;
-    public static int followerMotor =13; //13;
+    public static int leaderMotor = 12; // 12;
+    public static int followerMotor = 13; // 13;
   }
 
-
-  
   public static class Arm {
     public static int armMotor = 15;
     public static double manualPowerPOS = 0.006;
     public static double normalPIDRange = 0.45;
+
+    public static int normalCurrentLimit = 70;
   }
 
   public static class Intake {
@@ -116,6 +115,10 @@ public final class Constants {
 
   public static class Drivetrain {
     public static double L1autoAlignOffset = 0.1;
+
+    public static double L1_GEAR_RATIO = (50.0 / 14.0) * (19.0 / 25.0) * (45.0 / 15.0);
+    public static double L2_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0); // TODO
+
     public static double driveBaseRadius() {
       return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
     }
@@ -137,7 +140,7 @@ public final class Constants {
     public static final int FRONT_RIGHT_DRIVE_ID = 19; // 19
     public static final int FRONT_RIGHT_STEER_ID = 17; // 17
     public static final int FRONT_RIGHT_TURN_ENCODER_ID = 2; // 2
-    
+
     public static final double FRONT_RIGHT_OFFSET = Math.toRadians(150.5);
 
     public static final int BACK_LEFT_DRIVE_ID = 30; // 30
@@ -183,29 +186,30 @@ public final class Constants {
         new Translation2d(1.172, 7.0) // 9
       };
 
-      public static final Pose2d[] leftLocations = { //Placeholder currently using the center positions
-        new Pose2d(3.190, 4.222, new Rotation2d(0.0-Math.PI/2.0)), //1
-        new Pose2d(4.040, 5.193, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
-        new Pose2d(3.657, 3.050,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
-        new Pose2d(5.009, 5.167,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
-        new Pose2d(5.211, 3.008,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
-        new Pose2d(5.737, 4.112, new Rotation2d(Math.PI-Math.PI/2.0)),//6
-        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
-        new Pose2d(1.312, 0.948, new Rotation2d(0.3*Math.PI-Math.PI/2.0)),//8
-        new Pose2d(1.276, 7.124, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
+      public static final Pose2d[]
+          leftLocations = { // Placeholder currently using the center positions
+        new Pose2d(3.190, 4.222, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
+        new Pose2d(4.040, 5.193, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
+        new Pose2d(3.657, 3.050, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
+        new Pose2d(5.009, 5.167, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
+        new Pose2d(5.211, 3.008, new Rotation2d(2 * Math.PI / 3.0 - Math.PI / 2.0)), // 5
+        new Pose2d(5.737, 4.112, new Rotation2d(Math.PI - Math.PI / 2.0)), // 6
+        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI / 2.0 - Math.PI / 2.0)), // 7
+        new Pose2d(1.312, 0.948, new Rotation2d(0.3 * Math.PI - Math.PI / 2.0)), // 8
+        new Pose2d(1.276, 7.124, new Rotation2d(-0.3 * Math.PI - Math.PI / 2.0)) // 9
       };
 
-      public static final Pose2d[] rightLocations = { //Placeholder currently using the center positions
-        new Pose2d(3.256, 3.894, new Rotation2d(0.0-Math.PI/2.0)), //1
-        new Pose2d(3.760, 5.035, new Rotation2d(-Math.PI/3.0-Math.PI/2.0)),  //2
-        new Pose2d(3.988, 2.888,new Rotation2d(Math.PI/3.0-Math.PI/2.0)), //3
-        new Pose2d(5.297, 5.008,new Rotation2d(-2*Math.PI/3.0-Math.PI/2.0)), //4
-        new Pose2d(4.933, 2.837,new Rotation2d(2*Math.PI/3.0-Math.PI/2.0)), //5
-        new Pose2d(5.700, 3.812, new Rotation2d(Math.PI-Math.PI/2.0)),//6
-        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI/2.0-Math.PI/2.0)),//7
-        new Pose2d(1.702, 0.613, new Rotation2d(0.3*Math.PI-Math.PI/2.0)),//8
-        new Pose2d(0.685, 6.703, new Rotation2d(-0.3*Math.PI-Math.PI/2.0))//9
-
+      public static final Pose2d[]
+          rightLocations = { // Placeholder currently using the center positions
+        new Pose2d(3.256, 3.894, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
+        new Pose2d(3.760, 5.035, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
+        new Pose2d(3.988, 2.888, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
+        new Pose2d(5.297, 5.008, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
+        new Pose2d(4.933, 2.837, new Rotation2d(2 * Math.PI / 3.0 - Math.PI / 2.0)), // 5
+        new Pose2d(5.700, 3.812, new Rotation2d(Math.PI - Math.PI / 2.0)), // 6
+        new Pose2d(6.001, 0.489, new Rotation2d(Math.PI / 2.0 - Math.PI / 2.0)), // 7
+        new Pose2d(1.702, 0.613, new Rotation2d(0.3 * Math.PI - Math.PI / 2.0)), // 8
+        new Pose2d(0.685, 6.703, new Rotation2d(-0.3 * Math.PI - Math.PI / 2.0)) // 9
       };
       public static final Translation2d reefCenter = new Translation2d(4.59, 4.026);
     }
