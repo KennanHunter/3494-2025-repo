@@ -55,9 +55,15 @@ public class Limelights {
         tooFarAway = limelightLeftMeasurment.avgTagDist() > 3.1; // 3.25;
       }
 
-      logAllFiducialsPose3d(limelightLeftMeasurment);
-
-      Logger.recordOutput(limelightName + "/Valid", validMeasurment);
+      // logAllFiducialsPose3d(limelightLeftMeasurment);
+      
+      try {
+        Logger.recordOutput(limelightName+"/noTagsFound", noTagsFound);
+        Logger.recordOutput(limelightName+"/tooFarAway", tooFarAway);
+        Logger.recordOutput(limelightName+"/limelightLeftMeasurment", limelightLeftMeasurment);
+        Logger.recordOutput(limelightName + "/Valid", validMeasurment);
+      }
+      catch(Exception e) {}
 
       if (leftLimelightEmpty || rotationRateTooHigh || noTagsFound || tooFarAway) {
         validMeasurment = false;
