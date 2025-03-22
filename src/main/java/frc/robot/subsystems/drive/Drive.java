@@ -37,6 +37,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -315,15 +316,37 @@ public class Drive extends SubsystemBase {
         m_LimeLight3.setMegatag(false);
       }
 
+      
       // Logger.recordOutput("Drive/limelight3Distance", m_LimeLight3.getMeasurement().avgTagDist());
       if (m_LimeLight1.measurmentValid()) {
-          poseEstimator.addVisionMeasurement(
-              m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
+        poseEstimator.addVisionMeasurement(
+          m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
       }
       if (m_LimeLight2.measurmentValid() && !specialPoseEstimation) {
         poseEstimator.addVisionMeasurement(
-              m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+          m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
       }
+
+      if (DriverStation.isDisabled()) {
+        autoElapsedTime = null;
+      } else if (DriverStation.isTeleop()) {
+        autoElapsedTime = null;
+      } else if (DriverStation.isAutonomousEnabled() && autoElapsedTime == null) {
+        autoElapsedTime = new Timer();
+        autoElapsedTime.start();
+      }
+          
+      boolean inAuto = autoElapsedTime != null;
+
+      boolean ignoreSwerveLimelight = inAuto && !autoElapsedTime.hasElapsed(3);
+
+      Logger.recordOutput("Drive/IgnoringSwerveLimelight", ignoreSwerveLimelight);
+
+      if (ignoreSwerveLimelight) {
+        // Returns early if there is a autoElapsedTime (not teleop or disabled) and it is not over 3 seconds
+        return;
+      }
+
       if (m_LimeLight3.measurmentValid() && !specialPoseEstimation) {
         poseEstimator.addVisionMeasurement(
               m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
@@ -331,6 +354,8 @@ public class Drive extends SubsystemBase {
     
     }
   }
+
+  private Timer autoElapsedTime;
 
   /**
    * Runs the drive at the desired velocity.
