@@ -47,8 +47,8 @@ public class Elevator extends SubsystemBase {
     
   
     
-    leaderConfig.idleMode(IdleMode.kCoast);
-    followerConfig.idleMode(IdleMode.kCoast);
+    leaderConfig.idleMode(IdleMode.kBrake);
+    followerConfig.idleMode(IdleMode.kBrake);
     leaderConfig.inverted(true);//true
     followerConfig.inverted(false);//true
     
