@@ -126,7 +126,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    // robotContainer.drive.canReadTags = false;
+  }
 
   /** This function is called periodically when disabled. */
   @Override
@@ -135,8 +137,9 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    ModuleIOSparkMax.setGearRatio(Constants.Drivetrain.L2_GEAR_RATIO);
+    ModuleIOSparkMax.setGearRatio(Constants.Drivetrain.L1_GEAR_RATIO);
     robotContainer.drive.rezeroModulesRelativeEncoders(); // re-zero on auto init
+    // robotContainer.drive.canReadTags = true;
     autonomousCommand = robotContainer.getAutonomousCommand();
     // // schedule the autonomous command (example)
     if (autonomousCommand != null) {
@@ -155,7 +158,8 @@ public class Robot extends LoggedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    ModuleIOSparkMax.setGearRatio(Constants.Drivetrain.L1_GEAR_RATIO);
+    // robotContainer.drive.canReadTags = true;
+    ModuleIOSparkMax.setGearRatio(Constants.Drivetrain.L2_GEAR_RATIO);
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }

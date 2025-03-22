@@ -57,6 +57,8 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
+
+  // public boolean canReadTags = false;
   private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
   private static final double TRACK_WIDTH_X = Units.inchesToMeters(20.75); 
   private static final double TRACK_WIDTH_Y = Units.inchesToMeters(20.75);
@@ -312,6 +314,7 @@ public class Drive extends SubsystemBase {
         m_LimeLight2.setMegatag(false);
         m_LimeLight3.setMegatag(false);
       }
+
       // Logger.recordOutput("Drive/limelight3Distance", m_LimeLight3.getMeasurement().avgTagDist());
       if (m_LimeLight1.measurmentValid()) {
           poseEstimator.addVisionMeasurement(
@@ -325,6 +328,7 @@ public class Drive extends SubsystemBase {
         poseEstimator.addVisionMeasurement(
               m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
       }
+    
     }
   }
 
@@ -411,7 +415,11 @@ public class Drive extends SubsystemBase {
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
+    Logger.recordOutput("Drive/SetPoseInput", pose);
+    
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+
+    Logger.recordOutput("Drive/SetPoseOutputEstimation", poseEstimator.getEstimatedPosition());
   }
 
   /** Resets the current odometry pose. */

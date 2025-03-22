@@ -44,7 +44,7 @@ import org.littletonrobotics.junction.Logger;
  */
 public class ModuleIOSparkMax implements ModuleIO {
   // Gear ratios for SDS MK4i L1, adjust as necessary
-  private static double DRIVE_GEAR_RATIO = Constants.Drivetrain.L2_GEAR_RATIO;
+  private static double DRIVE_GEAR_RATIO = Constants.Drivetrain.L1_GEAR_RATIO;
   private static final double TURN_GEAR_RATIO = 150.0 / 7.0;
 
   private final SparkFlex driveSparkFlex;
@@ -249,6 +249,6 @@ public class ModuleIOSparkMax implements ModuleIO {
 
   public static void setGearRatio(double ratio) {
     DRIVE_GEAR_RATIO = ratio;
-    Logger.recordOutput("Set_Drive_Gear", DRIVE_GEAR_RATIO);
+    Logger.recordOutput("Drive/Set_Drive_Gear", DRIVE_GEAR_RATIO);
   }
 }
