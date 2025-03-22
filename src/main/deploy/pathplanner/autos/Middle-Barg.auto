@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Blue-Middle-Set-Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Intake"
           }
         },
@@ -138,6 +144,24 @@
           "type": "named",
           "data": {
             "name": "Barge"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L3 Algea"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Leave-after-barg"
           }
         }
       ]

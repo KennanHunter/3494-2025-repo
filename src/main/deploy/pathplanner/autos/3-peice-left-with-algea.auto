@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Blue-Left-Set-Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Intake"
           }
         },

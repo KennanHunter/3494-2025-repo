@@ -56,11 +56,11 @@ public final class Constants {
   public static class Presets {
     public static double globalArmOffset = -0.005; // -0.01
     public static double armIntake = 0.822; // -34.0;
-    public static double armIntakeLow = 0.833;
+    public static double armIntakeLow = 0.829;
     public static double armIntakeLowLow = 0.846;
     public static double armCoral = 0.85; // -136.0;
 
-    public static double armOuttakeL1 = 0.88;
+    public static double armOuttakeL1 = 0.875;
     public static double armOuttakeL2 = 0.60; // -111.0;
     public static double armOuttakeL2Auto = 0.60; // 0.595;
     public static double armOuttakeL3 = 0.62; // -106.0;
@@ -81,7 +81,7 @@ public final class Constants {
 
     public static double climberStage0 = 0.0;
     public static double climberStage1 = -28.0;
-    public static double climberStage2 = -54.5;
+    public static double climberStage2 = -53.4;
 
     public static double armBargeYeetRelease = 0.8; // 0.8;//0.7965;
   }
@@ -101,7 +101,7 @@ public final class Constants {
     public static double manualPowerPOS = 0.006;
     public static double normalPIDRange = 0.45;
 
-    public static int normalCurrentLimit = 70;
+    public static int normalCurrentLimit = 75;
   }
 
   public static class Intake {
@@ -188,7 +188,7 @@ public final class Constants {
 
       public static final Pose2d[]
           leftLocations = { // Placeholder currently using the center positions
-        new Pose2d(3.190, 4.222, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
+        new Pose2d(3.256, 4.222, new Rotation2d(0.0 - Math.PI / 2.0)), // 1
         new Pose2d(4.040, 5.193, new Rotation2d(-Math.PI / 3.0 - Math.PI / 2.0)), // 2
         new Pose2d(3.657, 3.050, new Rotation2d(Math.PI / 3.0 - Math.PI / 2.0)), // 3
         new Pose2d(5.009, 5.167, new Rotation2d(-2 * Math.PI / 3.0 - Math.PI / 2.0)), // 4
