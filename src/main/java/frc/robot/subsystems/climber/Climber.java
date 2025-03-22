@@ -59,12 +59,20 @@ public class Climber extends SubsystemBase {
     }
 
     prevTicks = inputs.targetPosition;
+
+    Logger.recordOutput("Climber/ClimberCurrent", climberMotor.getOutputCurrent());
+    Logger.recordOutput("Climber/IsBreak", climberMotor.configAccessor.getIdleMode() == IdleMode.kBrake);
   }
 
   public void setMotorPower(double power) {
     inputs.mode = ClimberMode.Manual;
     inputs.power = Math.max(Math.min(power, 1), -1);
     climberMotor.set(inputs.power);
+  }
+
+  public void setMotorBreak() {
+    climberMotorConfig.idleMode(IdleMode.kBrake);
+    climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   public void setTargetAngle(double ticks, double arbFFVoltage) {

@@ -424,8 +424,23 @@ public class RobotContainer {
     });
 
     OI.ClimbStage2().rising().ifHigh(()->{
-        climber.setCurrentLimit(80);
-        climber.setTargetAngle(Constants.Presets.climberStage2, 0);
+        Commands.sequence(
+            new InstantCommand(()->{climber.setMotorBreak();}),
+            new InstantCommand(()->{climber.setCurrentLimit(80);}),
+            new InstantCommand(()->{climber.setTargetAngle(Constants.Presets.climberStage2, 0);}),
+            new WaitCommand(1.5),
+            new InstantCommand(()->{climber.setCurrentLimit(70);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(60);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(50);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(40);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(20);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(0);})
+        ).schedule(); 
     });
   }
 
