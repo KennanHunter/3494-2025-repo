@@ -120,6 +120,15 @@ public class RobotContainer {
     // Set up auto routines
     NamedCommands.registerCommand(
         "Wheel Radius Calc", new WheelRadiusCharacterization(drive, Direction.COUNTER_CLOCKWISE));
+    NamedCommands.registerCommand(
+        "Blue-Left-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(7.196, 5.058, new Rotation2d(Math.toRadians(180))));}));
+    NamedCommands.registerCommand(
+        "Blue-Middle-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(7.550, 4.062, new Rotation2d(Math.toRadians(180))));}));
+    NamedCommands.registerCommand(
+        "Red-Left-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(10.349, 2.993, new Rotation2d(Math.toRadians(0))));}));
     //INTAKE STUFF-----------------------
     NamedCommands.registerCommand(
             "Intake", new AutoIntakePower(intake, -1));
