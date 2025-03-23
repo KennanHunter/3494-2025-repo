@@ -1,0 +1,394 @@
+{
+  "hubs": [
+    {
+      "x": -8,
+      "y": -8,
+      "width": 1382,
+      "height": 736,
+      "state": {
+        "sidebar": {
+          "width": 333,
+          "expanded": [
+            "/AdvantageKit/NetworkInputs/SmartDashboard",
+            "/RealOutputs/Alerts",
+            "/RealOutputs/Alerts/errors",
+            "/AdvantageKit/Drive",
+            "/AdvantageKit/RealOutputs",
+            "/AdvantageKit/RealOutputs/Odometry",
+            "/AdvantageKit",
+            "/AdvantageKit/Climber",
+            "/AdvantageKit/RealOutputs/Climber",
+            "/RealOutputs/Odometry",
+            "/RealOutputs/Alerts/infos",
+            "/RealOutputs/Alerts/warnings",
+            "/RadioStatus/Status",
+            "/RealOutputs/LoggedRobot",
+            "/RealOutputs/Mitocandira",
+            "/RealOutputs/Mitocandira/PigeonChannel",
+            "/RealOutputs/Mitocandira/LimelightChannel",
+            "/RealOutputs/Odometry/GoalPose",
+            "/AdvantageKit/RealOutputs/Drive",
+            "/AdvantageKit/RealOutputs/SwerveStates",
+            "/RealOutputs/Arm",
+            "/RealOutputs/Elevator",
+            "/NetworkInputs/SmartDashboard",
+            "/RealOutputs/Drive",
+            "/RealOutputs/SwerveStates",
+            "/RealOutputs/limelight-right/limelightLeftMeasurment/pose",
+            "/RealOutputs/limelight-right/limelightLeftMeasurment/pose/translation",
+            "/RealOutputs/limelight-left/limelightLeftMeasurment/pose",
+            "/RealOutputs/limelight-left/limelightLeftMeasurment/pose/translation",
+            "/RealOutputs/limelight-swerve/limelightLeftMeasurment",
+            "/RealOutputs/limelight-swerve/limelightLeftMeasurment/pose",
+            "/RealOutputs/limelight-swerve/limelightLeftMeasurment/pose/translation",
+            "/SystemStats/CANBus",
+            "/RadioStatus/Status/networkStatus6",
+            "/DriverStation/Joystick0/AxisValues",
+            "/DriverStation/Joystick0/AxisTypes",
+            "/DriverStation/Joystick0/POVs",
+            "/DriverStation/Joystick1/AxisTypes",
+            "/RealOutputs/Intake",
+            "/RealOutputs/AutoAlign",
+            "/RealOutputs",
+            "/RealOutputs/limelight-swerve",
+            "/RealOutputs/limelight-left",
+            "/RealOutputs/limelight-right/limelightLeftMeasurment",
+            "/RealOutputs/limelight-right",
+            "/RealOutputs/limelight-left/limelightLeftMeasurment"
+          ]
+        },
+        "tabs": {
+          "selected": 3,
+          "tabs": [
+            {
+              "type": 0,
+              "title": "",
+              "controller": null,
+              "controllerUUID": "mxiiw8jy13kvsptoz8gx39psje6uuq8q",
+              "renderer": "#/",
+              "controlsHeight": 0
+            },
+            {
+              "type": 1,
+              "title": "Line Graph",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/Arm/Applied-Current",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#858584",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/Arm/Current-Limit",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#3b875a",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/Arm/Applied-Output",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#d993aa",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/Arm/Target-Position",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/Arm/Arm-Encoder-Position",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [
+                  {
+                    "type": "stripes",
+                    "logKey": "/DriverStation/Autonomous",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/DriverStation/FMSAttached",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/RadioStatus/Status/networkStatus6/connectionQuality",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487"
+                    }
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "rightUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "yn4ik717nsf9nkrq3id9bkvfbu51r0xa",
+              "renderer": null,
+              "controlsHeight": 162
+            },
+            {
+              "type": 8,
+              "title": "Joysticks",
+              "controller": [
+                "Xbox Controller (White)",
+                "None",
+                "None",
+                "None",
+                "None",
+                "None"
+              ],
+              "controllerUUID": "4y0xaxzgwbwf08v384rb013vaa0m6o8d",
+              "renderer": null,
+              "controlsHeight": 85
+            },
+            {
+              "type": 2,
+              "title": "Odometry",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "arrow",
+                    "logKey": "/RealOutputs/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "position": "center"
+                    }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "/RealOutputs/Odometry/GoalPose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "color": "#00ff00"
+                    }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "/RealOutputs/limelight-swerve/limelightLeftMeasurment/pose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "color": "#ff0000"
+                    }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "/RealOutputs/limelight-right/limelightLeftMeasurment/pose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "color": "#0000ff"
+                    }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "/RealOutputs/limelight-left/limelightLeftMeasurment/pose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "color": "#ff8c00"
+                    }
+                  }
+                ],
+                "game": "2025 Field (Welded)",
+                "bumpers": "auto",
+                "origin": "blue",
+                "orientation": 0,
+                "size": 24
+              },
+              "controllerUUID": "gqoewd35eqv8krl8jor1losmhlt4mf3o",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 3,
+              "title": "3D Field",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2025 KitBot"
+                    }
+                  }
+                ],
+                "game": "2025 Field (Welded)",
+                "origin": "blue"
+              },
+              "controllerUUID": "oqk7umd4kag0h7vt5p21x9cnc8ed6eaz",
+              "renderer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  1.4695761589768238e-15,
+                  5.999999999999999,
+                  -12
+                ],
+                "cameraTarget": [
+                  0,
+                  0.5,
+                  0
+                ]
+              },
+              "controlsHeight": 200
+            },
+            {
+              "type": 8,
+              "title": "Joysticks",
+              "controller": [
+                "Xbox Controller (White)",
+                "Generic Joystick",
+                "Generic Joystick",
+                "None",
+                "None",
+                "None"
+              ],
+              "controllerUUID": "ew29vw7ik1u8scv9496jnp287117df23",
+              "renderer": null,
+              "controlsHeight": 85
+            },
+            {
+              "type": 5,
+              "title": "Console",
+              "controller": "/RealOutputs/Console",
+              "controllerUUID": "u2j9yuzlt8p6db51jrr7d9i8k19x9zj0",
+              "renderer": {
+                "highlight": false
+              },
+              "controlsHeight": 0
+            },
+            {
+              "type": 2,
+              "title": "Odometry",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/Trajectory",
+                    "logType": "Pose2d[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#00ff00"
+                    }
+                  }
+                ],
+                "game": "2025 Field (Welded)",
+                "bumpers": "auto",
+                "origin": "blue",
+                "orientation": 0,
+                "size": 30
+              },
+              "controllerUUID": "0vt9dro6da3n61xv3yuj1e0gs4o5cuh1",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 9,
+              "title": "Swerve",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "states",
+                    "logKey": "/RealOutputs/SwerveStates/Measured",
+                    "logType": "SwerveModuleState[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#ff0000",
+                      "arrangement": "0,1,2,3"
+                    }
+                  },
+                  {
+                    "type": "states",
+                    "logKey": "/RealOutputs/SwerveStates/SetpointsOptimized",
+                    "logType": "SwerveModuleState[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#0000ff",
+                      "arrangement": "0,1,2,3"
+                    }
+                  }
+                ],
+                "maxSpeed": 5,
+                "sizeX": 0.65,
+                "sizeY": 0.65,
+                "orientation": 1
+              },
+              "controllerUUID": "slh77ke7zmax3f47i8dq6b3paxmkaom9",
+              "renderer": null,
+              "controlsHeight": 200
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "4.1.1"
+}
