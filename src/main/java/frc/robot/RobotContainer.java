@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAlignDesitationDeterminer;
+import frc.robot.commands.AutoIntakeDeadline;
 import frc.robot.commands.AutoIntakePower;
 import frc.robot.commands.BargFligIntake;
 import frc.robot.commands.Direction;
@@ -146,6 +147,8 @@ public class RobotContainer {
                 "Outtake Algea", new AutoIntakePower(intake, 1));
     NamedCommands.registerCommand(
             "Outtake L1", new AutoIntakePower(intake, -0.3));
+    NamedCommands.registerCommand(
+            "Intake Deadline", new AutoIntakeDeadline(intake));
     NamedCommands.registerCommand(
             "Stop Intake", new AutoIntakePower(intake, 0));
     //Superstructure Place STUFF-----------------------
