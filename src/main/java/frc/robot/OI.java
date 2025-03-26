@@ -81,6 +81,12 @@ public final class OI {
   public static BooleanEvent L3Coral(){
     return leftButtonBoard.button(2,eventLoop);
   }
+  public static BooleanEvent L2Algea(){
+    return leftButtonBoard.button(4,eventLoop);
+  }
+  public static BooleanEvent L2Coral(){
+    return leftButtonBoard.button(5,eventLoop);
+  }
   public static BooleanEvent startClimb(){
     return rightButtonBoard.button(3, eventLoop);
   }
@@ -93,6 +99,9 @@ public final class OI {
 
   public static BooleanEvent ClimbStage2(){
     return rightButtonBoard.button(7, eventLoop);
+  }
+  public static BooleanEvent l1Test(){
+    return rightButtonBoard.button(8, eventLoop);
   }
   public static double powerCurved(double inputPower){
     double newValue = Math.pow(inputPower, 2);

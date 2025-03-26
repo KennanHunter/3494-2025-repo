@@ -15,6 +15,7 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.google.googlejavaformat.Indent.Const;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -279,7 +280,7 @@ public class RobotContainer {
         }));
     controller.
         leftBumper()
-        .or(controller.rightBumper())
+        .or(controller.rightBumper()).or(controller.x())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -290,7 +291,7 @@ public class RobotContainer {
 
                   // -----------
                   drive.setDefaultCommand(
-                      DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
+                      DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean(), controller.x().getAsBoolean()));
                   System.out.println(drive.getDefaultCommand());
 
                   // ------------
@@ -298,7 +299,7 @@ public class RobotContainer {
         }));
     controller
         .leftBumper()
-        .or(controller.rightBumper())
+        .or(controller.rightBumper()).or(controller.x())
         .onFalse(
             Commands.runOnce(
                 () -> {
@@ -312,7 +313,7 @@ public class RobotContainer {
                 }));
     controller
         .leftBumper()
-        .or(controller.rightBumper())
+        .or(controller.rightBumper()).or(controller.x())
         .onTrue(
             Commands.runOnce(
                     () ->
@@ -323,7 +324,7 @@ public class RobotContainer {
 
     //======== L3 ============
     OI.L3Algea().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+        elevator.setElevatorPosition(Constants.Presets.liftAlgeaL3);
         arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
     });
     OI.L3Algea().falling().ifHigh(()->{
@@ -335,24 +336,36 @@ public class RobotContainer {
         arm.setTargetAngle(Constants.Presets.armOuttakeL3, 0);
     });
     //========== L2 ===============
-    controller
-        .x().or(()->leftButtonBoard.getRawButton(4))
-        .onTrue(
-            Commands.sequence(
-                new InstantCommand(
-                    () -> {
-                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                        arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
-                    })));
-    controller
-        .x().or(()->leftButtonBoard.getRawButton(5)).or(() -> leftButtonBoard.getRawButtonReleased(4))
-        .onFalse(
-            Commands.sequence(
-                new InstantCommand(
-                    () -> {
-                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
-                        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
-                    })));
+    OI.L2Algea().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftAlgeaL2);
+        arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+    });
+    OI.L2Algea().falling().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+    });
+    OI.L2Coral().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+    });
+    // controller
+    //     .x().or(()->leftButtonBoard.getRawButton(4))
+    //     .onTrue(
+    //         Commands.sequence(
+    //             new InstantCommand(
+    //                 () -> {
+    //                     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //                     arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+    //                 })));
+    // controller
+    //     .x().or(()->leftButtonBoard.getRawButton(5)).or(() -> leftButtonBoard.getRawButtonReleased(4))
+    //     .onFalse(
+    //         Commands.sequence(
+    //             new InstantCommand(
+    //                 () -> {
+    //                     elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+    //                     arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+    //                 })));
     //========= L1 ==============
     controller
         .a().or(()->leftButtonBoard.getRawButton(9))
@@ -363,6 +376,10 @@ public class RobotContainer {
                         elevator.setElevatorPosition(Constants.Presets.liftIntake);
                         arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
                     })));
+    OI.l1Test().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.L1elevatorTest);
+        arm.setTargetAngle(Constants.Presets.L1armtest, 0);
+    });
     //========= Intake ==============
     OI.Intake().falling().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
@@ -396,7 +413,7 @@ public class RobotContainer {
     //BARGE===================
     OI.bargeYeet().rising().ifHigh(()->{
         Commands.sequence(
-            new InstantCommand(() -> {arm.setCurrentLimit(95);}),
+            new InstantCommand(() -> {arm.setCurrentLimit(73);}),
             new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 

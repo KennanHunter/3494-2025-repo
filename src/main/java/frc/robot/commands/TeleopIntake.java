@@ -36,6 +36,9 @@ public class TeleopIntake extends Command {
       intakePower *= 0.3;
       AutoAlignDesitationDeterminer.placingAtL1 = true;
     }
+    if(arm.getTargetPosition() == Constants.Presets.L1armtest+Constants.Presets.globalArmOffset){
+      intakePower *= 0.75;
+    }
 
     
     else{

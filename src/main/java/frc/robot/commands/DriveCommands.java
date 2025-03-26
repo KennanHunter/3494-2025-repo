@@ -88,9 +88,9 @@ public class DriveCommands {
     //     drive);
   }
 
-  public static Command autoAlign(Drive drive, boolean leftSide) {
+  public static Command autoAlign(Drive drive, boolean leftSide, boolean barging) {
     System.out.println("REUESTED--------------------");
-    Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide);
+    Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide, barging);
     if(leftSide){
       drive.m_LimeLight1.setCropY(-1, 1);
       // drive.m_LimeLight1.setMegatag(true);
