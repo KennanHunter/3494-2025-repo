@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.OI;
@@ -14,6 +16,8 @@ public class TeleopIntake extends Command {
   double lastPower;
   private double armPower = 0;
   private double lastIntakePower = -1;
+  private boolean holding_algea = false;
+  private Timer algeaTimer = new Timer();
 
   public TeleopIntake(Intake intake, Arm arm) {
     this.intake = intake;
@@ -46,13 +50,28 @@ public class TeleopIntake extends Command {
     }
     if (arm.getTargetPosition() == Constants.Presets.armCoral+Constants.Presets.globalArmOffset){
       arm.setPIDlimits(-0.8, 0.8);
+      holding_algea = true;
+      algeaTimer.start();
       System.out.println("limiting!!!!!!!!!");
+      if(arm.getAbsoluteTicks() > 0.7){
+        arm.setPIDlimits(-0.4, 0.4);
+      }
     }
+    else{
+      arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);
+      algeaTimer.stop();
+      holding_algea = false;
+    }
+
     // else{
     //   arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);
     // }
     if(intakePower != lastIntakePower){
       intake.setSpeed(intakePower);
+    }
+    else if(holding_algea && OI.deadband(intakePower, 0.5) == 0){
+      boolean isIntaking =  ((int) (algeaTimer.get()*10))%2 ==1;
+      intake.setSpeed(((isIntaking) ? 1: 0));
     }
     lastIntakePower = intakePower;
     

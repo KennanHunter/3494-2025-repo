@@ -390,6 +390,7 @@ public class RobotContainer {
         arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
     });
     OI.Processor().rising().ifHigh(()->{
+
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armCoral, 0);
     });
@@ -417,7 +418,7 @@ public class RobotContainer {
             new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
-            new InstantCommand(() -> {intake.setSpeed(0.3);}),
+            new InstantCommand(() -> {intake.setSpeed(0.5);}),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
             new WaitCommand(0.1),
             new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),

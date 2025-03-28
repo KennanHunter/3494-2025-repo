@@ -104,7 +104,7 @@ public final class Constants {
   public static class Arm {
     public static int armMotor = 15;
     public static double manualPowerPOS = 0.006;
-    public static double normalPIDRange = 0.45;
+    public static double normalPIDRange = 0.9;
 
     public static int normalCurrentLimit = 75;
   }
