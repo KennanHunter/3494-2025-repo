@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
   public double currentAverage(double currentCurrent) {
     currents.add(0, currentCurrent);
 
-    if (currents.size() >= 20) {
+    if (currents.size() >= 10) {
       currents.remove(currents.size() - 1);
     }
     double average = 0;
@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     double Cavrg = currentAverage(intakeMotor.getOutputCurrent());
-    if (Cavrg > 9) {
+    if (Cavrg >13) {
       hasCoral = true;
     }
     Logger.recordOutput("Intake/Current-Average", Cavrg);
