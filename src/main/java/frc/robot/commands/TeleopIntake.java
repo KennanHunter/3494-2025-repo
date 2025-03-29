@@ -58,7 +58,7 @@ public class TeleopIntake extends Command {
       }
     }
     else{
-      arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);
+      // arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);
       algeaTimer.stop();
       holding_algea = false;
     }
