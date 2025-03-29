@@ -3,6 +3,8 @@ package frc.robot.commands;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import com.google.googlejavaformat.Indent.Const;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,7 +17,7 @@ import frc.robot.Constants;
 public class AutoAlignDesitationDeterminer {
     public static boolean placingAtL1 = false;
     public static boolean seekingAlgea = false;
-    public static Supplier<Pose2d> destination(Pose2d robotPosition, boolean leftSide){
+    public static Supplier<Pose2d> destination(Pose2d robotPosition, boolean leftSide, boolean barging){
         Supplier<Pose2d> targetSupplier =
         () -> {
             double distance;
@@ -60,6 +62,10 @@ public class AutoAlignDesitationDeterminer {
                 Pose2d rightPos = Constants.Field.Reef.rightLocations[minIndex];
                 Pose2d averagePos = new Pose2d((leftPos.getX()+rightPos.getX())/2.0, (leftPos.getY()+rightPos.getY())/2.0, new Rotation2d((leftPos.getRotation().getRadians()+rightPos.getRotation().getRadians())/2.0));
                 targetPose = averagePos;
+            }
+
+            if(barging){
+                targetPose = Constants.Field.bargeSpot;
             }
             if(ally.get() == DriverStation.Alliance.Red){
                 targetPose = pose2red(targetPose);

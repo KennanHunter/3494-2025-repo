@@ -99,6 +99,9 @@ public class Elevator extends SubsystemBase {
     Logger.recordOutput("Elevator/Target-Position", targetPosition);
     Logger.recordOutput("Elevator/AppliedPOwer-Leader", leaderMotor.getAppliedOutput());
     Logger.recordOutput("Elevator/AppliedPower-Follower", followerMotor.getAppliedOutput());
+
+    Logger.recordOutput("Elevator/AppliedCurrent-Leader", leaderMotor.getOutputCurrent());
+    Logger.recordOutput("Elevator/AppliedCurrent-Follower", followerMotor.getOutputCurrent());
   }
 
   /**

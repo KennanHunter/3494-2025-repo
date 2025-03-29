@@ -302,6 +302,9 @@ public class Drive extends SubsystemBase {
         
       }
       specialPoseEstimation = currentRadiusFromReef < 1.8;
+      if(!m_LimeLight1.measurmentValid()){
+        specialPoseEstimation = false;
+      }
       Logger.recordOutput("Drive/DistanceFromReef", currentRadiusFromReef);
       Logger.recordOutput("Drive/InSpecialMode", specialPoseEstimation);
       poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Was 0.7, limelight recommends 0.5, 5188 0.1, and Sonic squirels 0.9
