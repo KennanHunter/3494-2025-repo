@@ -1,3 +1,4 @@
+
 // Copyright 2021-2024 FRC 6328
 // http://github.com/Mechanical-Advantage
 //
@@ -138,7 +139,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    ModuleIOSparkMax.setGearRatio(Constants.Drivetrain.L1_GEAR_RATIO);
+    ModuleIOSparkMax.setGearRatio(Constants.Drivetrain.L2_GEAR_RATIO);
     robotContainer.drive.rezeroModulesRelativeEncoders(); // re-zero on auto init
     // robotContainer.drive.canReadTags = true;
     autonomousCommand = robotContainer.getAutonomousCommand();

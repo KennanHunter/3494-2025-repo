@@ -143,7 +143,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
             "Outtake", new AutoIntakePower(intake, 1));
     NamedCommands.registerCommand(
-                "Outtake Fast", new AutoIntakePower(intake, 0.5));
+                "Outtake Fast", new AutoIntakePower(intake, 0.75));
     NamedCommands.registerCommand(
                 "Outtake Algea", new AutoIntakePower(intake, 1));
     NamedCommands.registerCommand(
@@ -212,12 +212,12 @@ public class RobotContainer {
                         arm.setTargetAngle(Constants.Presets.armCoral, 0);
                     })));
     NamedCommands.registerCommand(//THIS IS IN AUTO, IF YOU WANNA TUNE DONT RUN THIS ONE
-            "Barge", Commands.sequence(
-                new InstantCommand(() -> {arm.setCurrentLimit(95);}),
+            "Barge",Commands.sequence(
+                new InstantCommand(() -> {arm.setCurrentLimit(73);}),
                 new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
                 new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
                 new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
-                new InstantCommand(() -> {intake.setSpeed(0.3);}),
+                new InstantCommand(() -> {intake.setSpeed(0.5);}),
                 new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
                 new WaitCommand(0.1),
                 new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
@@ -227,11 +227,12 @@ public class RobotContainer {
                 // new WaitCommand(0.39),//WORKED at 0.2
                 // new InstantCommand(() -> {intake.setSpeed(-1);}),
                 new WaitCommand(0.75),
-                new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
+                new InstantCommand(() -> {elevator.setPIDlimits(-0.75, 0.75);}),
                 new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
                 new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
                 new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}),
-                new InstantCommand(() -> {arm.setCurrentLimit(Constants.Arm.normalCurrentLimit);}))); 
+                new InstantCommand(() -> {arm.setCurrentLimit(Constants.Arm.normalCurrentLimit);})
+            )); 
 
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
