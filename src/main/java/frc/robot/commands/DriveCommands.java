@@ -48,48 +48,49 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
-    return Commands.run(
-        () -> {
-          // Apply deadband
-          double linearMagnitude =
-              MathUtil.applyDeadband(
-                  Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), DEADBAND);
-          Rotation2d linearDirection =
-              new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
-          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+    return new MainDriveCommand(drive, xSupplier, ySupplier, omegaSupplier);
+    // return Commands.run(
+    //     () -> {
+    //       // Apply deadband
+    //       double linearMagnitude =
+    //           MathUtil.applyDeadband(
+    //               Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), DEADBAND);
+    //       Rotation2d linearDirection =
+    //           new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+    //       double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
 
-          // Square values
-          linearMagnitude = linearMagnitude * linearMagnitude;
-          omega = Math.copySign(omega * omega, omega);
+    //       // Square values
+    //       linearMagnitude = linearMagnitude * linearMagnitude;
+    //       omega = Math.copySign(omega * omega, omega);
 
-          // Calcaulate new linear velocity
-          Translation2d linearVelocity =
-              new Pose2d(new Translation2d(), linearDirection)
-                  .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
-                  .getTranslation();
+    //       // Calcaulate new linear velocity
+    //       Translation2d linearVelocity =
+    //           new Pose2d(new Translation2d(), linearDirection)
+    //               .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+    //               .getTranslation();
 
-          // Convert to field relative speeds & send command
-          boolean isFlipped = false;
-          // We're flipping at Blue instead of Red (which was 6328 default)
-          Optional<Alliance> ally = DriverStation.getAlliance();
-          if(ally.get() == DriverStation.Alliance.Red){
-            isFlipped = true;
-          }
-            drive.runVelocity(
-              ChassisSpeeds.fromFieldRelativeSpeeds(
-                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                  omega * drive.getMaxAngularSpeedRadPerSec(),
-                  isFlipped
-                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                      : drive.getRotation()));          
-        },
-        drive);
+    //       // Convert to field relative speeds & send command
+    //       boolean isFlipped = false;
+    //       // We're flipping at Blue instead of Red (which was 6328 default)
+    //       Optional<Alliance> ally = DriverStation.getAlliance();
+    //       if(ally.get() == DriverStation.Alliance.Red){
+    //         isFlipped = true;
+    //       }
+    //         drive.runVelocity(
+    //           ChassisSpeeds.fromFieldRelativeSpeeds(
+    //               linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+    //               linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+    //               omega * drive.getMaxAngularSpeedRadPerSec(),
+    //               isFlipped
+    //                   ? drive.getRotation().plus(new Rotation2d(Math.PI))
+    //                   : drive.getRotation()));          
+    //     },
+    //     drive);
   }
 
-  public static Command autoAlign(Drive drive, boolean leftSide) {
+  public static Command autoAlign(Drive drive, boolean leftSide, boolean barging) {
     System.out.println("REUESTED--------------------");
-    Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide);
+    Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide, barging);
     if(leftSide){
       drive.m_LimeLight1.setCropY(-1, 1);
       // drive.m_LimeLight1.setMegatag(true);

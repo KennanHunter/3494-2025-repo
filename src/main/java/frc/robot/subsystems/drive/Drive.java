@@ -37,6 +37,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,12 +51,15 @@ import frc.robot.util.SeanMathUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
+
+  // public boolean canReadTags = false;
   private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
   private static final double TRACK_WIDTH_X = Units.inchesToMeters(20.75); 
   private static final double TRACK_WIDTH_Y = Units.inchesToMeters(20.75);
@@ -145,8 +149,9 @@ public class Drive extends SubsystemBase {
             ),
         config,
         () ->
-            DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == Alliance.Red,
+          false,
+            // DriverStation.getAlliance().isPresent()
+            //     && DriverStation.getAlliance().get() == Alliance.Red,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
@@ -285,13 +290,21 @@ public class Drive extends SubsystemBase {
       
       
       Optional<Alliance> ally = DriverStation.getAlliance();
+      try{
       if(ally.get() == DriverStation.Alliance.Red){
         currentRadiusFromReef = SeanMathUtil.distance(poseEstimator.getEstimatedPosition(), new Pose2d(AutoAlignDesitationDeterminer.transform2red(Constants.Field.Reef.reefCenter), new Rotation2d(0.0)));
       }
       else{
       currentRadiusFromReef = SeanMathUtil.distance(poseEstimator.getEstimatedPosition(), new Pose2d(Constants.Field.Reef.reefCenter, new Rotation2d(0.0)));
       }
-      specialPoseEstimation = currentRadiusFromReef < 2.0;
+      }
+      catch(Exception e){
+        
+      }
+      specialPoseEstimation = currentRadiusFromReef < 1.8;
+      if(!m_LimeLight1.measurmentValid()){
+        specialPoseEstimation = false;
+      }
       Logger.recordOutput("Drive/DistanceFromReef", currentRadiusFromReef);
       Logger.recordOutput("Drive/InSpecialMode", specialPoseEstimation);
       poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Was 0.7, limelight recommends 0.5, 5188 0.1, and Sonic squirels 0.9
@@ -305,21 +318,47 @@ public class Drive extends SubsystemBase {
         m_LimeLight2.setMegatag(false);
         m_LimeLight3.setMegatag(false);
       }
+
+      
       // Logger.recordOutput("Drive/limelight3Distance", m_LimeLight3.getMeasurement().avgTagDist());
       if (m_LimeLight1.measurmentValid()) {
-          poseEstimator.addVisionMeasurement(
-              m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
-      }
-      if (m_LimeLight2.measurmentValid() && !specialPoseEstimation) {
         poseEstimator.addVisionMeasurement(
-              m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+          m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
       }
-      if (m_LimeLight3.measurmentValid() && !specialPoseEstimation) {
-        poseEstimator.addVisionMeasurement(
-              m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
+      // if (m_LimeLight2.measurmentValid() && !specialPoseEstimation) {
+      //   poseEstimator.addVisionMeasurement(
+      //     m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+      // }
+
+      if (DriverStation.isDisabled()) {
+        autoElapsedTime = null;
+      } else if (DriverStation.isTeleop()) {
+        autoElapsedTime = null;
+      } else if (DriverStation.isAutonomousEnabled() && autoElapsedTime == null) {
+        autoElapsedTime = new Timer();
+        autoElapsedTime.start();
       }
+          
+      boolean inAuto = autoElapsedTime != null;
+
+      boolean ignoreSwerveLimelight = inAuto && !autoElapsedTime.hasElapsed(3);
+
+      Logger.recordOutput("Drive/IgnoringSwerveLimelight", ignoreSwerveLimelight);
+
+      if (ignoreSwerveLimelight) {
+        // Returns early if there is a autoElapsedTime (not teleop or disabled) and it is not over 3 seconds
+        return;
+      }
+
+      // if (m_LimeLight3.measurmentValid() && !specialPoseEstimation) {
+      //   poseEstimator.addVisionMeasurement(
+      //         m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
+      // }
+    
     }
   }
+
+  private Timer autoElapsedTime;
 
   /**
    * Runs the drive at the desired velocity.
@@ -404,7 +443,11 @@ public class Drive extends SubsystemBase {
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
+    Logger.recordOutput("Drive/SetPoseInput", pose);
+    
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+
+    Logger.recordOutput("Drive/SetPoseOutputEstimation", poseEstimator.getEstimatedPosition());
   }
 
   /** Resets the current odometry pose. */

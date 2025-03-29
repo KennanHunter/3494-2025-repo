@@ -79,15 +79,22 @@
           }
         },
         {
-          "type": "wait",
+          "type": "race",
           "data": {
-            "waitTime": 0.75
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Deadline"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
+                }
+              }
+            ]
           }
         },
         {
@@ -166,15 +173,22 @@
           }
         },
         {
-          "type": "wait",
+          "type": "race",
           "data": {
-            "waitTime": 0.75
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Deadline"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
+                }
+              }
+            ]
           }
         },
         {

@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Blue-Right-Set-Pose"
+            "name": "Red-Right-Set-Pose"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1st-Peice-right"
+            "pathName": "Red-1st-Peice-right"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "intake-from-1st-right"
+            "pathName": "Red-intake-from-1st-right"
           }
         },
         {
@@ -83,7 +83,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2nd-peice-better-right"
+                  "pathName": "Red-2nd-peice-better-right"
                 }
               }
             ]
@@ -120,7 +120,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Algea-after-2nd-peice"
+                  "pathName": "Red-Algea-after-2nd-peice"
                 }
               },
               {
@@ -180,7 +180,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Backup-after-algea"
+                        "pathName": "Red-Backup-after-algea"
                       }
                     },
                     {

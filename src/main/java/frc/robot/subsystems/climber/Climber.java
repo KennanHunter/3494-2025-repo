@@ -20,16 +20,18 @@ public class Climber extends SubsystemBase {
   public ClimberIO climberIO;
   public double prevTicks;
 
+  private SparkMaxConfig climberMotorConfig;
+
   public Climber() {
     climberMotor = new SparkMax(Constants.Climber.CLIMBER_MOTOR_CAN_ID, MotorType.kBrushless);
 
-    SparkMaxConfig climberMotorConfig = new SparkMaxConfig();
-    climberMotorConfig.idleMode(IdleMode.kBrake);
+    climberMotorConfig = new SparkMaxConfig();
+    climberMotorConfig.idleMode(IdleMode.kCoast);
     climberMotorConfig.inverted(false);
     climberMotorConfig.closedLoop.pid(2, 0, 0);
     climberMotorConfig.closedLoop.outputRange(-1, 1);
     climberMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    climberMotorConfig.smartCurrentLimit(100);
+    climberMotorConfig.smartCurrentLimit(13);//100 works
 
     climberMotor.configure(
         climberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -44,30 +46,43 @@ public class Climber extends SubsystemBase {
 
     if (inputs.mode == ClimberMode.Automatic) {
       // Only update if it's a new value to not fill up can bus
-      if (inputs.targetPosition != prevTicks) {
+      // if (inputs.targetPosition != prevTicks) {
         climberMotor
             .getClosedLoopController()
             .setReference(
                 inputs.targetPosition, SparkMax.ControlType.kPosition, ClosedLoopSlot.kSlot0);
-      }
+      // }
     }
 
     if (inputs.mode == ClimberMode.Manual) {
-      if (inputs.climberPosition > -1) {
         climberMotor.set(inputs.power);
-      }
     }
 
     prevTicks = inputs.targetPosition;
+
+    Logger.recordOutput("Climber/ClimberCurrent", climberMotor.getOutputCurrent());
+    Logger.recordOutput("Climber/IsBreak", climberMotor.configAccessor.getIdleMode() == IdleMode.kBrake);
   }
 
   public void setMotorPower(double power) {
     inputs.mode = ClimberMode.Manual;
     inputs.power = Math.max(Math.min(power, 1), -1);
+    climberMotor.set(inputs.power);
+  }
+
+  public void setMotorBreak() {
+    climberMotorConfig.idleMode(IdleMode.kBrake);
+    climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   public void setTargetAngle(double ticks, double arbFFVoltage) {
     inputs.mode = ClimberMode.Automatic;
     inputs.targetPosition = ticks;
+  }
+
+  public void setCurrentLimit(int limit){
+    climberMotorConfig.smartCurrentLimit(limit);
+    climberMotor.configure(
+        climberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 }

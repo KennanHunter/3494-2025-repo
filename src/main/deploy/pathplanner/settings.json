@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [
     "Left-Side",
+    "Middle-Side",
     "Right-Side"
   ],
   "autoFolders": [],
@@ -16,7 +17,7 @@
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.048,
-  "driveGearing": 5.143,
+  "driveGearing": 8.14,
   "maxDriveSpeed": 5.45,
   "driveMotorType": "vortex",
   "driveCurrentLimit": 60.0,

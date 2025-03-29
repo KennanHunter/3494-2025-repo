@@ -13,9 +13,12 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.google.googlejavaformat.Indent.Const;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -24,11 +27,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAlignDesitationDeterminer;
+import frc.robot.commands.AutoIntakeDeadline;
 import frc.robot.commands.AutoIntakePower;
+import frc.robot.commands.BargFligIntake;
 import frc.robot.commands.Direction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopClimber;
@@ -46,7 +52,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -117,6 +122,21 @@ public class RobotContainer {
     // Set up auto routines
     NamedCommands.registerCommand(
         "Wheel Radius Calc", new WheelRadiusCharacterization(drive, Direction.COUNTER_CLOCKWISE));
+    NamedCommands.registerCommand(
+        "Blue-Left-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(7.196, 5.058, new Rotation2d(Math.toRadians(180))));}));
+    NamedCommands.registerCommand(
+        "Blue-Right-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(7.652, 2.954, new Rotation2d(Math.toRadians(90))));}));
+    NamedCommands.registerCommand(
+        "Blue-Middle-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(7.550, 4.062, new Rotation2d(Math.toRadians(180))));}));
+    NamedCommands.registerCommand(
+        "Red-Left-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(10.349, 2.993, new Rotation2d(Math.toRadians(0))));}));
+    NamedCommands.registerCommand(
+        "Red-Right-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(9.893, 5.098, new Rotation2d(Math.toRadians(-90))));}));
     //INTAKE STUFF-----------------------
     NamedCommands.registerCommand(
             "Intake", new AutoIntakePower(intake, -1));
@@ -128,6 +148,8 @@ public class RobotContainer {
                 "Outtake Algea", new AutoIntakePower(intake, 1));
     NamedCommands.registerCommand(
             "Outtake L1", new AutoIntakePower(intake, -0.3));
+    NamedCommands.registerCommand(
+            "Intake Deadline", new AutoIntakeDeadline(intake));
     NamedCommands.registerCommand(
             "Stop Intake", new AutoIntakePower(intake, 0));
     //Superstructure Place STUFF-----------------------
@@ -150,7 +172,7 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                     elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                    arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+                    arm.setTargetAngle(Constants.Presets.armAlgeaL2Auto, 0);
         })));
     NamedCommands.registerCommand(
         "L3 Outtake", Commands.sequence(
@@ -189,6 +211,28 @@ public class RobotContainer {
                         elevator.setElevatorPosition(Constants.Presets.liftIntake);
                         arm.setTargetAngle(Constants.Presets.armCoral, 0);
                     })));
+    NamedCommands.registerCommand(//THIS IS IN AUTO, IF YOU WANNA TUNE DONT RUN THIS ONE
+            "Barge", Commands.sequence(
+                new InstantCommand(() -> {arm.setCurrentLimit(95);}),
+                new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
+                new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
+                new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
+                new InstantCommand(() -> {intake.setSpeed(0.3);}),
+                new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+                new WaitCommand(0.1),
+                new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+                new WaitCommand(0.0),
+                new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+                new BargFligIntake(arm, intake, Constants.Presets.armBargeYeetRelease),
+                // new WaitCommand(0.39),//WORKED at 0.2
+                // new InstantCommand(() -> {intake.setSpeed(-1);}),
+                new WaitCommand(0.75),
+                new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
+                new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
+                new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+                new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}),
+                new InstantCommand(() -> {arm.setCurrentLimit(Constants.Arm.normalCurrentLimit);}))); 
+
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // Set up SysId routines
@@ -239,7 +283,7 @@ public class RobotContainer {
         }));
     controller.
         leftBumper()
-        .or(controller.rightBumper())
+        .or(controller.rightBumper()).or(controller.x())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -250,7 +294,7 @@ public class RobotContainer {
 
                   // -----------
                   drive.setDefaultCommand(
-                      DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean()));
+                      DriveCommands.autoAlign(drive, controller.leftBumper().getAsBoolean(), controller.x().getAsBoolean()));
                   System.out.println(drive.getDefaultCommand());
 
                   // ------------
@@ -258,7 +302,7 @@ public class RobotContainer {
         }));
     controller
         .leftBumper()
-        .or(controller.rightBumper())
+        .or(controller.rightBumper()).or(controller.x())
         .onFalse(
             Commands.runOnce(
                 () -> {
@@ -272,7 +316,7 @@ public class RobotContainer {
                 }));
     controller
         .leftBumper()
-        .or(controller.rightBumper())
+        .or(controller.rightBumper()).or(controller.x())
         .onTrue(
             Commands.runOnce(
                     () ->
@@ -283,7 +327,7 @@ public class RobotContainer {
 
     //======== L3 ============
     OI.L3Algea().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
+        elevator.setElevatorPosition(Constants.Presets.liftAlgeaL3);
         arm.setTargetAngle(Constants.Presets.armAlgeaL3, 0);
     });
     OI.L3Algea().falling().ifHigh(()->{
@@ -295,24 +339,36 @@ public class RobotContainer {
         arm.setTargetAngle(Constants.Presets.armOuttakeL3, 0);
     });
     //========== L2 ===============
-    controller
-        .x().or(()->leftButtonBoard.getRawButton(4))
-        .onTrue(
-            Commands.sequence(
-                new InstantCommand(
-                    () -> {
-                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                        arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
-                    })));
-    controller
-        .x().or(()->leftButtonBoard.getRawButton(5)).or(() -> leftButtonBoard.getRawButtonReleased(4))
-        .onFalse(
-            Commands.sequence(
-                new InstantCommand(
-                    () -> {
-                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
-                        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
-                    })));
+    OI.L2Algea().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftAlgeaL2);
+        arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+    });
+    OI.L2Algea().falling().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+    });
+    OI.L2Coral().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+        arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+    });
+    // controller
+    //     .x().or(()->leftButtonBoard.getRawButton(4))
+    //     .onTrue(
+    //         Commands.sequence(
+    //             new InstantCommand(
+    //                 () -> {
+    //                     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //                     arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+    //                 })));
+    // controller
+    //     .x().or(()->leftButtonBoard.getRawButton(5)).or(() -> leftButtonBoard.getRawButtonReleased(4))
+    //     .onFalse(
+    //         Commands.sequence(
+    //             new InstantCommand(
+    //                 () -> {
+    //                     elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+    //                     arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
+    //                 })));
     //========= L1 ==============
     controller
         .a().or(()->leftButtonBoard.getRawButton(9))
@@ -323,12 +379,21 @@ public class RobotContainer {
                         elevator.setElevatorPosition(Constants.Presets.liftIntake);
                         arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
                     })));
+    OI.l1Test().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.L1elevatorTest);
+        arm.setTargetAngle(Constants.Presets.L1armtest, 0);
+    });
     //========= Intake ==============
-    OI.Intake().rising().ifHigh(()->{
+    OI.Intake().falling().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armIntake, 0);
     });
+    OI.Intake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
+    });
     OI.Processor().rising().ifHigh(()->{
+
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armCoral, 0);
     });
@@ -337,9 +402,13 @@ public class RobotContainer {
         arm.setTargetAngle(Constants.Presets.armLoliPop, 0);
     });
     //LOW INTAKE======================
-    OI.lowIntake().rising().ifHigh(()->{
+    OI.lowIntake().falling().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
+    });
+    OI.lowIntake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntakeLowLow, 0);
     });
     OI.lowLowIntake().rising().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
@@ -348,22 +417,76 @@ public class RobotContainer {
     //BARGE===================
     OI.bargeYeet().rising().ifHigh(()->{
         Commands.sequence(
+            new InstantCommand(() -> {arm.setCurrentLimit(73);}),
             new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
+            new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
+            new InstantCommand(() -> {intake.setSpeed(0.5);}),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
             new WaitCommand(0.1),
-            new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+            new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
             new WaitCommand(0.0),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
-            new WaitCommand(0.36),//WORKED at 0.2
-            new InstantCommand(() -> {intake.setSpeed(-1);}),
+            new BargFligIntake(arm, intake, Constants.Presets.armBargeYeetRelease),
+            // new WaitCommand(0.39),//WORKED at 0.2
+            // new InstantCommand(() -> {intake.setSpeed(-1);}),
             new WaitCommand(0.75),
             new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
-            new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})).schedule();});    
+            new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
+            new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+            new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}),
+            new InstantCommand(() -> {arm.setCurrentLimit(Constants.Arm.normalCurrentLimit);})
+        ).schedule();
+    });    
     //CLIMB===========================
     OI.startClimb().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftClimb);
-        arm.setTargetAngle(Constants.Presets.armClimb, 0);
+        Commands.sequence(
+            new InstantCommand(() -> {
+                elevator.setElevatorPosition(Constants.Presets.liftClimb);
+                arm.setTargetAngle(Constants.Presets.armClimb, 0);
+            }),
+            new WaitCommand(0.5),
+            new InstantCommand(() -> {
+                climber.setTargetAngle(0, 0);
+            })
+        ).schedule();
+    });
+    
+    OI.ClimbStage0().rising().ifHigh(()->{
+        Commands.sequence(
+            new PrintCommand("UNOVERCENTERING------------------"),
+            new InstantCommand(()->{climber.setMotorPower(0.3);}),
+            new WaitCommand(0.7),
+            new InstantCommand(()->{climber.setMotorPower(-0.4);}),
+            new WaitCommand(0.4),
+            new InstantCommand(()->{climber.setMotorPower(0);})
+        ).schedule();
+        //climber.setTargetAngle(Constants.Presets.climberStage0, 0);
+    });
+
+    OI.ClimbStage1().rising().ifHigh(()->{
+        climber.setCurrentLimit(20);
+        climber.setTargetAngle(Constants.Presets.climberStage1, 0);
+    });
+
+    OI.ClimbStage2().rising().ifHigh(()->{
+        Commands.sequence(
+            new InstantCommand(()->{climber.setMotorBreak();}),
+            new InstantCommand(()->{climber.setCurrentLimit(80);}),
+            new InstantCommand(()->{climber.setTargetAngle(Constants.Presets.climberStage2, 0);}),
+            new WaitCommand(1.5),
+            new InstantCommand(()->{climber.setCurrentLimit(70);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(60);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(50);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(40);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(20);}),
+            new WaitCommand(0.1),
+            new InstantCommand(()->{climber.setCurrentLimit(0);})
+        ).schedule(); 
     });
   }
 
