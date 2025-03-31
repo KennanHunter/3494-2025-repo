@@ -64,6 +64,7 @@ public final class Constants {
     public static double armOuttakeL2 = 0.60; // -111.0;
     public static double armOuttakeL2Auto = 0.60; // 0.595;
     public static double armOuttakeL3 = 0.62; // -106.0;
+    public static double armGroundTransfer = 0.846;
 
     public static double armAlgeaL2 = 0.6125;//0.6125; // 0.605
     public static double armAlgeaL2Auto = 0.6125;
@@ -89,6 +90,9 @@ public final class Constants {
 
     public static double L1armtest = 0.613; // 0.610
     public static double L1elevatorTest = 8.38;
+
+    public static double groundIntakeIntake = 0.4;
+    public static double groundIntakeStore = 0.0;
   }
 
   public static class OI {
@@ -99,6 +103,12 @@ public final class Constants {
     public static int bottomMagSensorDIO = 9;
     public static int leaderMotor = 12; // 12;
     public static int followerMotor = 13; // 13;
+  }
+  public static class GroundIntake {
+    public static int pivotMotor = 0;
+    public static int frontIntakeMotor = 0;
+    public static int backIntakeMotor = 0;
+
   }
 
   public static class Arm {

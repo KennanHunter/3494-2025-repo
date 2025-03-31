@@ -43,6 +43,21 @@ public final class OI {
     return Sean_intake_power + Ashton_intake_power;
   }
 
+  public static BooleanEvent activateGroundIntake(){
+    double Sean_intake_power =
+        deadband(-primaryController.getRightTriggerAxis(), Constants.Intake.DEADBAND)
+            + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
+    return new BooleanEvent(eventLoop, ()->(Sean_intake_power>0));
+  }
+  public static BooleanEvent L1GroundIntake(){
+    return rightButtonBoard.button(9, eventLoop);
+  }
+
+  public static BooleanEvent groundIntakeOuttake(){
+    return rightButtonBoard.button(10, eventLoop);
+  }
+  
+
   public static double getElevatorPower() {
     // TODO: assign a button
     double upPower = (primaryController.povUp(eventLoop).getAsBoolean() ? -0.5 : 0.0);

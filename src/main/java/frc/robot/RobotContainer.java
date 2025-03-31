@@ -13,9 +13,10 @@
 
 package frc.robot;
 
+import java.net.ContentHandler;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import com.google.googlejavaformat.Indent.Const;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -42,6 +43,7 @@ import frc.robot.commands.TeleopElevator;
 import frc.robot.commands.TeleopIntake;
 import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.commands.WheelRadiusCharacterization;
+import frc.robot.subsystems.GroundIntake;
 import frc.robot.subsystems.SuperStructure.Arm;
 import frc.robot.subsystems.SuperStructure.Elevator;
 import frc.robot.subsystems.SuperStructure.Intake;
@@ -66,6 +68,7 @@ public class RobotContainer {
   private final Elevator elevator;
   private final Arm arm;
   private final Climber climber;
+  private final GroundIntake groundIntake;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -79,11 +82,13 @@ public class RobotContainer {
     arm = new Arm();
     intake = new Intake();
     climber = new Climber();
+    groundIntake = new GroundIntake();
     //arm.setDefaultCommand(new TeleopArm(arm)); the intake command overrides this so for now its content is going in the intake command
     elevator.setDefaultCommand(new TeleopElevator(elevator));
     intake.setDefaultCommand(new TeleopIntake(intake, arm));
     // arm.setDefaultCommand(new TeleopIntake(intake, arm));
     climber.setDefaultCommand(new TeleopClimber(climber));
+
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -402,6 +407,38 @@ public class RobotContainer {
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armLoliPop, 0);
     });
+
+    OI.activateGroundIntake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armGroundTransfer, 0);
+        groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
+        groundIntake.setIntakePower(0.75, 0.75);
+    });
+
+    OI.activateGroundIntake().falling().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntake, 0);
+        groundIntake.setIntakePosition(Constants.Presets.groundIntakeStore);
+        groundIntake.setIntakePower(0, 0);
+    });
+
+    OI.L1GroundIntake().rising().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armGroundTransfer, 0);
+        groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
+        groundIntake.setIntakePower(0.75, -0.1);
+    });
+    OI.L1GroundIntake().falling().ifHigh(()->{
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armIntake, 0);
+        groundIntake.setIntakePosition(Constants.Presets.groundIntakeStore);
+        groundIntake.setIntakePower(0, 0);
+    });
+
+    OI.groundIntakeOuttake().rising().ifHigh(()->{
+        groundIntake.setIntakePower(-0.6, -0.6);
+    });
+
     //LOW INTAKE======================
     OI.lowIntake().falling().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
