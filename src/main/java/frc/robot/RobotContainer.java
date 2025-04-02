@@ -159,6 +159,18 @@ public class RobotContainer {
             "Stop Intake", new AutoIntakePower(intake, 0));
     //Superstructure Place STUFF-----------------------
     NamedCommands.registerCommand(
+            "FreeArm", Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+                    }),
+                new WaitCommand(0.3),
+                new InstantCommand(() -> {
+                    arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
+                    groundIntake.setIntakePosition(Constants.Presets.groundIntakeStation);
+                })
+                    ));
+    NamedCommands.registerCommand(
             "L1", Commands.sequence(
                 new InstantCommand(
                     () -> {
@@ -206,8 +218,8 @@ public class RobotContainer {
             "Intake Pos", Commands.sequence(
                 new InstantCommand(
                     () -> {
-                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                        arm.setTargetAngle(Constants.Presets.armIntake, 0);
+                        elevator.setElevatorPosition(Constants.Presets.liftIntakeAlt);
+                        arm.setTargetAngle(Constants.Presets.armIntakeAlt, 0);
                     })));
     NamedCommands.registerCommand(
             "Algea Pos", Commands.sequence(
@@ -390,68 +402,119 @@ public class RobotContainer {
         arm.setTargetAngle(Constants.Presets.L1armtest, 0);
     });
     //========= Intake ==============
-    OI.Intake().falling().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armIntake, 0);
-    });
     OI.Intake().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
+        Commands.sequence(
+            new InstantCommand(() -> {
+                elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+                arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
+            }),
+            new WaitCommand(0.25),
+            new InstantCommand(() -> {
+                groundIntake.setIntakePosition(Constants.Presets.groundIntakeStation);
+                groundIntake.setIntakePower(0, 0);
+            }),
+            new WaitCommand(0.5),
+            new InstantCommand(() -> {
+                arm.setTargetAngle(Constants.Presets.armIntakeAlt, 0);
+            }),
+            new WaitCommand(0.25),
+            new InstantCommand(() -> {
+                elevator.setElevatorPosition(Constants.Presets.liftIntakeAlt);
+            })            
+        ).schedule();
     });
-    OI.Processor().rising().ifHigh(()->{
+    // OI.Intake().rising().ifHigh(()->{
+    //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //     arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
+    // });
+    // OI.Processor().rising().ifHigh(()->{
 
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armCoral, 0);
-    });
+    //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //     arm.setTargetAngle(Constants.Presets.armCoral, 0);
+    // });
     OI.lolipop().rising().ifHigh(()->{
         elevator.setElevatorPosition(Constants.Presets.liftIntake);
         arm.setTargetAngle(Constants.Presets.armLoliPop, 0);
     });
 
     OI.activateGroundIntake().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armGroundTransfer, 0);
-        groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
-        groundIntake.setIntakePower(0.75, 0.75);
+        Commands.sequence(
+            new InstantCommand(() -> {
+                elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
+            }),
+            new WaitCommand(0.25),
+            new InstantCommand(() -> {
+                groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
+                groundIntake.setIntakePower(-0.5, 0.5);
+            }),
+            new WaitCommand(0.25),
+            new InstantCommand(() -> {
+                elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                arm.setTargetAngle(Constants.Presets.armGroundTransfer, 0);
+            })            
+        ).schedule();
+        
     });
 
     OI.activateGroundIntake().falling().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armIntake, 0);
-        groundIntake.setIntakePosition(Constants.Presets.groundIntakeStore);
-        groundIntake.setIntakePower(0, 0);
+        Commands.sequence(
+            new InstantCommand(() -> {
+                elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
+            }),
+            new WaitCommand(0.5),
+            new InstantCommand(() -> {
+                groundIntake.setIntakePosition(Constants.Presets.groundIntakeHover);
+                groundIntake.setIntakePower(0, 0);
+            })
+        ).schedule();
+        
     });
 
     OI.L1GroundIntake().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armGroundTransfer, 0);
-        groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
-        groundIntake.setIntakePower(0.75, -0.1);
+        Commands.sequence(
+            new InstantCommand(() -> {
+                elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
+                groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
+                groundIntake.setIntakePower(-0.5, -0.5);
+            })
+        ).schedule();
     });
     OI.L1GroundIntake().falling().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armIntake, 0);
-        groundIntake.setIntakePosition(Constants.Presets.groundIntakeStore);
-        groundIntake.setIntakePower(0, 0);
+        Commands.sequence(
+            // new InstantCommand(() -> {
+            //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+            //     arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
+            // }),
+            // new WaitCommand(0.5),
+            new InstantCommand(() -> {
+                groundIntake.setIntakePosition(Constants.Presets.groundIntakeL1);
+                groundIntake.setIntakePower(0, 0);
+            })
+        ).schedule();
     });
 
     OI.groundIntakeOuttake().rising().ifHigh(()->{
-        groundIntake.setIntakePower(-0.6, -0.6);
+        groundIntake.setIntakePower(0.2, -0.5);
     });
-
+    OI.groundIntakeOuttake().falling().ifHigh(()->{
+        groundIntake.setIntakePower(0, 0);
+    });
     //LOW INTAKE======================
-    OI.lowIntake().falling().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
-    });
-    OI.lowIntake().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armIntakeLowLow, 0);
-    });
-    OI.lowLowIntake().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armIntakeLowLow, 0);
-    });
+    // OI.lowIntake().falling().ifHigh(()->{
+    //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //     arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
+    // });
+    // OI.lowIntake().rising().ifHigh(()->{
+    //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //     arm.setTargetAngle(Constants.Presets.armIntakeLowLow, 0);
+    // });
+    // OI.lowLowIntake().rising().ifHigh(()->{
+    //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //     arm.setTargetAngle(Constants.Presets.armIntakeLowLow, 0);
+    // });
     //BARGE===================
     OI.bargeYeet().rising().ifHigh(()->{
         Commands.sequence(

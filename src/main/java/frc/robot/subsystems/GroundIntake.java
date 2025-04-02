@@ -33,8 +33,9 @@ public class GroundIntake extends SubsystemBase  {
         frontIntakeMotorConfig = new SparkMaxConfig();
         backIntakeMotorConfig = new SparkMaxConfig();
 
-        pivotMotorConfig.smartCurrentLimit(40);
+        pivotMotorConfig.smartCurrentLimit(45);
         pivotMotorConfig.closedLoop.pid(4, 0, 0);
+        pivotMotorConfig.closedLoop.outputRange(-0.6, 0.6);
         pivotMotorConfig.idleMode(IdleMode.kBrake);
 
         frontIntakeMotorConfig.idleMode(IdleMode.kBrake);
@@ -46,7 +47,7 @@ public class GroundIntake extends SubsystemBase  {
         backIntakeMotorConfig.inverted(false);
 
         pivotMotor.configure(
-            pivotMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            pivotMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         frontIntakeMotor.configure(
             frontIntakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         backIntakeMotor.configure(

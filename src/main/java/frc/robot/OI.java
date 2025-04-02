@@ -44,10 +44,11 @@ public final class OI {
   }
 
   public static BooleanEvent activateGroundIntake(){
-    double Sean_intake_power =
-        deadband(-primaryController.getRightTriggerAxis(), Constants.Intake.DEADBAND)
-            + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
-    return new BooleanEvent(eventLoop, ()->(Sean_intake_power>0));
+    // double Sean_intake_power =
+    //     deadband(-primaryController.getRightTriggerAxis(), Constants.Intake.DEADBAND)
+    //         + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
+    // return new BooleanEvent(eventLoop, ()->(Sean_intake_power<0));
+    return primaryController.rightTrigger(0.05, eventLoop);
   }
   public static BooleanEvent L1GroundIntake(){
     return rightButtonBoard.button(9, eventLoop);
