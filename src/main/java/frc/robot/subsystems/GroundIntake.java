@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.google.googlejavaformat.Indent.Const;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -23,6 +24,8 @@ public class GroundIntake extends SubsystemBase  {
     private SparkMaxConfig backIntakeMotorConfig;
 
     public double targetPosition = 99999.0;
+    public double hoverPosition = Constants.Presets.groundIntakeHover;
+   
 
     public GroundIntake(){
         pivotMotor = new SparkMax(Constants.GroundIntake.pivotMotor, MotorType.kBrushless);
@@ -67,6 +70,7 @@ public class GroundIntake extends SubsystemBase  {
     @Override
   public void periodic() {
     Logger.recordOutput("Ground-Intake/Pivot-Position", pivotMotor.getEncoder().getPosition());
+    Logger.recordOutput("Ground-Intake/Pivot-Target-Position", targetPosition);
     Logger.recordOutput("Ground-Intake/Pivot-Power", pivotMotor.getAppliedOutput());
     Logger.recordOutput("Ground-Intake/Pivot-Current", pivotMotor.getOutputCurrent());
 

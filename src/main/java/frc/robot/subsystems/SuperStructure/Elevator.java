@@ -38,7 +38,7 @@ public class Elevator extends SubsystemBase {
     leaderConfig.smartCurrentLimit(80);
 
     leaderConfig.closedLoop.pid(0.8, 0, 0);
-    leaderConfig.closedLoop.outputRange(-0.75, 0.75);
+    leaderConfig.closedLoop.outputRange(-0.8, 0.8);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
     followerConfig.closedLoop.pid(0.8, 0, 0);

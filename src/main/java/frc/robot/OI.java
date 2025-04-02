@@ -111,7 +111,7 @@ public final class OI {
   }
 
   public static BooleanEvent L2Algea() {
-    return leftButtonBoard.button(4, eventLoop);
+    return leftButtonBoard.button(4, eventLoop).or(primaryController.x(eventLoop));
   }
 
   public static BooleanEvent L2Coral() {
