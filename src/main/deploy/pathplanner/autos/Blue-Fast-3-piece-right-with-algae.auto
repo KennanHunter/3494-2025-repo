@@ -17,15 +17,35 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "L2 Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Fast-1st-piece-right"
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "FreeArm"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L2 Outtake"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Fast-1st-piece-right"
+                }
+              }
+            ]
           }
         },
         {
@@ -37,7 +57,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.12
+            "waitTime": 0.15
           }
         },
         {
