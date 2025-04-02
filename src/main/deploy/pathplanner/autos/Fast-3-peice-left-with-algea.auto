@@ -17,15 +17,35 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "L2 Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Fast-1st-peice-left"
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "FreeArm"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L2 Outtake"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Fast-1st-peice-left"
+                }
+              }
+            ]
           }
         },
         {

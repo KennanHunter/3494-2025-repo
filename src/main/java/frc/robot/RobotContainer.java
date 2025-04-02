@@ -65,10 +65,10 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   public final Intake intake;
-  private final Elevator elevator;
-  private final Arm arm;
-  private final Climber climber;
-  private final GroundIntake groundIntake;
+  public  final Elevator elevator;
+  public final Arm arm;
+  public final Climber climber;
+  public final GroundIntake groundIntake;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -401,13 +401,22 @@ public class RobotContainer {
                         arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
                     })));
     OI.l1Test().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.L1elevatorTest);
-        arm.setTargetAngle(Constants.Presets.L1armtest, 0);
+        Command l1TestCommand =  Commands.sequence(new InstantCommand(()->{
+            elevator.setElevatorPosition(Constants.Presets.L1elevatorTest);
+            arm.setTargetAngle(Constants.Presets.L1armtest, 0);
+        }));
+        if(!arm.groundIntaking){
+            l1TestCommand.schedule();
+        }
+        else{
+            arm.bufferedCommand = l1TestCommand;
+        }
     });
     //========= Intake ==============
     OI.Intake().rising().ifHigh(()->{
         Commands.sequence(
             new InstantCommand(() -> {
+                arm.groundIntaking = true;
                 elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
                 arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
             }),
@@ -423,6 +432,7 @@ public class RobotContainer {
             new WaitCommand(0.25),
             new InstantCommand(() -> {
                 elevator.setElevatorPosition(Constants.Presets.liftIntakeAlt);
+                arm.groundIntaking = false;
             })            
         ).schedule();
     });
@@ -436,8 +446,16 @@ public class RobotContainer {
     //     arm.setTargetAngle(Constants.Presets.armCoral, 0);
     // });
     OI.lolipop().rising().ifHigh(()->{
-        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-        arm.setTargetAngle(Constants.Presets.armLoliPop, 0);
+        Command lolipop =  Commands.sequence(new InstantCommand(()->{
+            elevator.setElevatorPosition(Constants.Presets.liftIntake);
+            arm.setTargetAngle(Constants.Presets.armLoliPop, 0);
+        }));
+        if(!arm.groundIntaking){
+           lolipop.schedule();
+        }
+        else{
+            arm.bufferedCommand = lolipop;
+        }
     });
 
     OI.activateGroundIntake().rising().ifHigh(()->{
