@@ -131,6 +131,9 @@ public class RobotContainer {
         "Blue-Left-Set-Pose",  new InstantCommand(
             () -> {drive.setPose(new Pose2d(7.196, 5.058, new Rotation2d(Math.toRadians(180))));}));
     NamedCommands.registerCommand(
+        "Blue-Right-Fast-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(7.196, 2.994, new Rotation2d(Math.toRadians(0))));}));
+    NamedCommands.registerCommand(
         "Blue-Right-Set-Pose",  new InstantCommand(
             () -> {drive.setPose(new Pose2d(7.652, 2.954, new Rotation2d(Math.toRadians(90))));}));
     NamedCommands.registerCommand(
