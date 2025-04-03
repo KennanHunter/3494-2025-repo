@@ -257,7 +257,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.175
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -307,19 +307,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Algea Pos"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.1
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "L1"
+                        "name": "Processor"
                       }
                     }
                   ]

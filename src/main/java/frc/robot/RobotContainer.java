@@ -165,9 +165,9 @@ public class RobotContainer {
             "FreeArm", Commands.sequence(
                 new InstantCommand(
                     () -> {
-                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+                        elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);
                     }),
-                new WaitCommand(0.3),
+                new WaitCommand(0.5),
                 new InstantCommand(() -> {
                     arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
                     groundIntake.setIntakePosition(Constants.Presets.groundIntakeStation);
@@ -224,6 +224,14 @@ public class RobotContainer {
                         elevator.setElevatorPosition(Constants.Presets.liftIntakeAlt);
                         arm.setTargetAngle(Constants.Presets.armIntakeAlt, 0);
                     })));
+    NamedCommands.registerCommand(
+            "Processor", Commands.sequence(
+                new InstantCommand(
+                    () -> {
+                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                        arm.setTargetAngle(Constants.Presets.armCoral, 0);
+                    })));
+                    
     NamedCommands.registerCommand(
             "Algea Pos", Commands.sequence(
                 new InstantCommand(
@@ -452,15 +460,15 @@ public class RobotContainer {
     //                     arm.setTargetAngle(Constants.Presets.armOuttakeL2, 0);
     //                 })));
     //========= L1 ==============
-    controller
-        .a().or(()->leftButtonBoard.getRawButton(9))
-        .onFalse(
-            Commands.sequence(
-                new InstantCommand(
-                    () -> {
-                        elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                        arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
-                    })));
+    // controller
+    //     .a().or(()->leftButtonBoard.getRawButton(9))
+    //     .onFalse(
+    //         Commands.sequence(
+    //             new InstantCommand(
+    //                 () -> {
+    //                     elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //                     arm.setTargetAngle(Constants.Presets.armOuttakeL1, 0);
+    //                 })));
     OI.l1Test().rising().ifHigh(()->{
         Command l1TestCommand =  Commands.sequence(new InstantCommand(()->{
             elevator.setElevatorPosition(Constants.Presets.L1elevatorTest);
@@ -508,11 +516,11 @@ public class RobotContainer {
     //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
     //     arm.setTargetAngle(Constants.Presets.armIntakeLow, 0);
     // });
-    // OI.Processor().rising().ifHigh(()->{
+    OI.Processor().rising().ifHigh(()->{
 
-    //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
-    //     arm.setTargetAngle(Constants.Presets.armCoral, 0);
-    // });
+        elevator.setElevatorPosition(Constants.Presets.liftIntake);
+        arm.setTargetAngle(Constants.Presets.armCoral, 0);
+    });
     OI.lolipop().rising().ifHigh(()->{
         Command lolipop =  Commands.sequence(new InstantCommand(()->{
             elevator.setElevatorPosition(Constants.Presets.liftIntake);
@@ -527,18 +535,43 @@ public class RobotContainer {
     });
 
     OI.activateGroundIntake().rising().ifHigh(()->{
+        if(arm.getTargetPosition() == Constants.Presets.armIntakeAlt + Constants.Presets.globalArmOffset){
+            Constants.Presets.defenseDelay = 1;
+        }
+        else{
+            Constants.Presets.defenseDelay = 0;
+        }
+        if(groundIntake.targetPosition == Constants.Presets.groundIntakeL1 ||groundIntake.targetPosition == Constants.Presets.groundIntakeStation || groundIntake.targetPosition == Constants.Presets.groundIntakeStore){
+            Constants.Presets.defenseDelay = 1;
+        }
+        else{
+            Constants.Presets.defenseDelay = 0;
+        }
+        
         Commands.sequence(
             new InstantCommand(() -> {
                 arm.groundIntaking = true;
-                elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                if(arm.getTargetPosition() == Constants.Presets.armIntakeAlt + Constants.Presets.globalArmOffset){
+                    elevator.setElevatorPosition(Constants.Presets.liftOuttakeL2);
+                    // Constants.Presets.defenseDelay = 2;
+                }
+                else{
+                    elevator.setElevatorPosition(Constants.Presets.liftIntake);
+                    // Constants.Presets.defenseDelay = 0;
+                }
+                
                 arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
+                
+               
             }),
             new WaitCommand(Constants.Presets.defenseDelay/2.0),
             new InstantCommand(() -> {
+                
                 groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
                 groundIntake.setIntakePower(-0.5, 0.5);
+                
             }),
-            new WaitCommand(Constants.Presets.defenseDelay/2.0),
+            new WaitCommand(Constants.Presets.defenseDelay/3.5),
             new InstantCommand(() -> {
                 elevator.setElevatorPosition(Constants.Presets.liftIntake);
                 arm.setTargetAngle(Constants.Presets.armGroundTransfer, 0);
@@ -605,6 +638,12 @@ public class RobotContainer {
     OI.groundIntakeOuttake().falling().ifHigh(()->{
         groundIntake.setIntakePower(0, 0);
     });
+    OI.groundIntakeIntake().rising().ifHigh(()->{
+        groundIntake.setIntakePower(-0.2, 0.5);
+    });
+    OI.groundIntakeIntake().falling().ifHigh(()->{
+        groundIntake.setIntakePower(0, 0);
+    });
     //LOW INTAKE======================
     // OI.lowIntake().falling().ifHigh(()->{
     //     elevator.setElevatorPosition(Constants.Presets.liftIntake);
@@ -619,10 +658,17 @@ public class RobotContainer {
     //     arm.setTargetAngle(Constants.Presets.armIntakeLowLow, 0);
     // });
     //BARGE===================
+    OI.bargeStage().rising().ifHigh(()->{
+        Commands.sequence(
+            new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+            new WaitCommand(0.5),
+            new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeStore, 0);})
+        );
+    });
     OI.bargeYeet().rising().ifHigh(()->{
         Commands.sequence(
             new InstantCommand(() -> {arm.setCurrentLimit(73);}),
-            new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
+            // new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
             new InstantCommand(() -> {intake.setSpeed(0.5);}),

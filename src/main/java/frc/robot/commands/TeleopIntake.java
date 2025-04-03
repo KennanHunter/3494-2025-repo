@@ -15,7 +15,7 @@ public class TeleopIntake extends Command {
   private Arm arm;
   double lastPower;
   private double armPower = 0;
-  private double lastIntakePower = -1;
+  private double lastIntakePower = 1;
   private boolean holding_algea = false;
   private Timer algeaTimer = new Timer();
 
@@ -53,7 +53,7 @@ public class TeleopIntake extends Command {
       holding_algea = true;
       algeaTimer.start();
       System.out.println("limiting!!!!!!!!!");
-      if(arm.getAbsoluteTicks() > 0.7){
+      if(arm.getAbsoluteTicks() < 0.7){
         arm.setPIDlimits(-0.4, 0.4);
       }
     }

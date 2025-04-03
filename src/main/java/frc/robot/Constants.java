@@ -59,9 +59,10 @@ public final class Constants {
     public static double armIntakeLow = 0.829;
     public static double armIntakeAlt = 0.830;
     public static double armIntakeLowLow = 0.846;
-    public static double armCoral = 0.85; // -136.0;
+    public static double armCoral = 0.54; // -136.0;
 
     public static double armSafePosition = 0.72;
+    public static double armProcessor = 0.53;
     public static double armOuttakeL1 = 0.875;
     public static double armOuttakeL2 = 0.60; // -111.0;
     public static double armOuttakeL2Auto = 0.60; // 0.595;
@@ -72,6 +73,7 @@ public final class Constants {
     public static double armAlgeaL2Auto = 0.6125;
     public static double armAlgeaL3 = 0.627;//0.585; // 0.58 // -116.0;
     public static double armBargeYeet = 0.65;
+    public static double armBargeStore = 0.85;
 
     public static double liftIntake = 0;
     public static double liftIntakeAlt = 2.238;
@@ -96,6 +98,7 @@ public final class Constants {
 
     public static double groundIntakeIntake = -19.6;
     public static double groundIntakeHover = -17;
+    public static double defenseDelay = 0.0;
     public static double groundIntakeStore = 6;
     public static double groundIntakeL1 = 0;
     public static double groundIntakeStation = 3.28;

@@ -37,7 +37,7 @@ public final class OI {
 
     double Sean_intake_power =
         deadband(-primaryController.getRightTriggerAxis(), Constants.Intake.DEADBAND)
-            + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
+            + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND)+ (primaryController.getAButton() ? -0.5: 0);
     double Ashton_intake_power =
         deadband(rightButtonBoard.getRawAxis(0), Constants.Intake.DEADBAND);
     return Sean_intake_power + Ashton_intake_power;
@@ -49,11 +49,17 @@ public final class OI {
     //         + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
     // return new BooleanEvent(eventLoop, ()->(Sean_intake_power<0));
     return primaryController.rightTrigger(0.05, eventLoop);
+    // return primaryController.a(eventLoop);
   }
   public static BooleanEvent L1GroundIntake(){
+    return rightButtonBoard.button(8, eventLoop);
+  }
+  public static BooleanEvent L1Outtake(){
+    return leftButtonBoard.button(9, eventLoop);
+  }
+  public static BooleanEvent groundIntakeIntake(){
     return rightButtonBoard.button(9, eventLoop);
   }
-
   public static BooleanEvent groundIntakeOuttake(){
     return rightButtonBoard.button(10, eventLoop);
   }
@@ -81,6 +87,9 @@ public final class OI {
   public static BooleanEvent bargeYeet() {
     return leftButtonBoard.button(7, eventLoop);
   }
+  public static BooleanEvent bargeStage() {
+    return rightButtonBoard.button(6, eventLoop);
+  }
 
   public static BooleanEvent lowIntake() {
     return leftButtonBoard.button(10, eventLoop);
@@ -91,7 +100,7 @@ public final class OI {
   }
 
   public static BooleanEvent lolipop() {
-    return rightButtonBoard.button(1, eventLoop);
+    return leftButtonBoard.button(3, eventLoop);
   }
 
   public static BooleanEvent Intake() {
@@ -111,7 +120,7 @@ public final class OI {
   }
 
   public static BooleanEvent L2Algea() {
-    return leftButtonBoard.button(4, eventLoop).or(primaryController.x(eventLoop));
+    return leftButtonBoard.button(4, eventLoop);
   }
 
   public static BooleanEvent L2Coral() {
@@ -119,23 +128,26 @@ public final class OI {
   }
 
   public static BooleanEvent startClimb() {
-    return rightButtonBoard.button(3, eventLoop);
+    return rightButtonBoard.button(1, eventLoop);
   }
 
   public static BooleanEvent ClimbStage0() {
     return rightButtonBoard.button(5, eventLoop);
   }
+  public static BooleanEvent ToggleDefenseMode() {
+    return rightButtonBoard.button(5, eventLoop);
+  }
 
   public static BooleanEvent ClimbStage1() {
-    return rightButtonBoard.button(6, eventLoop);
+    return rightButtonBoard.button(2, eventLoop);
   }
 
   public static BooleanEvent ClimbStage2() {
-    return rightButtonBoard.button(7, eventLoop);
+    return rightButtonBoard.button(3, eventLoop);
   }
 
   public static BooleanEvent l1Test() {
-    return rightButtonBoard.button(8, eventLoop);
+    return leftButtonBoard.button(10, eventLoop);
   }
 
   public static double powerCurved(double inputPower) {
