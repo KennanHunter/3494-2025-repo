@@ -52,7 +52,7 @@ public final class OI {
     // return primaryController.a(eventLoop);
   }
   public static BooleanEvent L1GroundIntake(){
-    return rightButtonBoard.button(8, eventLoop);
+    return rightButtonBoard.button(8, eventLoop).or(rightButtonBoard.button(7, eventLoop));
   }
   public static BooleanEvent L1Outtake(){
     return leftButtonBoard.button(9, eventLoop);

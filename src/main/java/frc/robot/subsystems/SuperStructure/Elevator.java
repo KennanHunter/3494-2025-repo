@@ -130,7 +130,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public double getTicks() {
-    return leaderMotor.getEncoder().getPosition();
+    return followerMotor.getEncoder().getPosition();
   }
   public void setPIDlimits(double lowerBound, double upperBound){
     leaderConfig.closedLoop.outputRange(lowerBound, upperBound);

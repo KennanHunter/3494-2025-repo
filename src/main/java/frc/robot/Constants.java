@@ -70,7 +70,7 @@ public final class Constants {
     public static double armGroundTransfer = 0.94;
 
     public static double armAlgeaL2 = 0.62;//0.6125; // 0.605
-    public static double armAlgeaL2Auto = 0.62;
+    public static double armAlgeaL2Auto = 0.6125;
     public static double armAlgeaL3 = 0.627;//0.585; // 0.58 // -116.0;
     public static double armBargeYeet = 0.65;
     public static double armBargeStore = 0.85;

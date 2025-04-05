@@ -197,6 +197,13 @@ public class RobotContainer {
                     elevator.setElevatorPosition(Constants.Presets.liftIntake);
                     arm.setTargetAngle(Constants.Presets.armAlgeaL2Auto, 0);
         })));
+    // NamedCommands.registerCommand(
+    //     "HOLDALGEA", Commands.sequence(
+    //         new InstantCommand(
+    //             () -> {
+    //                 elevator.setElevatorPosition(Constants.Presets.liftIntake);
+    //                 arm.setTargetAngle(Constants.Presets.armAlgeaL2Auto, 0);
+    //     })));
     NamedCommands.registerCommand(
         "L3 Outtake", Commands.sequence(
                 new InstantCommand(
@@ -240,7 +247,7 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> {
                         elevator.setElevatorPosition(Constants.Presets.liftIntake);
-                        arm.setTargetAngle(Constants.Presets.armCoral, 0);
+                        arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);//was armCoral
                     })));
     NamedCommands.registerCommand(
             "BargeStage0", Commands.sequence(
