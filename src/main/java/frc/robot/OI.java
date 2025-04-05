@@ -88,7 +88,7 @@ public final class OI {
     return leftButtonBoard.button(7, eventLoop);
   }
   public static BooleanEvent bargeStage() {
-    return rightButtonBoard.button(6, eventLoop);
+    return leftButtonBoard.button(9, eventLoop);
   }
 
   public static BooleanEvent lowIntake() {

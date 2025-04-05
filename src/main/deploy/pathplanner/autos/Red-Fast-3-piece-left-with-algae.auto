@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Blue-Left-Set-Pose"
+            "name": "Red-Left-Set-Pose"
           }
         },
         {
@@ -42,7 +42,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-1st-peice-left"
+                  "pathName": "Red-Fast-1st-piece-left"
                 }
               }
             ]
@@ -67,7 +67,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-Intake-from-1st-peice"
+                  "pathName": "Red-Fast-Intake-from-1st-piece"
                 }
               },
               {
@@ -117,7 +117,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-2nd-peice"
+                  "pathName": "Red-Fast-2nd-piece"
                 }
               },
               {
@@ -185,7 +185,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-Intake-from-2nd-peice"
+                  "pathName": "Red-Fast-Intake-from-2nd-piece"
                 }
               }
             ]
@@ -210,7 +210,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-3rd-peice"
+                  "pathName": "Red-Fast-3rd-piece"
                 }
               },
               {
@@ -241,7 +241,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-3rd-peice-algea"
+                  "pathName": "Red-Fast-3rd-piece-algae"
                 }
               },
               {
@@ -291,7 +291,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-Gunit"
+                  "pathName": "Red-Fast-Gunit"
                 }
               },
               {

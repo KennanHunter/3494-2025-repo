@@ -7,7 +7,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Blue-Left-Set-Pose"
+            "name": "Red-Right-Fast-Set-Pose"
           }
         },
         {
@@ -42,7 +42,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-1st-peice-left"
+                  "pathName": "Red-Fast-1st-piece-right"
                 }
               }
             ]
@@ -57,7 +57,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.12
+            "waitTime": 0.15
           }
         },
         {
@@ -67,7 +67,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-Intake-from-1st-peice"
+                  "pathName": "Red-Fast-Intake-from-1st-piece-right"
                 }
               },
               {
@@ -117,7 +117,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-2nd-peice"
+                  "pathName": "Red-Fast-2nd-piece-right"
                 }
               },
               {
@@ -185,7 +185,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-Intake-from-2nd-peice"
+                  "pathName": "Red-Fast-Intake-from-2nd-piece-right"
                 }
               }
             ]
@@ -210,7 +210,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-3rd-peice"
+                  "pathName": "Red-Fast-3rd-piece-right"
                 }
               },
               {
@@ -241,7 +241,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-3rd-peice-algea"
+                  "pathName": "Red-Fast-3rd-piece-algae-right"
                 }
               },
               {
@@ -257,7 +257,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.2
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -291,7 +291,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fast-Gunit"
+                  "pathName": "Red-Fast-Gunit-right"
                 }
               },
               {
@@ -301,13 +301,13 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.5
+                        "waitTime": 0.4
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Algea Pos"
+                        "name": "Processor"
                       }
                     }
                   ]

@@ -138,13 +138,16 @@ public class RobotContainer {
             () -> {drive.setPose(new Pose2d(7.652, 2.954, new Rotation2d(Math.toRadians(90))));}));
     NamedCommands.registerCommand(
         "Blue-Middle-Set-Pose",  new InstantCommand(
-            () -> {drive.setPose(new Pose2d(7.550, 4.062, new Rotation2d(Math.toRadians(180))));}));
+            () -> {drive.setPose(new Pose2d(7.550, 4.062, new Rotation2d(Math.toRadians(90))));}));//was 180, not sure why
+    NamedCommands.registerCommand(
+        "Red-Middle-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(9.995, 3.990, new Rotation2d(Math.toRadians(-90))));}));//was 180, not sure why
     NamedCommands.registerCommand(
         "Red-Left-Set-Pose",  new InstantCommand(
-            () -> {drive.setPose(new Pose2d(10.349, 2.993, new Rotation2d(Math.toRadians(0))));}));
+            () -> {drive.setPose(new Pose2d(10.349, 2.994, new Rotation2d(Math.toRadians(0))));}));
     NamedCommands.registerCommand(
-        "Red-Right-Set-Pose",  new InstantCommand(
-            () -> {drive.setPose(new Pose2d(9.893, 5.098, new Rotation2d(Math.toRadians(-90))));}));
+        "Red-Right-Fast-Set-Pose",  new InstantCommand(
+            () -> {drive.setPose(new Pose2d(10.349, 5.058, new Rotation2d(Math.toRadians(180))));}));
     //INTAKE STUFF-----------------------
     NamedCommands.registerCommand(
             "Intake", new AutoIntakePower(intake, -1));
@@ -239,10 +242,21 @@ public class RobotContainer {
                         elevator.setElevatorPosition(Constants.Presets.liftIntake);
                         arm.setTargetAngle(Constants.Presets.armCoral, 0);
                     })));
+    NamedCommands.registerCommand(
+            "BargeStage0", Commands.sequence(
+                new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
+                new InstantCommand(() -> {groundIntake.setIntakePosition(Constants.Presets.groundIntakeHover);}),
+                new WaitCommand(0.5),
+                new InstantCommand(()->{arm.setPIDlimits(-0.4, 0.4);}),
+                new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeStore, 0);}),
+                new WaitCommand(1.5),
+                new InstantCommand(()->{arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);})
+            ));
+                    
     NamedCommands.registerCommand(//THIS IS IN AUTO, IF YOU WANNA TUNE DONT RUN THIS ONE
             "Barge",Commands.sequence(
-                new InstantCommand(() -> {arm.setCurrentLimit(73);}),
-                new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
+                new InstantCommand(() -> {arm.setCurrentLimit(85);}),
+                // new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
                 new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
                 new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
                 new InstantCommand(() -> {intake.setSpeed(0.5);}),
@@ -255,7 +269,7 @@ public class RobotContainer {
                 // new WaitCommand(0.39),//WORKED at 0.2
                 // new InstantCommand(() -> {intake.setSpeed(-1);}),
                 new WaitCommand(0.75),
-                new InstantCommand(() -> {elevator.setPIDlimits(-0.75, 0.75);}),
+                new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
                 new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
                 new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
                 new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}),
@@ -406,7 +420,7 @@ public class RobotContainer {
     //========== L2 ===============
     OI.L2Algea().rising().ifHigh(()->{
         Command l2AlgeaCommand =  Commands.sequence(new InstantCommand(()->{
-            elevator.setElevatorPosition(Constants.Presets.liftAlgeaL2);
+            elevator.setElevatorPosition(Constants.Presets.liftAlgeaTeleopL2);
             arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
         }));
         if(!arm.groundIntaking){
@@ -568,7 +582,7 @@ public class RobotContainer {
             new InstantCommand(() -> {
                 
                 groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
-                groundIntake.setIntakePower(-0.5, 0.5);
+                groundIntake.setIntakePower(-0.85, 0.5);
                 
             }),
             new WaitCommand(Constants.Presets.defenseDelay/3.5),
@@ -586,7 +600,7 @@ public class RobotContainer {
                 elevator.setElevatorPosition(Constants.Presets.liftIntake);
                 arm.setTargetAngle(Constants.Presets.armSafePosition, 0);
             }),
-            new WaitCommand(Constants.Presets.defenseDelay),
+            new WaitCommand(Constants.Presets.defenseDelay/3),
             new InstantCommand(() -> {
                 groundIntake.setIntakePosition(groundIntake.hoverPosition);
                 groundIntake.setIntakePower(0, 0);
@@ -602,7 +616,7 @@ public class RobotContainer {
                 elevator.setElevatorPosition(Constants.Presets.liftIntake);
                 arm.setTargetAngle(Constants.Presets.armAlgeaL2, 0);
                 groundIntake.setIntakePosition(Constants.Presets.groundIntakeIntake);
-                groundIntake.setIntakePower(-0.5, -0.5);
+                groundIntake.setIntakePower(-0.85, -0.6);
             })
         );
         if(!arm.groundIntaking){
@@ -663,11 +677,11 @@ public class RobotContainer {
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
             new WaitCommand(0.5),
             new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeStore, 0);})
-        );
+        ).schedule();
     });
     OI.bargeYeet().rising().ifHigh(()->{
         Commands.sequence(
-            new InstantCommand(() -> {arm.setCurrentLimit(73);}),
+            new InstantCommand(() -> {arm.setCurrentLimit(85);}),
             // new InstantCommand(() -> {elevator.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
             new InstantCommand(() -> {arm.setPID(12, 0.0, 0.0);}), 
@@ -675,14 +689,15 @@ public class RobotContainer {
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
             new WaitCommand(0.1),
             new InstantCommand(()-> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
+            new InstantCommand(() -> {arm.setPIDlimits(-1, 1);}),
             new WaitCommand(0.0),
             new InstantCommand(() -> {elevator.setElevatorPosition(Constants.Presets.liftOuttakeL3);}),
             new BargFligIntake(arm, intake, Constants.Presets.armBargeYeetRelease),
             // new WaitCommand(0.39),//WORKED at 0.2
             // new InstantCommand(() -> {intake.setSpeed(-1);}),
             new WaitCommand(0.75),
-            new InstantCommand(() -> {elevator.setPIDlimits(-0.5, 0.5);}),
-            new InstantCommand(() -> {arm.setPID(6, 0, 0);}),
+            new InstantCommand(() -> {elevator.setPIDlimits(-0.8, 0.8);}),
+            new InstantCommand(() -> {arm.setPID(9, 0, 0);}),
             new InstantCommand(() -> {arm.setTargetAngle(Constants.Presets.armBargeYeet, 0);}),
             new InstantCommand(() -> {arm.setPIDlimits(-Constants.Arm.normalPIDRange, Constants.Arm.normalPIDRange);}),
             new InstantCommand(() -> {arm.setCurrentLimit(Constants.Arm.normalCurrentLimit);})
@@ -694,6 +709,7 @@ public class RobotContainer {
             new InstantCommand(() -> {
                 elevator.setElevatorPosition(Constants.Presets.liftClimb);
                 arm.setTargetAngle(Constants.Presets.armClimb, 0);
+                groundIntake.setIntakePosition(Constants.Presets.groundIntakeHover);
             }),
             new WaitCommand(0.5),
             new InstantCommand(() -> {
