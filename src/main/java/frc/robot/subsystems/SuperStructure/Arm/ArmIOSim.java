@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SuperStructure.Arm;
+package frc.robot.subsystems.superstructure.Arm;
 
 import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.spark.SparkFlex;
@@ -22,7 +22,7 @@ public class ArmIOSim implements ArmIO {
     armMotorSim.iterate(
         Units.radiansPerSecondToRotationsPerMinute(armMotorSim.getVelocity()),
         RoboRioSim.getVInVoltage(),
-        0.02);
+        Constants.SIMULATED_LOOP_TIME);
 
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armMotorSim.getMotorCurrent()));
@@ -34,8 +34,8 @@ public class ArmIOSim implements ArmIO {
   public void updateInputs(ArmIOInputs inputs) {
     stepSimulation();
 
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
+    // // TODO Auto-generated method stub
+    // throw new UnsupportedOperationException("Unimplemented method 'updateInputs'");
   }
 
   @Override

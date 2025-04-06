@@ -34,13 +34,8 @@ public final class OI {
   }
 
   public static double getIntakePower() {
-
-    double Sean_intake_power =
-        deadband(-primaryController.getRightTriggerAxis(), Constants.Intake.DEADBAND)
-            + deadband(primaryController.getLeftTriggerAxis(), Constants.Intake.DEADBAND);
-    double Ashton_intake_power =
-        deadband(rightButtonBoard.getRawAxis(0), Constants.Intake.DEADBAND);
-    return Sean_intake_power + Ashton_intake_power;
+    // TODO: Properly compute intake power as wanted
+    return 0;
   }
 
   public static double getElevatorPower() {

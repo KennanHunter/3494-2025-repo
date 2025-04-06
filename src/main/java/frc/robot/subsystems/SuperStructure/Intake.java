@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SuperStructure;
+package frc.robot.subsystems.superstructure;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
