@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.JoyStickDriveCommand;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -116,13 +117,15 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // drive.setDefaultCommand(
-    //     DriveCommands.joystickDrive(
-    //         drive,
-    //         () -> -controller.getLeftY(),
-    //         () -> -controller.getLeftX(),
-    //         () -> -controller.getRightX()));
+    drive.setDefaultCommand(
+        new JoyStickDriveCommand(
+            drive,
+            () -> -controller.getLeftY(),
+            () -> controller.getLeftX(),
+            () -> -controller.getRightX()));
+
     controller.b().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
     controller
         .back()
         .onTrue(
@@ -130,6 +133,7 @@ public class RobotContainer {
                 () -> {
                   GyroIOPigeon2.pigeon.setYaw(0.0);
                 }));
+
     controller
         .start()
         .onTrue(
