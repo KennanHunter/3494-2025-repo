@@ -13,7 +13,10 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import au.grapplerobotics.MitoCANdria;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -63,6 +66,8 @@ public final class Constants {
     public static int bottomMagSensorDIO = 9;
     public static int leaderMotor = 12;
     public static int followerMotor = 13;
+
+    public static final Distance PHYSICAL_ELEVATOR_BOTTOM_HEIGHT = Meters.of(0);
   }
 
   public static class Arm {

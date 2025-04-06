@@ -28,7 +28,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
-import frc.robot.subsystems.superstructure.Intake;
 import frc.robot.subsystems.superstructure.Arm.Arm;
 import frc.robot.subsystems.superstructure.Arm.ArmIO;
 import frc.robot.subsystems.superstructure.Arm.ArmIOSim;
@@ -36,8 +35,7 @@ import frc.robot.subsystems.superstructure.Arm.ArmIOSpark;
 import frc.robot.subsystems.superstructure.Elevator.Elevator;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSim;
-import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSparkMax;
-
+import frc.robot.subsystems.superstructure.Intake;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -71,7 +69,8 @@ public class RobotContainer {
       case REAL -> {
         arm = new Arm(new ArmIOSpark());
 
-        elevator = new Elevator(new ElevatorIOSparkMax());
+        // TODO: Elevator real
+        elevator = new Elevator(null);
 
         drive =
             new Drive(

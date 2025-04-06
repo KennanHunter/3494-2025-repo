@@ -18,7 +18,7 @@ public interface ElevatorIO {
   public default void updateInputs(ElevatorIOInputs inputs) {}
 
   /** Sets the elevator position setpoint. */
-  public default void setElevatorHeight(Distance height) {}
+  public default void runElevatorHeight(Distance height) {}
 
   /** Sets the brake mode. */
   public default void setBrakes(IdleMode idleMode) {}

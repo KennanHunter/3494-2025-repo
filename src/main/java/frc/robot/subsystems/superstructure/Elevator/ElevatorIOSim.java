@@ -1,5 +1,7 @@
 package frc.robot.subsystems.superstructure.Elevator;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIOSim implements ElevatorIO {
   // Simulation parameters
@@ -39,8 +42,7 @@ public class ElevatorIOSim implements ElevatorIO {
   private final ElevatorSim elevatorSim;
 
   // State tracking
-  private double targetPosition = 0.0;
-  private boolean bottomSensorTripped = false;
+  private boolean isBottomSensorTripped = false;
 
   public ElevatorIOSim() {
     // Create SparkMax motors - use the same IDs as real hardware
@@ -108,28 +110,32 @@ public class ElevatorIOSim implements ElevatorIO {
     double velocityTicksPerSecond =
         elevatorSim.getVelocityMetersPerSecond() * POSITION_CONVERSION_FACTOR;
 
-    leaderMotorSim.setPosition(elevatorSim.getPositionMeters());
-    leaderMotorSim.setVelocity(elevatorSim.getVelocityMetersPerSecond());
+    leaderMotorSim.setPosition(positionTicks);
+    leaderMotorSim.setVelocity(velocityTicksPerSecond);
 
     // Update battery simulation
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
 
     // Update sensor state
-    bottomSensorTripped = (elevatorSim.getPositionMeters() < 0.01);
+    isBottomSensorTripped = (elevatorSim.getPositionMeters() < 0.01);
 
-    // Update inputs structure
-    inputs.targetHeight = targetPosition;
-    inputs.sensorState = bottomSensorTripped ? ElevatorSensorState.BOTTOM : ElevatorSensorState.UP;
+    inputs.sensorState =
+        isBottomSensorTripped ? ElevatorSensorState.BOTTOM : ElevatorSensorState.UP;
   }
 
   @Override
-  public void setElevatorHeight(Distance position) {
-    // TODO: Properly map magnitude to reference
+  public void runElevatorHeight(Distance height) {
+    Distance computedElevatorHeight =
+        height.minus(Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT);
+
+    double computedElevatorTicks = computedElevatorHeight.in(Meters);
+
+    Logger.recordOutput("Elevator/computedElevatorTicks", computedElevatorTicks);
+
     leaderMotor
         .getClosedLoopController()
-        .setReference(position.magnitude(), SparkBase.ControlType.kPosition);
-    targetPosition = position.magnitude();
+        .setReference(computedElevatorHeight.in(Meters), SparkBase.ControlType.kPosition);
   }
 
   @Override
