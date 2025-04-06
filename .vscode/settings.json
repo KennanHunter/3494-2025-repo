@@ -81,6 +81,7 @@
   },
   "java.compile.nullAnalysis.mode": "automatic",
   "cSpell.words": [
+    "ascope",
     "deadband"
   ]
 }
