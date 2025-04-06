@@ -22,7 +22,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -35,18 +34,12 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
-import frc.robot.commands.AutoAlignDesitationDeterminer;
-import frc.robot.subsystems.limelights.Limelights;
 import frc.robot.util.LocalADStarAK;
-import frc.robot.util.SeanMathUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -78,10 +71,7 @@ public class Drive extends SubsystemBase {
       };
   public SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-  public Limelights m_LimeLight1 = new Limelights(this, "limelight-right");
-  public Limelights m_LimeLight2 = new Limelights(this, "limelight-left");
-  public Limelights m_LimeLight3 = new Limelights(this, "limelight-swerve");
-  public double rotationRate = 0;
+
   public boolean specialPoseEstimation = false;
   public double reefRadiusToSpecialPoseActivation = 3.0;
   double currentRadiusFromReef;
@@ -174,9 +164,6 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    m_LimeLight1.periodic();
-    m_LimeLight2.periodic();
-    m_LimeLight3.periodic();
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
 
@@ -254,74 +241,8 @@ public class Drive extends SubsystemBase {
         Twist2d twist = kinematics.toTwist2d(moduleDeltas);
         rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
       }
-      // rawGyroRotation = gyroInputs.yawPosition; // Seans test FIX NOT PERMENATE
-      rotationRate = gyroInputs.yawVelocityRadPerSec; // Logged for megaTag
 
-      // Apply update
-      // System.out.println(rawGyroRotation+ "|" +
-      // poseEstimator.getEstimatedPosition().getRotation());
-      // System.out.println("PRediodicing2");
-      Logger.recordOutput("Odo Yaw from gyro", rawGyroRotation.getDegrees());
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
-      Logger.recordOutput(
-          "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-
-      // if (m_LimeLight1.measurmentValid()) {
-      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));
-      //   poseEstimator.addVisionMeasurement(
-      //       m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
-      // } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
-      // else if (m_LimeLight2.measurmentValid()) {
-      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Switched
-      // from 0.7 to 0.1 after have a great conversation with the lead programmer on 5188
-      //   poseEstimator.addVisionMeasurement(
-      //       m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
-      // }
-
-      Optional<Alliance> ally = DriverStation.getAlliance();
-      if (ally.get() == DriverStation.Alliance.Red) {
-        currentRadiusFromReef =
-            SeanMathUtil.distance(
-                poseEstimator.getEstimatedPosition(),
-                new Pose2d(
-                    AutoAlignDesitationDeterminer.transform2red(Constants.Field.Reef.reefCenter),
-                    new Rotation2d(0.0)));
-      } else {
-        currentRadiusFromReef =
-            SeanMathUtil.distance(
-                poseEstimator.getEstimatedPosition(),
-                new Pose2d(Constants.Field.Reef.reefCenter, new Rotation2d(0.0)));
-      }
-      specialPoseEstimation = currentRadiusFromReef < 1.8;
-      Logger.recordOutput("Drive/DistanceFromReef", currentRadiusFromReef);
-      Logger.recordOutput("Drive/InSpecialMode", specialPoseEstimation);
-      poseEstimator.setVisionMeasurementStdDevs(
-          VecBuilder.fill(
-              .1, .1,
-              9999999)); // Was 0.7, limelight recommends 0.5, 5188 0.1, and Sonic squirels 0.9
-      if (specialPoseEstimation) {
-        m_LimeLight1.setMegatag(true);
-        m_LimeLight2.setMegatag(true);
-        m_LimeLight3.setMegatag(true);
-      } else {
-        m_LimeLight1.setMegatag(false);
-        m_LimeLight2.setMegatag(false);
-        m_LimeLight3.setMegatag(false);
-      }
-      // Logger.recordOutput("Drive/limelight3Distance",
-      // m_LimeLight3.getMeasurement().avgTagDist());
-      if (m_LimeLight1.measurmentValid()) {
-        poseEstimator.addVisionMeasurement(
-            m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
-      }
-      if (m_LimeLight2.measurmentValid() && !specialPoseEstimation) {
-        poseEstimator.addVisionMeasurement(
-            m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
-      }
-      if (m_LimeLight3.measurmentValid() && !specialPoseEstimation) {
-        poseEstimator.addVisionMeasurement(
-            m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
-      }
     }
   }
 
