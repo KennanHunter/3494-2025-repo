@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "richardwillis.vscode-spotless-gradle",
-    "redhat.java"
+    "redhat.java",
+    "streetsidesoftware.code-spell-checker"
   ]
 }

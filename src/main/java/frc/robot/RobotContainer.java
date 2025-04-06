@@ -21,21 +21,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
-import frc.robot.subsystems.superstructure.Arm.Arm;
-import frc.robot.subsystems.superstructure.Arm.ArmIO;
-import frc.robot.subsystems.superstructure.Arm.ArmIOSim;
-import frc.robot.subsystems.superstructure.Arm.ArmIOSpark;
 import frc.robot.subsystems.superstructure.Elevator.Elevator;
-import frc.robot.subsystems.superstructure.Elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSim;
-import frc.robot.subsystems.superstructure.Intake;
+import frc.robot.subsystems.superstructure.SuperStructure;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -47,10 +41,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
-  public final Intake intake;
+  private final SuperStructure superStructure;
   private final Elevator elevator;
-  private final Arm arm;
-  private final Climber climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -61,17 +53,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    intake = new Intake();
-    climber = new Climber();
+    superStructure = new SuperStructure();
+
+    elevator = new Elevator(new ElevatorIOSim());
 
     switch (Constants.currentMode) {
       /* Real robot, instantiate hardware IO implementations */
       case REAL -> {
-        arm = new Arm(new ArmIOSpark());
-
-        // TODO: Elevator real
-        elevator = new Elevator(null);
-
         drive =
             new Drive(
                 new GyroIOPigeon2(),
@@ -83,10 +71,6 @@ public class RobotContainer {
 
       /* Sim robot, instantiate physics sim IO implementations */
       case SIM -> {
-        arm = new Arm(new ArmIOSim());
-
-        elevator = new Elevator(new ElevatorIOSim());
-
         drive =
             new Drive(
                 new GyroIO() {},
@@ -98,10 +82,6 @@ public class RobotContainer {
 
       /* Replayed robot, disable IO implementations */
       default -> {
-        arm = new Arm(new ArmIO() {});
-
-        elevator = new Elevator(new ElevatorIO() {});
-
         drive =
             new Drive(
                 new GyroIO() {},
