@@ -1,6 +1,7 @@
 package frc.robot.subsystems.SuperStructure.Arm;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
@@ -17,11 +18,9 @@ public interface ArmIO {
     ArmMode curretArmMode;
   }
 
-  double getArmPosition();
+  public default void setTargetRotation(Rotation2d targetPosition) {}
 
-  void setTargetPosition(double targetPosition);
+  public default void updateInputs(ArmIOInputs inputs) {}
 
-  void updateInputs(ArmIOInputs inputs);
-
-  void setBrakes(IdleMode neutralMode);
+  public default void setBrakes(IdleMode neutralMode) {}
 }

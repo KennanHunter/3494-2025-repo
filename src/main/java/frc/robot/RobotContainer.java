@@ -21,13 +21,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.AutoIntakePower;
-import frc.robot.commands.DriveCommands;
-import frc.robot.commands.TeleopClimber;
-import frc.robot.commands.TeleopElevator;
-import frc.robot.commands.TeleopIntake;
-import frc.robot.commands.WheelOffsetCalculator;
 import frc.robot.subsystems.SuperStructure.Arm.Arm;
+import frc.robot.subsystems.SuperStructure.Arm.ArmIO;
+import frc.robot.subsystems.SuperStructure.Arm.ArmIOSim;
 import frc.robot.subsystems.SuperStructure.Arm.ArmIOSpark;
 import frc.robot.subsystems.SuperStructure.Elevator;
 import frc.robot.subsystems.SuperStructure.Intake;
@@ -57,24 +53,21 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   public static Joystick leftButtonBoard = new Joystick(1);
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     elevator = new Elevator();
-    arm = new Arm(new ArmIOSpark());
     intake = new Intake();
     climber = new Climber();
 
-    elevator.setDefaultCommand(new TeleopElevator(elevator));
-    intake.setDefaultCommand(new TeleopIntake(intake, arm));
-    // arm.setDefaultCommand(new TeleopIntake(intake, arm));
-    climber.setDefaultCommand(new TeleopClimber(climber));
-
     switch (Constants.currentMode) {
-      case REAL:
-        // Real robot, instantiate hardware IO implementations
+      /* Real robot, instantiate hardware IO implementations */
+      case REAL -> {
+        arm = new Arm(new ArmIOSpark());
+
         drive =
             new Drive(
                 new GyroIOPigeon2(),
@@ -82,10 +75,12 @@ public class RobotContainer {
                 new ModuleIOSparkMax(1),
                 new ModuleIOSparkMax(2),
                 new ModuleIOSparkMax(3));
-        break;
+      }
 
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
+      /* Sim robot, instantiate physics sim IO implementations */
+      case SIM -> {
+        arm = new Arm(new ArmIOSim());
+
         drive =
             new Drive(
                 new GyroIO() {},
@@ -93,10 +88,12 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
-        break;
+      }
 
-      default:
-        // Replayed robot, disable IO implementations
+      /* Replayed robot, disable IO implementations */
+      default -> {
+        arm = new Arm(new ArmIO() {});
+
         drive =
             new Drive(
                 new GyroIO() {},
@@ -104,7 +101,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        break;
+      }
     }
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -120,8 +117,6 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    autoChooser.addOption("Calculate Wheel Position", new WheelOffsetCalculator(drive));
-    autoChooser.addOption("Outtake Test", new AutoIntakePower(intake, -1));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -133,12 +128,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(), // used to be -
-            () -> -controller.getRightX())); // used to be -
+    // drive.setDefaultCommand(
+    //     DriveCommands.joystickDrive(
+    //         drive,
+    //         () -> -controller.getLeftY(),
+    //         () -> -controller.getLeftX(),
+    //         () -> -controller.getRightX()));
     controller.b().onTrue(Commands.runOnce(drive::stopWithX, drive));
     controller
         .back()
@@ -162,10 +157,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    Command command = autoChooser.get();
-
-    System.out.println("Starting: " + command.getName());
-
-    return command;
+    return autoChooser.get();
   }
 }

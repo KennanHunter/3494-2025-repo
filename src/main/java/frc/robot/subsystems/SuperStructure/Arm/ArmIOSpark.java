@@ -1,16 +1,15 @@
 package frc.robot.subsystems.SuperStructure.Arm;
 
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -37,21 +36,20 @@ public class ArmIOSpark implements ArmIO {
   }
 
   @Override
-  public double getArmPosition() {
-    return motor.getEncoder().getPosition();
-  }
-
-  @Override
-  public void setTargetPosition(double targetPosition) {
-    controller.setReference(
-        targetPosition + Constants.Presets.globalArmOffset,
-        SparkMax.ControlType.kPosition,
-        ClosedLoopSlot.kSlot0);
+  public void setTargetRotation(Rotation2d targetPosition) {
+    // controller.setReference(
+    //     targetPosition + Constants.Presets.globalArmOffset,
+    //     SparkMax.ControlType.kPosition,
+    //     ClosedLoopSlot.kSlot0);
   }
 
   @Override
   public void updateInputs(ArmIOInputs inputs) {
-    inputs.armPosition = getArmPosition();
+    // TODO: Is it smart to do stateful actions in updateInputs? Is it a bad mix of functionality?
+    configurePID();
+
+    // inputs.armPosition = getArmPosition();
+
   }
 
   public void configurePID() {
