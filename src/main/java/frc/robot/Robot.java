@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.LoggedMitocandria;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -26,7 +25,8 @@ import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-//import org.littletonrobotics.urcl.URCL;
+
+// import org.littletonrobotics.urcl.URCL;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -89,7 +89,7 @@ public class Robot extends LoggedRobot {
     }
 
     // Initialize URCL
-    //Logger.registerURCL(URCL.startExternal());
+    // Logger.registerURCL(URCL.startExternal());
 
     // See http://bit.ly/3YIzFZ6 for more information on timestamps in AdvantageKit.
     // Logger.disableDeterministicTimestamps()
@@ -108,7 +108,7 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     // Switch thread to high priority to improve loop timing
     Threads.setCurrentThreadPriority(true, 99);
-    
+
     loggedMitocandria.periodic();
     OI.update();
 
@@ -134,7 +134,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    robotContainer.drive.rezeroModulesRelativeEncoders(); //re-zero on auto init
+    robotContainer.drive.rezeroModulesRelativeEncoders(); // re-zero on auto init
     autonomousCommand = robotContainer.getAutonomousCommand();
     // // schedule the autonomous command (example)
     if (autonomousCommand != null) {

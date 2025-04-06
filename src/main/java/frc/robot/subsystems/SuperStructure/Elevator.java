@@ -1,7 +1,5 @@
 package frc.robot.subsystems.SuperStructure;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -10,11 +8,10 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
   private SparkMax leaderMotor;
@@ -40,11 +37,9 @@ public class Elevator extends SubsystemBase {
     leaderConfig.closedLoop.pid(0.5, 0, 0);
     leaderConfig.closedLoop.outputRange(-0.6, 0.6);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    
-  
+
     leaderConfig.idleMode(IdleMode.kCoast);
     leaderConfig.inverted(true);
-    
 
     leaderMotor.configure(
         leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -112,9 +107,10 @@ public class Elevator extends SubsystemBase {
   public double getTicks() {
     return leaderMotor.getEncoder().getPosition();
   }
-  public void setPIDlimits(double lowerBound, double upperBound){
+
+  public void setPIDlimits(double lowerBound, double upperBound) {
     leaderConfig.closedLoop.outputRange(lowerBound, upperBound);
     leaderMotor.configure(
-      leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 }

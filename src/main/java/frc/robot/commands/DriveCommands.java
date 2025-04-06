@@ -23,10 +23,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants;
 import frc.robot.subsystems.drive.AutoAlignController;
 import frc.robot.subsystems.drive.Drive;
-
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -72,35 +70,36 @@ public class DriveCommands {
           boolean isFlipped = false;
           // We're flipping at Blue instead of Red (which was 6328 default)
           Optional<Alliance> ally = DriverStation.getAlliance();
-          if(ally.get() == DriverStation.Alliance.Red){
+          if (ally.get() == DriverStation.Alliance.Red) {
             isFlipped = true;
           }
-            drive.runVelocity(
+          drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                   omega * drive.getMaxAngularSpeedRadPerSec(),
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                      : drive.getRotation()));          
+                      : drive.getRotation()));
         },
         drive);
   }
 
   public static Command autoAlign(Drive drive, boolean leftSide) {
     System.out.println("REUESTED--------------------");
-    Supplier<Pose2d> onTheFly = AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide);
-    if(leftSide){
+    Supplier<Pose2d> onTheFly =
+        AutoAlignDesitationDeterminer.destination(drive.getPose(), leftSide);
+    if (leftSide) {
       drive.m_LimeLight1.setCropY(-1, 1);
       // drive.m_LimeLight1.setMegatag(true);
-    }
-    else{ drive.m_LimeLight1.setCropY(-1, 1);
-      // drive.m_LimeLight1.setMegatag(false); 
+    } else {
+      drive.m_LimeLight1.setCropY(-1, 1);
+      // drive.m_LimeLight1.setMegatag(false);
     }
     autoAlignController =
         new AutoAlignController(
             drive,
-            onTheFly,//ampAlignedPose,
+            onTheFly, // ampAlignedPose,
             () -> {
               return new Translation2d();
             },
@@ -117,5 +116,4 @@ public class DriveCommands {
   public void setDriveMode(DriveMode newDriveMode) {
     currentDriveMode = newDriveMode;
   }
-  
 }

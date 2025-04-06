@@ -8,9 +8,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 import java.util.ArrayList;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -20,7 +18,7 @@ public class Intake extends SubsystemBase {
 
   boolean hasNote = false;
   private double currentSpeed = 0;
-  ArrayList currents =  new ArrayList<>();
+  ArrayList currents = new ArrayList<>();
 
   public Intake() {
     Logger.recordOutput("Intake/Intake-Power", intakeSpeed);
@@ -37,35 +35,35 @@ public class Intake extends SubsystemBase {
     currentSpeed = speed;
     intakeMotor.set(speed);
   }
-  public double currentAverage(double currentCurrent){
+
+  public double currentAverage(double currentCurrent) {
     currents.add(0, currentCurrent);
 
-    if (currents.size() >= 20){
+    if (currents.size() >= 20) {
       currents.remove(currents.size() - 1);
     }
     double average = 0;
-    for(int i = 0; i<currents.size(); i++){
-      average+= (double)currents.get(i);
+    for (int i = 0; i < currents.size(); i++) {
+      average += (double) currents.get(i);
     }
     average /= currents.size();
     return average;
-      
   }
 
   @Override
-  public void periodic(){
+  public void periodic() {
     double Cavrg = currentAverage(intakeMotor.getOutputCurrent());
-    if(Cavrg >9){
+    if (Cavrg > 9) {
       hasNote = true;
     }
     Logger.recordOutput("Intake/Current-Average", Cavrg);
     Logger.recordOutput("Intake/Has-Coral", hasNote);
-    if(currentSpeed > 0.05){
+    if (currentSpeed > 0.05) {
       hasNote = false;
     }
   }
 
-  public boolean hasNote(){
+  public boolean hasNote() {
     return hasNote;
   }
 }

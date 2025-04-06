@@ -22,8 +22,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -46,7 +44,6 @@ import frc.robot.commands.AutoAlignDesitationDeterminer;
 import frc.robot.subsystems.limelights.Limelights;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.SeanMathUtil;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -57,12 +54,11 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
-  private static final double TRACK_WIDTH_X = Units.inchesToMeters(20.75); 
+  private static final double TRACK_WIDTH_X = Units.inchesToMeters(20.75);
   private static final double TRACK_WIDTH_Y = Units.inchesToMeters(20.75);
   private static final double DRIVE_BASE_RADIUS =
       Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
   private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
-
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
@@ -144,10 +140,9 @@ public class Drive extends SubsystemBase {
             new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
             ),
         config,
-        () ->
-          false,
-            // DriverStation.getAlliance().isPresent()
-            //     && DriverStation.getAlliance().get() == Alliance.Red,
+        () -> false,
+        // DriverStation.getAlliance().isPresent()
+        //     && DriverStation.getAlliance().get() == Alliance.Red,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
@@ -271,53 +266,61 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput(
           "Odo Yaw right after", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
-      
       // if (m_LimeLight1.measurmentValid()) {
       //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));
       //   poseEstimator.addVisionMeasurement(
       //       m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
       // } // THE SDEVS ARE TOO HIGH (I THINK) causes jitter wehn seeing two measurments
       // else if (m_LimeLight2.measurmentValid()) {
-      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Switched from 0.7 to 0.1 after have a great conversation with the lead programmer on 5188
+      //   poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Switched
+      // from 0.7 to 0.1 after have a great conversation with the lead programmer on 5188
       //   poseEstimator.addVisionMeasurement(
       //       m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
       // }
 
-      
-      
       Optional<Alliance> ally = DriverStation.getAlliance();
-      if(ally.get() == DriverStation.Alliance.Red){
-        currentRadiusFromReef = SeanMathUtil.distance(poseEstimator.getEstimatedPosition(), new Pose2d(AutoAlignDesitationDeterminer.transform2red(Constants.Field.Reef.reefCenter), new Rotation2d(0.0)));
-      }
-      else{
-      currentRadiusFromReef = SeanMathUtil.distance(poseEstimator.getEstimatedPosition(), new Pose2d(Constants.Field.Reef.reefCenter, new Rotation2d(0.0)));
+      if (ally.get() == DriverStation.Alliance.Red) {
+        currentRadiusFromReef =
+            SeanMathUtil.distance(
+                poseEstimator.getEstimatedPosition(),
+                new Pose2d(
+                    AutoAlignDesitationDeterminer.transform2red(Constants.Field.Reef.reefCenter),
+                    new Rotation2d(0.0)));
+      } else {
+        currentRadiusFromReef =
+            SeanMathUtil.distance(
+                poseEstimator.getEstimatedPosition(),
+                new Pose2d(Constants.Field.Reef.reefCenter, new Rotation2d(0.0)));
       }
       specialPoseEstimation = currentRadiusFromReef < 1.8;
       Logger.recordOutput("Drive/DistanceFromReef", currentRadiusFromReef);
       Logger.recordOutput("Drive/InSpecialMode", specialPoseEstimation);
-      poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, 9999999));//Was 0.7, limelight recommends 0.5, 5188 0.1, and Sonic squirels 0.9
-      if(specialPoseEstimation){
+      poseEstimator.setVisionMeasurementStdDevs(
+          VecBuilder.fill(
+              .1, .1,
+              9999999)); // Was 0.7, limelight recommends 0.5, 5188 0.1, and Sonic squirels 0.9
+      if (specialPoseEstimation) {
         m_LimeLight1.setMegatag(true);
         m_LimeLight2.setMegatag(true);
         m_LimeLight3.setMegatag(true);
-      }
-      else{
+      } else {
         m_LimeLight1.setMegatag(false);
         m_LimeLight2.setMegatag(false);
         m_LimeLight3.setMegatag(false);
       }
-      // Logger.recordOutput("Drive/limelight3Distance", m_LimeLight3.getMeasurement().avgTagDist());
+      // Logger.recordOutput("Drive/limelight3Distance",
+      // m_LimeLight3.getMeasurement().avgTagDist());
       if (m_LimeLight1.measurmentValid()) {
-          poseEstimator.addVisionMeasurement(
-              m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
+        poseEstimator.addVisionMeasurement(
+            m_LimeLight1.getMeasuremPosition(), m_LimeLight1.getMeasurementTimeStamp());
       }
       if (m_LimeLight2.measurmentValid() && !specialPoseEstimation) {
         poseEstimator.addVisionMeasurement(
-              m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
+            m_LimeLight2.getMeasuremPosition(), m_LimeLight2.getMeasurementTimeStamp());
       }
       if (m_LimeLight3.measurmentValid() && !specialPoseEstimation) {
         poseEstimator.addVisionMeasurement(
-              m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
+            m_LimeLight3.getMeasuremPosition(), m_LimeLight3.getMeasurementTimeStamp());
       }
     }
   }
