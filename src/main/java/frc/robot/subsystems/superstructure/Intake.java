@@ -18,7 +18,7 @@ public class Intake extends SubsystemBase {
 
   boolean hasNote = false;
   private double currentSpeed = 0;
-  ArrayList currents = new ArrayList<>();
+  ArrayList<Double> currents = new ArrayList<Double>();
 
   public Intake() {
     Logger.recordOutput("Intake/Intake-Power", intakeSpeed);

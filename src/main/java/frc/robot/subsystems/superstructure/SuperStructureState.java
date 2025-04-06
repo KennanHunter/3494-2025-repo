@@ -31,15 +31,14 @@ public record SuperStructureState(ElevatorState elevatorState, ArmState armState
       elevatorLigament.append(
           new LoggedMechanismLigament2d("ArmStart", 0.2, 0, 3, new Color8Bit(Color.kBlue)));
 
-  private static final LoggedMechanismLigament2d armIntakeBranch =
-      armLigament.append(
-          new LoggedMechanismLigament2d(
-              "ArmIntakeBranch", 0.22, 45, 3, new Color8Bit(Color.kBlue)));
+  static {
+    armLigament.append(
+        new LoggedMechanismLigament2d("ArmIntakeBranch", 0.22, 45, 3, new Color8Bit(Color.kBlue)));
 
-  private static final LoggedMechanismLigament2d armAlgaeHolderBranch =
-      armLigament.append(
-          new LoggedMechanismLigament2d(
-              "ArmAlgaeHolderBranch", 0.25, -45, 3, new Color8Bit(Color.kAqua)));
+    armLigament.append(
+        new LoggedMechanismLigament2d(
+            "ArmAlgaeHolderBranch", 0.25, -45, 3, new Color8Bit(Color.kAqua)));
+  }
 
   public static LoggedMechanism2d updateMechanism(SuperStructureState state) {
     double elevatorHeight =
