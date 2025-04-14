@@ -13,11 +13,14 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 
 import au.grapplerobotics.MitoCANdria;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -71,7 +74,19 @@ public final class Constants {
   }
 
   public static class Arm {
+
     public static int ARM_MOTOR_CAN_ID = 15;
+
+    public static final Angle MIN_ANGLE = Degrees.of(0);
+    public static final Angle MAX_ANGLE = Degrees.of(110);
+    public static final Distance ARM_LENGTH_TO_CENTER_OF_WHEELS = Meters.of(0.4);
+
+    public static final double ARM_REDUCTION = 22 / 3;
+
+    public static final double MOI =
+        SingleJointedArmSim.estimateMOI(ARM_LENGTH_TO_CENTER_OF_WHEELS.in(Meters), 2);
+
+    public static final int ARM_ENCODER_PULSE_PER_REV = 4096;
   }
 
   public static class Intake {

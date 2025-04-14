@@ -28,8 +28,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
-import frc.robot.subsystems.superstructure.Elevator.Elevator;
-import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.superstructure.SuperStructure;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -43,7 +41,6 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   private final SuperStructure superStructure;
-  private final Elevator elevator;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -55,8 +52,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     superStructure = new SuperStructure();
-
-    elevator = new Elevator(new ElevatorIOSim());
 
     switch (Constants.currentMode) {
       /* Real robot, instantiate hardware IO implementations */

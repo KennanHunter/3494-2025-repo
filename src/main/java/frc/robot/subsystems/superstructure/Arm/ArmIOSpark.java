@@ -9,7 +9,6 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -33,14 +32,6 @@ public class ArmIOSpark implements ArmIO {
     config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
-
-  @Override
-  public void setTargetRotation(Rotation2d targetPosition) {
-    // controller.setReference(
-    //     targetPosition + Constants.Presets.globalArmOffset,
-    //     SparkMax.ControlType.kPosition,
-    //     ClosedLoopSlot.kSlot0);
   }
 
   @Override

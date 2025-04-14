@@ -1,14 +1,10 @@
 package frc.robot.subsystems.superstructure;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.superstructure.Arm.ArmState;
-import frc.robot.subsystems.superstructure.Elevator.ElevatorState;
+import frc.robot.subsystems.superstructure.Arm.Arm;
+import frc.robot.subsystems.superstructure.Arm.ArmIOSim;
+import frc.robot.subsystems.superstructure.Elevator.Elevator;
+import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSim;
 import org.littletonrobotics.junction.Logger;
 
 public class SuperStructure extends SubsystemBase {
@@ -17,23 +13,26 @@ public class SuperStructure extends SubsystemBase {
   // Define rotation speed in radians per second
   private final double ROTATION_SPEED = Math.PI / 4; // 45 degrees per second
 
+  Elevator elevator;
+  Arm arm;
+
+  public SuperStructure() {
+    elevator = new Elevator(new ElevatorIOSim());
+
+    arm = new Arm(new ArmIOSim());
+  }
+
   @Override
   public void periodic() {
-    // Update the current angle based on time
-    currentAngle =
-        (currentAngle + (ROTATION_SPEED * Constants.SIMULATED_LOOP_TIME)) % (2 * Math.PI);
-
-    // Create a new ArmState with the updated rotation
-    Rotation2d armRotation = new Rotation2d(currentAngle);
-
-    SuperStructureState state =
-        new SuperStructureState(
-            new ElevatorState(Meters.of(1.2), MetersPerSecond.of(0), IdleMode.kBrake),
-            new ArmState(armRotation));
+    SuperStructureState state = getState();
 
     Logger.recordOutput("SuperStructureState", state);
 
     Logger.recordOutput("SuperStructureMechanismState", SuperStructureState.updateMechanism(state));
     Logger.recordOutput("SuperStructureComponents", SuperStructureState.updatePoses(state));
+  }
+
+  SuperStructureState getState() {
+    return new SuperStructureState(elevator.getState(), arm.getState());
   }
 }
