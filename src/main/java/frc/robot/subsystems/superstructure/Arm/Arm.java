@@ -1,7 +1,10 @@
 package frc.robot.subsystems.superstructure.Arm;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 
@@ -16,8 +19,13 @@ public class Arm extends SubsystemBase {
     this.armIO = armIO;
   }
 
-  public ArmState getState() {
-    return new ArmState(Rotation2d.fromRadians(armIOInputs.armPosition));
+  public Optional<ArmState> getState() {
+    if (armIOInputs.armPosition == null) {
+      return Optional.empty();
+    }
+
+    return Optional.of(
+        new ArmState(Rotation2d.fromRotations(armIOInputs.armPosition.in(Rotation))));
   }
 
   @Override

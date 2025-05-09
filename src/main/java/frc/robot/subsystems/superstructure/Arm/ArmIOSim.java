@@ -2,6 +2,7 @@ package frc.robot.subsystems.superstructure.Arm;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.Rotation;
 
 import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -80,7 +81,7 @@ public class ArmIOSim implements ArmIO {
     stepSimulation();
 
     // Update the inputs
-    inputs.armPosition = Units.rotationsToRadians(armMotor.getEncoder().getPosition());
+    inputs.armPosition = Rotation.of(armMotor.getEncoder().getPosition());
     inputs.armVelocity =
         Units.rotationsPerMinuteToRadiansPerSecond(armMotor.getEncoder().getVelocity());
     // inputs.armAppliedVolts = armMotorSim.getAppliedOutput() * RoboRioSim.getVInVoltage();

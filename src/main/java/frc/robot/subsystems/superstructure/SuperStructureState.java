@@ -68,3 +68,9 @@ public record SuperStructureState(ElevatorState elevatorState, ArmState armState
     return new Pose3d[] {elevatorPose, armOffset.plus(armTransform)};
   }
 }
+
+record SuperStructureMechanismContainer(
+    LoggedMechanism2d mech2d,
+    LoggedMechanismRoot2d elevatorRoot,
+    LoggedMechanismLigament2d elevatorLigament,
+    LoggedMechanismLigament2d armLigament) {}

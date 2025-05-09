@@ -1,5 +1,7 @@
 package frc.robot.subsystems.superstructure.Arm;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -30,6 +32,7 @@ public class ArmIOSpark implements ArmIO {
 
     config.idleMode(IdleMode.kCoast);
     config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+    config.closedLoop.maxOutput(0);
 
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -39,8 +42,7 @@ public class ArmIOSpark implements ArmIO {
     // TODO: Is it smart to do stateful actions in updateInputs? Is it a bad mix of functionality?
     configurePID();
 
-    // inputs.armPosition = getArmPosition();
-
+    inputs.armPosition = Rotation.of(motor.getExternalEncoder().getPosition());
   }
 
   public void configurePID() {

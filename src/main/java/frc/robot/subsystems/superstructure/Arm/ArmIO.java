@@ -1,6 +1,9 @@
 package frc.robot.subsystems.superstructure.Arm;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.units.measure.Angle;
+
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
@@ -11,7 +14,7 @@ public interface ArmIO {
 
   @AutoLog
   public static class ArmIOInputs {
-    double armPosition;
+    Angle armPosition;
     IdleMode idleMode;
     double targetPosition;
     ArmMode curretArmMode;

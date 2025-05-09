@@ -28,7 +28,13 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.superstructure.Arm.ArmIO;
+import frc.robot.subsystems.superstructure.Arm.ArmIOSim;
+import frc.robot.subsystems.superstructure.Arm.ArmIOSpark;
+import frc.robot.subsystems.superstructure.Elevator.ElevatorIO;
+import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.superstructure.SuperStructure;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -51,11 +57,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    superStructure = new SuperStructure();
+    Logger.recordMetadata("Current Mode", Constants.currentMode.toString());
 
     switch (Constants.currentMode) {
       /* Real robot, instantiate hardware IO implementations */
       case REAL -> {
+        superStructure = new SuperStructure(new ElevatorIO() {}, new ArmIOSpark());
+
         drive =
             new Drive(
                 new GyroIOPigeon2(),
@@ -67,6 +75,8 @@ public class RobotContainer {
 
       /* Sim robot, instantiate physics sim IO implementations */
       case SIM -> {
+        superStructure = new SuperStructure(new ElevatorIOSim(), new ArmIOSim());
+
         drive =
             new Drive(
                 new GyroIO() {},
@@ -78,6 +88,8 @@ public class RobotContainer {
 
       /* Replayed robot, disable IO implementations */
       default -> {
+        superStructure = new SuperStructure(new ElevatorIO() {}, new ArmIO() {});
+
         drive =
             new Drive(
                 new GyroIO() {},
