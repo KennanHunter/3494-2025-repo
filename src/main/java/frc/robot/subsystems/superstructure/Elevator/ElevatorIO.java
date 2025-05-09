@@ -10,7 +10,6 @@ public interface ElevatorIO {
   @AutoLog
   public static class ElevatorIOInputs {
     public Distance currentHeight = Meters.of(0.0);
-    public Distance targetHeight = Meters.of(0.0);
     public ElevatorSensorState sensorState = ElevatorSensorState.UP;
   }
 

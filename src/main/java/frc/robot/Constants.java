@@ -71,6 +71,8 @@ public final class Constants {
     public static int followerMotor = 13;
 
     public static final Distance PHYSICAL_ELEVATOR_BOTTOM_HEIGHT = Meters.of(0);
+
+    public static final double ROTATIONS_TO_INCHES_CONVERSION_RATIO = (4.0 / 9.0);
   }
 
   public static class Arm {

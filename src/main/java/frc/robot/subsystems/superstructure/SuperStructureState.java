@@ -56,11 +56,17 @@ public record SuperStructureState(ElevatorState elevatorState, ArmState armState
   }
 
   public static Pose3d[] updatePoses(SuperStructureState state) {
-    Pose3d elevatorPose = Pose3d.kZero;
+    Pose3d elevatorPose =
+        new Pose3d(0.0, 0.0, state.elevatorState.height().in(Meters), Rotation3d.kZero);
 
     // We define offsets to 0,0 in `ascope_assets/Robot_Lambda/config.json`,
     // these offset from 0,0 to the actual zeroed position on the robot
-    Pose3d armOffset = new Pose3d(0, 0, 0.76, new Rotation3d(Math.toRadians(45), 0, 0));
+    Pose3d armOffset =
+        new Pose3d(
+            0,
+            0,
+            0.76 + state.elevatorState.height().in(Meters),
+            new Rotation3d(Math.toRadians(45), 0, 0));
 
     Transform3d armTransform =
         new Transform3d(0, 0, 0, new Rotation3d(state.armState.rotation().getRadians(), 0, 0));
