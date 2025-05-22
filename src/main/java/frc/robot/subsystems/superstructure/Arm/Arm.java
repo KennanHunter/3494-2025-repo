@@ -28,6 +28,10 @@ public class Arm extends SubsystemBase {
         new ArmState(Rotation2d.fromRotations(armIOInputs.armPosition.in(Rotation))));
   }
 
+  public void setState(ArmState newState) {
+    armIOInputs.armPosition = Rotation.of(newState.rotation().getRotations());
+  }
+
   @Override
   public void periodic() {
     armIO.updateInputs(armIOInputs);

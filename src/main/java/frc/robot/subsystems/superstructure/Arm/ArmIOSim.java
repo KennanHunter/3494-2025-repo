@@ -49,8 +49,11 @@ public class ArmIOSim implements ArmIO {
     // Set up the motor configuration
     armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+    double startingPosDegrees = 10;
+
     // Initialize the simulation
-    armSim.setState(0.0, 0.0);
+    armSim.setState(Math.toRadians(startingPosDegrees), 0.0);
+    armMotor.getEncoder().setPosition(startingPosDegrees);
   }
 
   private void stepSimulation() {
@@ -68,10 +71,10 @@ public class ArmIOSim implements ArmIO {
 
     // Update encoder position from the arm simulation
     armMotorSim
-        .getRelativeEncoderSim()
+        .getAbsoluteEncoderSim()
         .setPosition(Units.radiansToRotations(armSim.getAngleRads()));
     armMotorSim
-        .getRelativeEncoderSim()
+        .getAbsoluteEncoderSim()
         .setVelocity(Units.radiansPerSecondToRotationsPerMinute(armSim.getVelocityRadPerSec()));
   }
 

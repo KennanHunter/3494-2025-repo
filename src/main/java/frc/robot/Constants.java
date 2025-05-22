@@ -79,8 +79,8 @@ public final class Constants {
 
     public static int ARM_MOTOR_CAN_ID = 15;
 
-    public static final Angle MIN_ANGLE = Degrees.of(0);
-    public static final Angle MAX_ANGLE = Degrees.of(110);
+    public static final Angle MIN_ANGLE = Degrees.of(-80);
+    public static final Angle MAX_ANGLE = Degrees.of(80);
     public static final Distance ARM_LENGTH_TO_CENTER_OF_WHEELS = Meters.of(0.4);
 
     public static final double ARM_REDUCTION = 22 / 3;
