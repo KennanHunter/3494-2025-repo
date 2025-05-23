@@ -1,7 +1,6 @@
 package frc.robot.subsystems.superstructure.Elevator;
 
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -46,7 +45,7 @@ public class ElevatorIOReal implements ElevatorIO {
     leaderConfig.closedLoop.pid(0.5, 0, 0);
     leaderConfig.closedLoop.outputRange(-0.6, 0.6);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    leaderConfig.closedLoop.maxOutput(0);
+    leaderConfig.closedLoop.maxOutput(0.2);
 
     // TODO: WHY THE ACTUAL FLYING FUCK DOES THIS CONVERSION FACTOR ERROR
 
@@ -97,15 +96,17 @@ public class ElevatorIOReal implements ElevatorIO {
     Distance computedElevatorHeight =
         height.minus(Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT);
 
-    double targetPosition = computedElevatorHeight.in(Meters);
+    double targetPosition = computedElevatorHeight.in(Inches);
 
     // Log the target position for debugging
-    Logger.recordOutput("Elevator/TargetPositionMeters", targetPosition);
+    Logger.recordOutput("Elevator/TargetPositionInches", targetPosition);
 
     // Command the motor to the target position using closed-loop control
     leaderMotor
         .getClosedLoopController()
-        .setReference(targetPosition, SparkBase.ControlType.kPosition);
+        .setReference(
+            targetPosition / Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO,
+            SparkBase.ControlType.kPosition);
   }
 
   @Override

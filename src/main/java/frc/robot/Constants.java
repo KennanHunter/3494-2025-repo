@@ -76,7 +76,6 @@ public final class Constants {
   }
 
   public static class Arm {
-
     public static int ARM_MOTOR_CAN_ID = 15;
 
     public static final Angle MIN_ANGLE = Degrees.of(-80);
