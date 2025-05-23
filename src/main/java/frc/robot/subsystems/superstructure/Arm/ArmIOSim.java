@@ -49,10 +49,10 @@ public class ArmIOSim implements ArmIO {
     // Set up the motor configuration
     armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    double startingPosDegrees = 10;
+    double startingPosDegrees = 0;
 
     // Initialize the simulation
-    armSim.setState(Math.toRadians(startingPosDegrees), 0.0);
+    armSim.setState(Math.toRadians(startingPosDegrees), 0.2);
     armMotor.getEncoder().setPosition(startingPosDegrees);
   }
 

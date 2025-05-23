@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Rotation;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -13,11 +12,11 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import frc.robot.Constants;
 import frc.robot.util.LoggedTunableNumber;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark implements ArmIO {
   private final SparkFlex motor;
   private final SparkFlexConfig config;
-  private final SparkClosedLoopController controller;
 
   public final LoggedTunableNumber p = new LoggedTunableNumber("Arm/P", 6.0);
   public final LoggedTunableNumber i = new LoggedTunableNumber("Arm/I", 0.0);
@@ -28,11 +27,15 @@ public class ArmIOSpark implements ArmIO {
   public ArmIOSpark() {
     motor = new SparkFlex(Constants.Arm.ARM_MOTOR_CAN_ID, MotorType.kBrushless);
     config = new SparkFlexConfig();
-    controller = motor.getClosedLoopController();
 
     config.idleMode(IdleMode.kCoast);
     config.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     config.closedLoop.maxOutput(0);
+
+    config.absoluteEncoder.zeroOffset(0.2);
+    config.absoluteEncoder.zeroCentered(true);
+    config.absoluteEncoder.positionConversionFactor(2);
+    config.absoluteEncoder.inverted(false);
 
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -42,7 +45,9 @@ public class ArmIOSpark implements ArmIO {
     // TODO: Is it smart to do stateful actions in updateInputs? Is it a bad mix of functionality?
     configurePID();
 
-    inputs.armPosition = Rotation.of(motor.getExternalEncoder().getPosition());
+    Logger.recordOutput("Arm/RawAbsoluteOutputRotations", motor.getAbsoluteEncoder().getPosition());
+
+    inputs.armPosition = Rotation.of(motor.getAbsoluteEncoder().getPosition());
   }
 
   public void configurePID() {
