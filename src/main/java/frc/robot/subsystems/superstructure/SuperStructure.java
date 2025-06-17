@@ -12,6 +12,8 @@ import frc.robot.subsystems.superstructure.Arm.ArmState;
 import frc.robot.subsystems.superstructure.Elevator.Elevator;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorState;
+import frc.robot.subsystems.superstructure.Intake.Intake;
+import frc.robot.subsystems.superstructure.Intake.IntakeState;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
@@ -23,12 +25,14 @@ public class SuperStructure extends SubsystemBase {
 
   private final Elevator elevator;
   private final Arm arm;
+  private final Intake intake;
   private final SuperStructureVisualizer currentPositionVisualizer;
   private final SuperStructureVisualizer targetPositionVisualizer;
 
   public SuperStructure(ElevatorIO elevatorIO, ArmIO armIO) {
     elevator = new Elevator(elevatorIO);
     arm = new Arm(armIO);
+    intake = new Intake();
 
     currentPositionVisualizer =
         new SuperStructureVisualizer(new Color8Bit(Color.kBlue), new Color8Bit(Color.kAqua));
@@ -38,7 +42,8 @@ public class SuperStructure extends SubsystemBase {
     setTargetState(
         new SuperStructureState(
             new ElevatorState(Constants.Elevator.positionFromPercentage(0.5), IdleMode.kCoast),
-            new ArmState(Rotation2d.kZero)));
+            new ArmState(Rotation2d.kZero),
+            IntakeState.Hold));
   }
 
   @Override
@@ -55,7 +60,11 @@ public class SuperStructure extends SubsystemBase {
   }
 
   Optional<SuperStructureState> getState() {
-    return arm.getState().map((armState) -> new SuperStructureState(elevator.getState(), armState));
+    if (arm.getState().isEmpty() || intake.getState().isEmpty()) return Optional.empty();
+
+    return Optional.of(
+        new SuperStructureState(
+            elevator.getState(), arm.getState().get(), intake.getState().get()));
   }
 
   public void setTargetState(SuperStructureState newState) {
