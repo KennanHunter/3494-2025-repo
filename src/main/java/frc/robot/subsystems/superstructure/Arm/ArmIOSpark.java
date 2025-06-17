@@ -1,7 +1,5 @@
 package frc.robot.subsystems.superstructure.Arm;
 
-import static edu.wpi.first.units.Units.Rotation;
-
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -18,8 +16,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark implements ArmIO {
   private final SparkFlex motor;
-  private final SparkFlexConfig config;
-
   public final LoggedTunableNumber p = new LoggedTunableNumber("Arm/P", 6.0);
   public final LoggedTunableNumber i = new LoggedTunableNumber("Arm/I", 0.0);
   public final LoggedTunableNumber d = new LoggedTunableNumber("Arm/D", 0.0);
@@ -27,7 +23,7 @@ public class ArmIOSpark implements ArmIO {
 
   public ArmIOSpark() {
     motor = new SparkFlex(Constants.Arm.ARM_MOTOR_CAN_ID, MotorType.kBrushless);
-    config = new SparkFlexConfig();
+    SparkFlexConfig config = new SparkFlexConfig();
 
     config.idleMode(IdleMode.kCoast);
 
@@ -58,10 +54,12 @@ public class ArmIOSpark implements ArmIO {
     Logger.recordOutput("Arm/AppliedOutput", motor.getAppliedOutput());
     Logger.recordOutput("Arm/OutputCurrent", motor.getOutputCurrent());
 
-    inputs.armPosition = Rotation.of(motor.getAbsoluteEncoder().getPosition());
+    inputs.armPosition = Rotation2d.fromRotations(motor.getAbsoluteEncoder().getPosition());
   }
 
   public void configurePID() {
+    SparkFlexConfig config = new SparkFlexConfig();
+
     if (!p.hasChanged(hashCode())
         && !i.hasChanged(hashCode())
         && !d.hasChanged(hashCode())
@@ -79,6 +77,8 @@ public class ArmIOSpark implements ArmIO {
 
   @Override
   public void setBrakes(IdleMode neutralMode) {
+    SparkFlexConfig config = new SparkFlexConfig();
+
     config.idleMode(neutralMode);
     motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }

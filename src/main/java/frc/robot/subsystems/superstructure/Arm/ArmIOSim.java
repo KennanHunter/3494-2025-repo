@@ -68,14 +68,6 @@ public class ArmIOSim implements ArmIO {
     // Update battery voltage simulation
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(armMotorSim.getMotorCurrent()));
-
-    // Update encoder position from the arm simulation
-    armMotorSim
-        .getAbsoluteEncoderSim()
-        .setPosition(Units.radiansToRotations(armSim.getAngleRads()));
-    armMotorSim
-        .getAbsoluteEncoderSim()
-        .setVelocity(Units.radiansPerSecondToRotationsPerMinute(armSim.getVelocityRadPerSec()));
   }
 
   @Override
@@ -83,13 +75,14 @@ public class ArmIOSim implements ArmIO {
     // Run simulation step
     stepSimulation();
 
-    // Update the inputs
-    inputs.armPosition = Rotation.of(armMotor.getEncoder().getPosition());
-    inputs.armVelocity =
-        Units.rotationsPerMinuteToRadiansPerSecond(armMotor.getEncoder().getVelocity());
-    // inputs.armAppliedVolts = armMotorSim.getAppliedOutput() * RoboRioSim.getVInVoltage();
-    // inputs.armCurrentAmps = armMotorSim.getMotorCurrent();
+    inputs.armPosition = Rotation2d.fromRotations(armMotor.getAbsoluteEncoder().getPosition());
+    inputs.armVelocity = RotationsPerSecond.of(armMotor.getAbsoluteEncoder().getVelocity());
     inputs.idleMode = currentIdleMode;
+
+    Logger.recordOutput(
+        "Arm/RawAbsoluteOutputRotations", armMotor.getAbsoluteEncoder().getPosition());
+    Logger.recordOutput("Arm/AppliedOutput", armMotor.getAppliedOutput());
+    Logger.recordOutput("Arm/OutputCurrent", armMotor.getOutputCurrent());
   }
 
   @Override
