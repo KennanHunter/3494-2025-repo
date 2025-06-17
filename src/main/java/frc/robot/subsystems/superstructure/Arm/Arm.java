@@ -28,9 +28,19 @@ public class Arm extends SubsystemBase {
         new ArmState(Rotation2d.fromRotations(armIOInputs.armPosition.in(Rotation))));
   }
 
+  public void setTargetState(ArmState armState) {
+    this.armIO.runPosition(armState.rotation());
+  }
+
   @Override
   public void periodic() {
     armIO.updateInputs(armIOInputs);
     Logger.processInputs("Arm", armIOInputs);
+
+    getState()
+        .ifPresent(
+            (val) -> {
+              Logger.recordOutput("Arm/CurrentRotations", val);
+            });
   }
 }

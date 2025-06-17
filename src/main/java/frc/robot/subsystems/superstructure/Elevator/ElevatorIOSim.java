@@ -122,16 +122,17 @@ public class ElevatorIOSim implements ElevatorIO {
 
     inputs.sensorState =
         isBottomSensorTripped ? ElevatorSensorState.BOTTOM : ElevatorSensorState.UP;
+    inputs.currentHeight =
+        Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.plus(
+            Meters.of(elevatorSim.getPositionMeters()));
   }
 
   @Override
   public void runElevatorHeight(Distance height) {
     Distance computedElevatorHeight =
-        height.minus(Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT);
+        height.minus(Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT);
 
-    double computedElevatorTicks = computedElevatorHeight.in(Meters);
-
-    Logger.recordOutput("Elevator/computedElevatorTicks", computedElevatorTicks);
+    Logger.recordOutput("Elevator/computedElevatorMeters", computedElevatorHeight.in(Meters));
 
     leaderMotor
         .getClosedLoopController()

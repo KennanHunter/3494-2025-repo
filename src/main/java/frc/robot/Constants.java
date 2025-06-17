@@ -14,6 +14,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import au.grapplerobotics.MitoCANdria;
@@ -70,9 +71,25 @@ public final class Constants {
     public static int leaderMotor = 12;
     public static int followerMotor = 13;
 
-    public static final Distance PHYSICAL_ELEVATOR_BOTTOM_HEIGHT = Meters.of(0);
+    public static final Distance PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT = Inches.of(29.5);
+    public static final Distance PHYSICAL_ELEVATOR_TOP_HEIGHT_MEASUREMENT = Inches.of(49);
 
     public static final double ROTATIONS_TO_INCHES_CONVERSION_RATIO = (4.0 / 9.0);
+
+    /**
+     * @param percentage value from 0 to 1
+     * @return distance
+     */
+    public static Distance positionFromPercentage(double percentage) {
+      assert percentage >= 0;
+      assert percentage <= 1;
+
+      Double displacement =
+          PHYSICAL_ELEVATOR_TOP_HEIGHT_MEASUREMENT.in(Meters)
+              - PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.in(Meters);
+
+      return PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.plus(Meters.of(displacement * percentage));
+    }
   }
 
   public static class Arm {

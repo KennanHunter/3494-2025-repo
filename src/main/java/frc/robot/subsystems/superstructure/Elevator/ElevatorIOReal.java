@@ -42,8 +42,8 @@ public class ElevatorIOReal implements ElevatorIO {
     leaderConfig.smartCurrentLimit(80);
 
     // Configure PID and motion control
-    leaderConfig.closedLoop.pid(0.5, 0, 0);
-    leaderConfig.closedLoop.outputRange(-0.6, 0.6);
+    leaderConfig.closedLoop.pid(1, 0, 0);
+    leaderConfig.closedLoop.outputRange(-1, 1);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     leaderConfig.closedLoop.maxOutput(0.2);
 
@@ -74,9 +74,10 @@ public class ElevatorIOReal implements ElevatorIO {
   public void updateInputs(ElevatorIOInputs inputs) {
     // Read current elevator position from encoder
     inputs.currentHeight =
-        Inches.of(
-            leaderMotor.getEncoder().getPosition()
-                * Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
+        Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.plus(
+            Inches.of(
+                leaderMotor.getEncoder().getPosition()
+                    * Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO));
 
     boolean isBottomSwitchPressed = !bottomLimitSwitch.get();
     inputs.sensorState =
@@ -94,7 +95,7 @@ public class ElevatorIOReal implements ElevatorIO {
   public void runElevatorHeight(Distance height) {
     // Calculate the target position, accounting for physical offset
     Distance computedElevatorHeight =
-        height.minus(Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT);
+        height.minus(Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT);
 
     double targetPosition = computedElevatorHeight.in(Inches);
 
