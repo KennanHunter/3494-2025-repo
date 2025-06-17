@@ -47,12 +47,15 @@ public class JoyStickDriveCommand extends Command {
     double y = MathUtil.applyDeadband(ySupplier.getAsDouble(), DEADBAND);
     double linearMagnitude = Math.hypot(x, y);
 
-    if (y == 0) {
-      y = Double.MIN_VALUE;
+    Rotation2d linearDirection;
+
+    if (linearMagnitude > 1e-6) {
+      linearDirection = new Rotation2d(x, y);
+    } else {
+      linearDirection = Rotation2d.kZero;
     }
 
     // Get direction and apply deadband to rotation
-    Rotation2d linearDirection = new Rotation2d(x, y);
     double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
 
     // Square values for smoother control
