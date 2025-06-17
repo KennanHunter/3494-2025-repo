@@ -81,6 +81,8 @@
   },
   "java.compile.nullAnalysis.mode": "automatic",
   "cSpell.words": [
+    "andymark",
+    "apriltags",
     "ascope",
     "brushless",
     "deadband",
