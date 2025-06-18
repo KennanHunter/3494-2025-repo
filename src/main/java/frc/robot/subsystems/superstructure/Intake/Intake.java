@@ -28,9 +28,9 @@ public class Intake extends SubsystemBase {
         intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  public void setState(IntakeState state) {
+  public void setTargetState(IntakeState state) {
     this.state = Optional.of(state);
-    Logger.recordOutput("IntakeState", state);
+    Logger.recordOutput("Intake/State", state);
 
     // TODO: Constantize and make actually work
     double speed =

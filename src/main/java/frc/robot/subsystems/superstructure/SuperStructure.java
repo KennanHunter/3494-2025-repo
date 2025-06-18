@@ -70,6 +70,7 @@ public class SuperStructure extends SubsystemBase {
   public void setTargetState(SuperStructureState newState) {
     elevator.setTargetState(newState.elevatorState());
     arm.setTargetState(newState.armState());
+    intake.setTargetState(newState.intakeState());
 
     Logger.recordOutput(
         "TargetSuperStructureMechanismState", targetPositionVisualizer.updateMechanism(newState));
