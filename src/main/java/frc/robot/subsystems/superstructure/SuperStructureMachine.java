@@ -1,3 +1,9 @@
 package frc.robot.subsystems.superstructure;
 
-public class SuperStructureMachine {}
+import org.jgrapht.graph.*;
+
+public class SuperStructureMachine {
+  SuperStructureMachine() {
+    // Graph<> = new
+  }
+}

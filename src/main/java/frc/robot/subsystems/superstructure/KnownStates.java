@@ -13,7 +13,13 @@ public enum KnownStates {
       new SuperStructureState(
           new ElevatorState(Meters.of(0.5), IdleMode.kBrake),
           new ArmState(Rotation2d.kZero),
-          IntakeState.Hold));
+          IntakeState.Hold)),
+
+  Test2(
+      new SuperStructureState(
+          new ElevatorState(Meters.of(0.7), IdleMode.kBrake),
+          new ArmState(Rotation2d.kCW_90deg),
+          IntakeState.Spit));
 
   KnownStates(SuperStructureState state) {}
 }
