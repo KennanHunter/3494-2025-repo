@@ -1,6 +1,9 @@
 package frc.robot.subsystems.superstructure.Elevator;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -8,6 +11,10 @@ public class Elevator extends SubsystemBase {
   // IO layer
   private final ElevatorIO io;
   private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+
+  private Distance ELEVATOR_ACCEPTABLE_HEIGHT_ERROR = Meters.of(0.1);
+
+  private ElevatorState target;
 
   public Elevator(ElevatorIO io) {
     this.io = io;
@@ -21,16 +28,21 @@ public class Elevator extends SubsystemBase {
   }
 
   public ElevatorState getState() {
-    Logger.recordOutput("Height", inputs.currentHeight);
-
     return new ElevatorState(inputs.currentHeight, IdleMode.kBrake);
   }
 
   public void setTargetState(ElevatorState targetState) {
+    this.target = targetState;
+
     io.runElevatorHeight(targetState.height());
   }
 
   public ElevatorSensorState getSensorState() {
     return inputs.sensorState;
+  }
+
+  public boolean isAtTarget() {
+    return this.target.height().minus(getState().height()).abs(Meters)
+        <= ELEVATOR_ACCEPTABLE_HEIGHT_ERROR.in(Meters);
   }
 }

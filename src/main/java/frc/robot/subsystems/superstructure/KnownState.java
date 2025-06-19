@@ -8,7 +8,7 @@ import frc.robot.subsystems.superstructure.Arm.ArmState;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorState;
 import frc.robot.subsystems.superstructure.Intake.IntakeState;
 
-public enum KnownStates {
+public enum KnownState {
   Test(
       new SuperStructureState(
           new ElevatorState(Meters.of(0.5), IdleMode.kBrake),
@@ -21,5 +21,13 @@ public enum KnownStates {
           new ArmState(Rotation2d.kCW_90deg),
           IntakeState.Spit));
 
-  KnownStates(SuperStructureState state) {}
+  private SuperStructureState state;
+
+  KnownState(SuperStructureState state) {
+    this.state = state;
+  }
+
+  public SuperStructureState getState() {
+    return this.state;
+  }
 }

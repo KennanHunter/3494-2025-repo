@@ -23,7 +23,6 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
-import javax.annotation.Nullable;
 
 /**
  * Provides an interface for asynchronously reading high-frequency measurements to a set of queues.
@@ -39,8 +38,8 @@ public class SparkMaxOdometryThread {
   private final Notifier notifier;
   private static SparkMaxOdometryThread instance = null;
 
-  private @Nullable REVLibError lastDriveError;
-  private @Nullable REVLibError lastTurnError;
+  private REVLibError lastDriveError;
+  private REVLibError lastTurnError;
 
   // TODO: Experiment with different capacities, if a motor dies completely it will fill up
   // this queue and potentially slow down the main loop

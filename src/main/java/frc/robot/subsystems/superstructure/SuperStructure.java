@@ -77,4 +77,8 @@ public class SuperStructure extends SubsystemBase {
     Logger.recordOutput(
         "TargetSuperStructureComponents", targetPositionVisualizer.updatePoses(newState));
   }
+
+  public boolean isAtTarget() {
+    return elevator.isAtTarget() && arm.isAtTarget() && intake.isAtTarget();
+  }
 }

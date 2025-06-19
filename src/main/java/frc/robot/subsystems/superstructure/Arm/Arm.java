@@ -1,5 +1,8 @@
 package frc.robot.subsystems.superstructure.Arm;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
@@ -11,6 +14,10 @@ public class Arm extends SubsystemBase {
 
   // Mechanism2d visualization
   public final LoggedMechanism2d mech2d = new LoggedMechanism2d(60, 60);
+
+  private Angle ACCEPTABLE_ANGLE_ERROR = Degrees.of(5);
+
+  private ArmState target;
 
   public Arm(ArmIO armIO) {
     this.armIO = armIO;
@@ -25,6 +32,8 @@ public class Arm extends SubsystemBase {
   }
 
   public void setTargetState(ArmState armState) {
+    target = armState;
+
     this.armIO.runPosition(armState.rotation());
   }
 
@@ -38,5 +47,10 @@ public class Arm extends SubsystemBase {
             (val) -> {
               Logger.recordOutput("Arm/CurrentRotations", val);
             });
+  }
+
+  public boolean isAtTarget() {
+    return this.target.rotation().minus(this.armIOInputs.armPosition).getDegrees()
+        <= ACCEPTABLE_ANGLE_ERROR.in(Degrees);
   }
 }

@@ -48,4 +48,10 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {}
+
+  public boolean isAtTarget() {
+    // TODO: Intake state is so inconsequential rn that i just return true, should probably properly
+    // implement at some point esp. for auto routines that may require spitting as a task
+    return true;
+  }
 }
