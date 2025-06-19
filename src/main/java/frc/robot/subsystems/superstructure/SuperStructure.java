@@ -59,7 +59,7 @@ public class SuperStructure extends SubsystemBase {
             });
   }
 
-  Optional<SuperStructureState> getState() {
+  public Optional<SuperStructureState> getState() {
     if (arm.getState().isEmpty() || intake.getState().isEmpty()) return Optional.empty();
 
     return Optional.of(
