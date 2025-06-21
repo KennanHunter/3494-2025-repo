@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.Nullable;
 
 /**
  * LimelightHelpers provides static methods and classes for interfacing with Limelight vision
@@ -1236,7 +1235,7 @@ public class LimelightHelpers {
    * @param limelightName
    * @return
    */
-  public static @Nullable PoseEstimate getBotPoseEstimate_wpiBlue_MegaTag2(String limelightName) {
+  public static PoseEstimate getBotPoseEstimate_wpiBlue_MegaTag2(String limelightName) {
     return getBotPoseEstimate(limelightName, "botpose_orb_wpiblue", true);
   }
 

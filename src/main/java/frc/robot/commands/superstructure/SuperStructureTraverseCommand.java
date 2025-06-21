@@ -1,19 +1,26 @@
-package frc.robot.commands;
+package frc.robot.commands.superstructure;
 
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.superstructure.KnownState;
 import frc.robot.subsystems.superstructure.SuperStructure;
 import frc.robot.subsystems.superstructure.SuperStructureMachine;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.littletonrobotics.junction.Logger;
 
+/** The real entrypoint for this command is SuperStructure::traverseToKnownState */
 public class SuperStructureTraverseCommand extends Command {
+  static Alert detachedStateAlert =
+      new Alert("Tried to traverse while outside of state machine", AlertType.kWarning);
+
   private final SuperStructure superStructure;
   private final KnownState targetState;
-  private final Supplier<KnownState> currentStateSupplier;
+  private final Supplier<Optional<KnownState>> currentStateSupplier;
 
   private GraphPath<KnownState, DefaultEdge> path;
   private List<KnownState> stateSequence;
@@ -29,7 +36,7 @@ public class SuperStructureTraverseCommand extends Command {
    */
   public SuperStructureTraverseCommand(
       SuperStructure superStructure,
-      Supplier<KnownState> currentStateSupplier,
+      Supplier<Optional<KnownState>> currentStateSupplier,
       KnownState targetState) {
     this.superStructure = superStructure;
     this.targetState = targetState;
@@ -47,12 +54,18 @@ public class SuperStructureTraverseCommand extends Command {
    */
   public SuperStructureTraverseCommand(
       SuperStructure superStructure, KnownState startState, KnownState targetState) {
-    this(superStructure, () -> startState, targetState);
+    this(superStructure, () -> Optional.of(startState), targetState);
   }
 
   @Override
   public void initialize() {
-    KnownState currentState = currentStateSupplier.get();
+    if (currentStateSupplier.get().isEmpty()) {
+      detachedStateAlert.set(true);
+      return;
+    }
+    detachedStateAlert.set(false);
+
+    KnownState currentState = currentStateSupplier.get().get();
 
     path = SuperStructureMachine.traverse(currentState, targetState);
 
@@ -84,6 +97,12 @@ public class SuperStructureTraverseCommand extends Command {
 
   @Override
   public void execute() {
+    if (currentStateSupplier.get().isEmpty()) {
+      detachedStateAlert.set(true);
+      return;
+    }
+    detachedStateAlert.set(false);
+
     if (!pathCalculated || stateSequence.isEmpty()) {
       return;
     }
@@ -126,7 +145,7 @@ public class SuperStructureTraverseCommand extends Command {
   private void executeCurrentStep() {
     if (currentStepIndex < stateSequence.size()) {
       KnownState currentTargetState = stateSequence.get(currentStepIndex);
-      superStructure.setTargetState(currentTargetState.getState());
+      superStructure.setTargetKnownState(currentTargetState);
 
       Logger.recordOutput("SuperStructureTraverse/ExecutingStep", currentStepIndex);
       Logger.recordOutput("SuperStructureTraverse/StepState", currentTargetState.toString());

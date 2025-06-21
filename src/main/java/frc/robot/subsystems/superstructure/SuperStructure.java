@@ -1,19 +1,17 @@
 package frc.robot.subsystems.superstructure;
 
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import edu.wpi.first.math.geometry.Rotation2d;
+import static edu.wpi.first.units.Units.Centimeters;
+
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.commands.superstructure.SuperStructureTraverseCommand;
 import frc.robot.subsystems.superstructure.Arm.Arm;
 import frc.robot.subsystems.superstructure.Arm.ArmIO;
-import frc.robot.subsystems.superstructure.Arm.ArmState;
 import frc.robot.subsystems.superstructure.Elevator.Elevator;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIO;
-import frc.robot.subsystems.superstructure.Elevator.ElevatorState;
 import frc.robot.subsystems.superstructure.Intake.Intake;
-import frc.robot.subsystems.superstructure.Intake.IntakeState;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
@@ -29,6 +27,8 @@ public class SuperStructure extends SubsystemBase {
   private final SuperStructureVisualizer currentPositionVisualizer;
   private final SuperStructureVisualizer targetPositionVisualizer;
 
+  private KnownState lastKnownState;
+
   public SuperStructure(ElevatorIO elevatorIO, ArmIO armIO) {
     elevator = new Elevator(elevatorIO);
     arm = new Arm(armIO);
@@ -38,12 +38,6 @@ public class SuperStructure extends SubsystemBase {
         new SuperStructureVisualizer(new Color8Bit(Color.kBlue), new Color8Bit(Color.kAqua));
     targetPositionVisualizer =
         new SuperStructureVisualizer(new Color8Bit(Color.kGreen), new Color8Bit(Color.kLightGreen));
-
-    setTargetState(
-        new SuperStructureState(
-            new ElevatorState(Constants.Elevator.positionFromPercentage(0.5), IdleMode.kCoast),
-            new ArmState(Rotation2d.kZero),
-            IntakeState.Hold));
   }
 
   @Override
@@ -57,6 +51,10 @@ public class SuperStructure extends SubsystemBase {
               Logger.recordOutput(
                   "SuperStructureComponents", currentPositionVisualizer.updatePoses(state));
             });
+
+    Logger.recordOutput("SuperStructure/lastKnownState", lastKnownState);
+    Logger.recordOutput(
+        "SuperStructure/isWithinRangeOfLastKnownState", isWithinRangeOfKnownState(lastKnownState));
   }
 
   public Optional<SuperStructureState> getState() {
@@ -80,5 +78,50 @@ public class SuperStructure extends SubsystemBase {
 
   public boolean isAtTarget() {
     return elevator.isAtTarget() && arm.isAtTarget() && intake.isAtTarget();
+  }
+
+  public void setTargetKnownState(KnownState state) {
+    this.lastKnownState = state;
+
+    setTargetState(state.getState());
+  }
+
+  public boolean isWithinRangeOfKnownState(KnownState state) {
+    if (this.getState().isEmpty()) {
+      return false;
+    }
+
+    var old = this.getState().get();
+    var newState = state.getState();
+
+    boolean armWithinDegrees =
+        Math.abs(
+                old.armState().rotation().getDegrees()
+                    - newState.armState().rotation().getDegrees())
+            <= 5;
+
+    boolean heightWithinCentimeters =
+        old.elevatorState().height().minus(newState.elevatorState().height()).abs(Centimeters)
+            <= 10;
+
+    return armWithinDegrees && heightWithinCentimeters;
+  }
+
+  public Optional<KnownState> getLastKnownStateIfWithinRange() {
+    if (this.lastKnownState == null) {
+      return Optional.empty();
+    }
+
+    if (this.isWithinRangeOfKnownState(this.lastKnownState)) {
+      return Optional.of(this.lastKnownState);
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  public Command createCommandTraversalToKnownState(KnownState targetState) {
+    return new SuperStructureTraverseCommand(
+            this, () -> getLastKnownStateIfWithinRange(), targetState)
+        .onlyIf(() -> getLastKnownStateIfWithinRange().isPresent());
   }
 }

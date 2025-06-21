@@ -7,14 +7,13 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 public class SuperStructureMachine {
-  private static Graph<KnownState, DefaultEdge> graph = buildGraph();
+  private static Graph<KnownState, DefaultEdge> graph = createGraph();
 
-  SuperStructureMachine() {}
-
-  private static Graph<KnownState, DefaultEdge> buildGraph() {
+  private static Graph<KnownState, DefaultEdge> createGraph() {
     var graph = new SimpleGraph<KnownState, DefaultEdge>(DefaultEdge.class);
 
     graph.addEdge(KnownState.Test, KnownState.Test2);
+    graph.addEdge(KnownState.Test, KnownState.SafeReset);
 
     return graph;
   }

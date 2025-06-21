@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.JoyStickDriveCommand;
+import frc.robot.commands.superstructure.SuperStructureManualControlCommand;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -52,6 +52,7 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   public static Joystick leftButtonBoard = new Joystick(1);
+  public static Joystick rightButtonBoard = new Joystick(2);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -125,12 +126,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(
-        new JoyStickDriveCommand(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> controller.getLeftX(),
-            () -> -controller.getRightX()));
+    // drive.setDefaultCommand(
+    //     new JoyStickDriveCommand(
+    //         drive,
+    //         () -> -controller.getLeftY(),
+    //         () -> controller.getLeftX(),
+    //         () -> -controller.getRightX()));
+
+    superStructure.setDefaultCommand(
+        new SuperStructureManualControlCommand(
+            superStructure, () -> controller.getLeftX(), () -> controller.getLeftY()));
 
     controller.b().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
