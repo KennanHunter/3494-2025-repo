@@ -18,7 +18,7 @@ public enum KnownState {
   Test(
       new SuperStructureState(
           new ElevatorState(Meters.of(0.5), IdleMode.kBrake),
-          new ArmState(Rotation2d.kZero),
+          new ArmState(Rotation2d.fromDegrees(45)),
           IntakeState.Hold)),
 
   Test2(
