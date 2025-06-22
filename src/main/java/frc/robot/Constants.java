@@ -22,6 +22,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import java.time.Duration;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -93,7 +94,7 @@ public final class Constants {
   }
 
   public static class Arm {
-    public static int ARM_MOTOR_CAN_ID = 15;
+    public static final int ARM_MOTOR_CAN_ID = 15;
 
     public static final Angle MIN_ANGLE = Degrees.of(-80);
     public static final Angle MAX_ANGLE = Degrees.of(80);
@@ -108,11 +109,19 @@ public final class Constants {
   }
 
   public static class Intake {
-    public static int INTAKE_MOTOR_CAN_ID = 14;
+    public static final int INTAKE_MOTOR_CAN_ID = 14;
   }
 
   public static class Climber {
-    public static int CLIMBER_MOTOR_CAN_ID = 6;
+    public static final int CLIMBER_MOTOR_CAN_ID = 6;
+  }
+
+  public static class GroundIntake {
+    public static final int PIVOT_MOTOR_CAN_ID = 7;
+    public static final int FRONT_INTAKE_MOTOR_CAN_ID = 11;
+    public static final int BACK_INTAKE_MOTOR_CAN_ID = 10;
+
+    public static final Duration CURRENT_FILTER_LENGTH = Duration.ofSeconds(1);
   }
 
   public static class Drivetrain {
