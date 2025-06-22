@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase {
   private Optional<IntakeState> state = Optional.empty();
 
   public Intake() {
-    intakeMotor = new SparkMax(Constants.Intake.intakeMotor, MotorType.kBrushless);
+    intakeMotor = new SparkMax(Constants.Intake.INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);
 
     SparkMaxConfig intakeConfig = new SparkMaxConfig();
 

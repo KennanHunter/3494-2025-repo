@@ -108,7 +108,7 @@ public final class Constants {
   }
 
   public static class Intake {
-    public static int intakeMotor = 14;
+    public static int INTAKE_MOTOR_CAN_ID = 14;
   }
 
   public static class Climber {
