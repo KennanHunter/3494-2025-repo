@@ -19,8 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -37,6 +36,7 @@ public class ArmIOSim implements ArmIO {
   // Current idle mode
   private IdleMode currentIdleMode = IdleMode.kCoast;
 
+  // Adjusted simulation setup
   private final SingleJointedArmSim armSim =
       new SingleJointedArmSim(
           armGearbox,
@@ -47,43 +47,41 @@ public class ArmIOSim implements ArmIO {
           Constants.Arm.MAX_ANGLE.in(Radians),
           true,
           STARTING_ANGLE.in(Radians),
-          1 / Constants.Arm.ARM_ENCODER_PULSE_PER_REV,
-          0.0 // Add noise with a std-dev of 1 tick
-          );
+          0.0,
+          0.0);
 
   public ArmIOSim() {
     SparkFlexConfig config = new SparkFlexConfig();
 
     config.idleMode(IdleMode.kCoast);
 
-    config.closedLoop.p(0.001).i(0).d(0).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+    config.closedLoop.p(5).i(0).d(0).feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
     config.closedLoop.maxMotion.maxVelocity(5).maxAcceleration(5);
 
-    config.absoluteEncoder.zeroCentered(true).positionConversionFactor(2).inverted(false);
+    // config.absoluteEncoder.zeroCentered(true).positionConversionFactor(2).inverted(false);
 
     // Set up the motor configuration
     armMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // Initialize the simulation
     armSim.setState(STARTING_ANGLE.in(Radians), 0);
+
     armMotor.getEncoder().setPosition(STARTING_ANGLE.in(Rotations));
   }
 
   private void stepSimulation() {
-    armSim.setInput(armMotorSim.getAppliedOutput() * RoboRioSim.getVInVoltage());
+    armSim.setInput(armMotorSim.getAppliedOutput() * RobotController.getBatteryVoltage());
 
     armSim.update(Constants.SIMULATED_LOOP_TIME);
+
+    // armSim.setState(armMotor.getEncoder().getPosition(), armMotor.getEncoder().getVelocity());
 
     // Update the motor simulation
     armMotorSim.iterate(
         Units.radiansPerSecondToRotationsPerMinute(armSim.getVelocityRadPerSec()),
-        RoboRioSim.getVInVoltage(),
+        RobotController.getBatteryVoltage(),
         Constants.SIMULATED_LOOP_TIME);
-
-    // Update battery voltage simulation
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(armMotorSim.getMotorCurrent()));
   }
 
   @Override
@@ -91,12 +89,11 @@ public class ArmIOSim implements ArmIO {
     // Run simulation step
     stepSimulation();
 
-    inputs.armPosition = Rotation2d.fromRotations(armMotor.getAbsoluteEncoder().getPosition());
-    inputs.armVelocity = RotationsPerSecond.of(armMotor.getAbsoluteEncoder().getVelocity());
+    inputs.armPosition = Rotation2d.fromRotations(armMotor.getEncoder().getPosition());
+    inputs.armVelocity = RotationsPerSecond.of(armMotor.getEncoder().getVelocity());
     inputs.idleMode = currentIdleMode;
 
-    Logger.recordOutput(
-        "Arm/RawAbsoluteOutputRotations", armMotor.getAbsoluteEncoder().getPosition());
+    Logger.recordOutput("Arm/RawAbsoluteOutputRotations", armMotor.getEncoder().getPosition());
     Logger.recordOutput("Arm/AppliedOutput", armMotor.getAppliedOutput());
     Logger.recordOutput("Arm/OutputCurrent", armMotor.getOutputCurrent());
   }
