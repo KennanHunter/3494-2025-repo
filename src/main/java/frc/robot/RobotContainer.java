@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.JoyStickDriveCommand;
+import frc.robot.commands.superstructure.ReturnSuperStructureToSafeState;
 import frc.robot.commands.superstructure.SuperStructureManualControlCommand;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -34,6 +36,7 @@ import frc.robot.subsystems.superstructure.Arm.ArmIOSpark;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIOReal;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSim;
+import frc.robot.subsystems.superstructure.KnownState;
 import frc.robot.subsystems.superstructure.SuperStructure;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -126,16 +129,22 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // drive.setDefaultCommand(
-    //     new JoyStickDriveCommand(
-    //         drive,
-    //         () -> -controller.getLeftY(),
-    //         () -> controller.getLeftX(),
-    //         () -> -controller.getRightX()));
+    drive.setDefaultCommand(
+        new JoyStickDriveCommand(
+            drive,
+            () -> -controller.getLeftY(),
+            () -> controller.getLeftX(),
+            () -> -controller.getRightX()));
 
-    superStructure.setDefaultCommand(
-        new SuperStructureManualControlCommand(
-            superStructure, () -> controller.getLeftX(), () -> controller.getLeftY()));
+    controller
+        .a()
+        .onTrue(
+            new SuperStructureManualControlCommand(
+                superStructure, () -> controller.getLeftX(), () -> controller.getLeftY()));
+
+    controller.y().onTrue(new ReturnSuperStructureToSafeState(superStructure));
+
+    controller.x().onTrue(superStructure.createCommandTraversalToKnownState(KnownState.Test2));
 
     controller.b().onTrue(Commands.runOnce(drive::stopWithX, drive));
 

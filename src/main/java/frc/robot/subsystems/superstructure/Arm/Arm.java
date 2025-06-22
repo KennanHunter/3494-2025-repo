@@ -15,7 +15,7 @@ public class Arm extends SubsystemBase {
   // Mechanism2d visualization
   public final LoggedMechanism2d mech2d = new LoggedMechanism2d(60, 60);
 
-  private Angle ACCEPTABLE_ANGLE_ERROR = Degrees.of(5);
+  public Angle ACCEPTABLE_ANGLE_ERROR = Degrees.of(5);
 
   private ArmState target;
 
@@ -47,9 +47,13 @@ public class Arm extends SubsystemBase {
             (val) -> {
               Logger.recordOutput("Arm/CurrentRotations", val);
             });
+
+    Logger.recordOutput("Arm/Target", this.target);
   }
 
   public boolean isAtTarget() {
+    if (this.target == null) return false;
+
     return this.target.rotation().minus(this.armIOInputs.armPosition).getDegrees()
         <= ACCEPTABLE_ANGLE_ERROR.in(Degrees);
   }

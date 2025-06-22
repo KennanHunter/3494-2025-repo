@@ -12,7 +12,7 @@ public class Elevator extends SubsystemBase {
   private final ElevatorIO io;
   private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
 
-  private Distance ELEVATOR_ACCEPTABLE_HEIGHT_ERROR = Meters.of(0.1);
+  public Distance ELEVATOR_ACCEPTABLE_HEIGHT_ERROR = Meters.of(0.1);
 
   private ElevatorState target;
 
@@ -42,6 +42,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean isAtTarget() {
+    if (this.target == null) return false;
+
     return this.target.height().minus(getState().height()).abs(Meters)
         <= ELEVATOR_ACCEPTABLE_HEIGHT_ERROR.in(Meters);
   }

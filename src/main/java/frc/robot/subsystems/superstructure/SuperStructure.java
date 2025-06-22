@@ -1,6 +1,7 @@
 package frc.robot.subsystems.superstructure;
 
 import static edu.wpi.first.units.Units.Centimeters;
+import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -52,6 +53,7 @@ public class SuperStructure extends SubsystemBase {
                   "SuperStructureComponents", currentPositionVisualizer.updatePoses(state));
             });
 
+    Logger.recordOutput("SuperStructure/isAtTargetState", isAtTarget());
     Logger.recordOutput("SuperStructure/lastKnownState", lastKnownState);
     Logger.recordOutput(
         "SuperStructure/isWithinRangeOfLastKnownState", isWithinRangeOfKnownState(lastKnownState));
@@ -86,6 +88,7 @@ public class SuperStructure extends SubsystemBase {
     setTargetState(state.getState());
   }
 
+  // TODO: Merge with isAtTarget()
   public boolean isWithinRangeOfKnownState(KnownState state) {
     if (this.getState().isEmpty()) {
       return false;
@@ -94,17 +97,15 @@ public class SuperStructure extends SubsystemBase {
     var old = this.getState().get();
     var newState = state.getState();
 
-    boolean armWithinDegrees =
-        Math.abs(
-                old.armState().rotation().getDegrees()
-                    - newState.armState().rotation().getDegrees())
-            <= 5;
+    boolean armWithinRange =
+        Math.abs(old.armState().rotation().minus(newState.armState().rotation()).getDegrees())
+            <= arm.ACCEPTABLE_ANGLE_ERROR.in(Degrees);
 
-    boolean heightWithinCentimeters =
+    boolean heightWithinRange =
         old.elevatorState().height().minus(newState.elevatorState().height()).abs(Centimeters)
-            <= 10;
+            <= elevator.ELEVATOR_ACCEPTABLE_HEIGHT_ERROR.in(Centimeters);
 
-    return armWithinDegrees && heightWithinCentimeters;
+    return armWithinRange && heightWithinRange;
   }
 
   public Optional<KnownState> getLastKnownStateIfWithinRange() {
