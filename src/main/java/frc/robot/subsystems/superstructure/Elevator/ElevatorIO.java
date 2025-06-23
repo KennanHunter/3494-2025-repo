@@ -22,8 +22,8 @@ public interface ElevatorIO {
   /** Sets the brake mode. */
   public default void setBrakes(IdleMode idleMode) {}
 
-  /** Resets the encoder position. */
-  public default void resetPosition(double position) {}
+  /** Resets the encoder position to given height. */
+  public default void resetHeight(Distance height) {}
 
   /** Sets the PID output limits. */
   public default void setPIDlimits(double lowerBound, double upperBound) {}

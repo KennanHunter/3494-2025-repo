@@ -86,6 +86,7 @@
     "ascope",
     "brushless",
     "deadband",
+    "Debouncer",
     "Odometry",
     "robo"
   ]

@@ -15,30 +15,20 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 
-public class ElevatorIOReal implements ElevatorIO {
+public class ElevatorIOSpark implements ElevatorIO {
   // SparkMax hardware objects
   private final SparkMax leaderMotor;
-  // private final SparkMax followerMotor;
   private final SparkMaxConfig leaderConfig;
-  // private final SparkMaxConfig followerConfig;
 
   // Limit switch for bottom position detection
   private final DigitalInput bottomLimitSwitch;
 
-  public ElevatorIOReal() {
+  public ElevatorIOSpark() {
     // Create SparkMax motors with the IDs from constants
     leaderMotor = new SparkMax(Constants.Elevator.leaderMotor, MotorType.kBrushless);
-    // followerMotor = new SparkMax(Constants.Elevator.followerMotor, MotorType.kBrushless);
 
     // Create configs
     leaderConfig = new SparkMaxConfig();
-    // followerConfig = new SparkMaxConfig();
-
-    // Configure follower to mirror leader with inverted output
-    // followerConfig.follow(leaderMotor, true);
-
-    // Set current limits to prevent motor damage
-    // followerConfig.smartCurrentLimit(80);
     leaderConfig.smartCurrentLimit(80);
 
     // Configure PID and motion control
@@ -63,10 +53,7 @@ public class ElevatorIOReal implements ElevatorIO {
     // Apply configurations
     leaderMotor.configure(
         leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // followerMotor.configure(
-    //     followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    // Initialize the bottom limit switch on the specified DIO port
     bottomLimitSwitch = new DigitalInput(Constants.Elevator.bottomMagSensorDIO);
   }
 
@@ -84,7 +71,7 @@ public class ElevatorIOReal implements ElevatorIO {
         isBottomSwitchPressed ? ElevatorSensorState.BOTTOM : ElevatorSensorState.UP;
 
     Logger.recordOutput(
-        "Elevator/Leader/RotToInchesConvRatio",
+        "Elevator/Leader/RotToInchesConversionRatio",
         Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
     Logger.recordOutput("Elevator/Leader/Rotations", leaderMotor.getEncoder().getPosition());
     Logger.recordOutput("Elevator/Leader/AppliedAmps", leaderMotor.getOutputCurrent());
@@ -112,37 +99,20 @@ public class ElevatorIOReal implements ElevatorIO {
 
   @Override
   public void setBrakes(IdleMode idleMode) {
-    // Update the idle mode configuration
     leaderConfig.idleMode(idleMode);
-    // followerConfig.idleMode(idleMode);
 
-    // Apply the configuration to both motors
     leaderMotor.configure(
         leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    // followerMotor.configure(
-    // followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     Logger.recordOutput("Elevator/BrakeMode", idleMode.toString());
   }
 
   @Override
-  public void resetPosition(double position) {
+  public void resetHeight(Distance height) {
     // Reset the encoder position
-    leaderMotor.getEncoder().setPosition(position);
-    Logger.recordOutput("Elevator/ResetPosition", position);
-  }
-
-  @Override
-  public void setPIDlimits(double lowerBound, double upperBound) {
-    // Update the PID output limits
-    leaderConfig.closedLoop.outputRange(lowerBound, upperBound);
-
-    // Apply the updated configuration
-    leaderMotor.configure(
-        leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    Logger.recordOutput("Elevator/PIDLowerLimit", lowerBound);
-    Logger.recordOutput("Elevator/PIDUpperLimit", upperBound);
+    leaderMotor
+        .getEncoder()
+        .setPosition(height.in(Inches) / Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
+    Logger.recordOutput("Elevator/ResetHeight", height);
   }
 }

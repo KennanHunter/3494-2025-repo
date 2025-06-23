@@ -34,8 +34,8 @@ import frc.robot.subsystems.superstructure.Arm.ArmIO;
 import frc.robot.subsystems.superstructure.Arm.ArmIOSim;
 import frc.robot.subsystems.superstructure.Arm.ArmIOSpark;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIO;
-import frc.robot.subsystems.superstructure.Elevator.ElevatorIOReal;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSim;
+import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSpark;
 import frc.robot.subsystems.superstructure.KnownState;
 import frc.robot.subsystems.superstructure.SuperStructure;
 import org.littletonrobotics.junction.Logger;
@@ -67,7 +67,7 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       /* Real robot, instantiate hardware IO implementations */
       case REAL -> {
-        superStructure = new SuperStructure(new ElevatorIOReal(), new ArmIOSpark());
+        superStructure = new SuperStructure(new ElevatorIOSpark(), new ArmIOSpark());
 
         drive =
             new Drive(

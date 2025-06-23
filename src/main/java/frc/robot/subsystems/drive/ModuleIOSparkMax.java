@@ -13,7 +13,6 @@
 
 package frc.robot.subsystems.drive;
 
-import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -107,6 +106,7 @@ public class ModuleIOSparkMax implements ModuleIO {
       default:
         throw new RuntimeException("Invalid module index");
     }
+
     driveSparkMaxConfig.voltageCompensation(12);
     driveSparkMaxConfig.smartCurrentLimit(40);
     driveSparkMaxConfig.signals.primaryEncoderPositionPeriodMs(
@@ -152,12 +152,6 @@ public class ModuleIOSparkMax implements ModuleIO {
                 () -> {
                   double value = driveEncoder.getPosition();
 
-                  REVLibError lastError = driveSparkFlex.getLastError();
-
-                  // if (lastError != REVLibError.kOk) {
-                  //   SparkMaxOdometryThread.getInstance().addDriveError(lastError);
-                  // }
-
                   return OptionalDouble.of(value);
                 });
     turnPositionQueue =
@@ -165,12 +159,6 @@ public class ModuleIOSparkMax implements ModuleIO {
             .registerSignal(
                 () -> {
                   double value = turnRelativeEncoder.getPosition();
-
-                  REVLibError lastError = turnSparkMax.getLastError();
-
-                  // if (lastError != REVLibError.kOk) {
-                  //   SparkMaxOdometryThread.getInstance().addTurnError(lastError);
-                  // }
 
                   return OptionalDouble.of(value);
                 });

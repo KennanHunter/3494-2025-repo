@@ -1,5 +1,6 @@
 package frc.robot.subsystems.superstructure.Elevator;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.sim.SparkMaxSim;
@@ -14,150 +15,161 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 
+// TODO: The simulation part of this is really scuffed and likely fixed by just getting all the
+// actual values we need for ElevatorSim
 public class ElevatorIOSim implements ElevatorIO {
-  // Simulation parameters
-  private static final double ELEVATOR_DRUM_RADIUS_METERS = 0.02;
-  private static final double ELEVATOR_GEARING = 20.0;
-  private static final double CARRIAGE_MASS_KG = 4.0;
-  private static final double MIN_HEIGHT_METERS = 0.0;
-  private static final double MAX_HEIGHT_METERS = 1.5;
-  private static final double POSITION_CONVERSION_FACTOR = 10.0;
-
   // SparkMax hardware objects
   private final SparkMax leaderMotor;
-  private final SparkMax followerMotor;
   private final SparkMaxConfig leaderConfig;
-  private final SparkMaxConfig followerConfig;
-  private final DCMotor elevatorGearbox;
 
-  // Simulation objects
-  private final SparkMaxSim leaderMotorSim;
-  private final SparkMaxSim followerMotorSim;
+  // Simulation components
+  private final DCMotor elevatorMotorModel = DCMotor.getNEO(1);
+  private final SparkMaxSim motorSim;
   private final ElevatorSim elevatorSim;
 
-  // State tracking
-  private boolean isBottomSensorTripped = false;
-
   public ElevatorIOSim() {
-    // Create SparkMax motors - use the same IDs as real hardware
+    // Create SparkMax motors with the IDs from constants
     leaderMotor = new SparkMax(Constants.Elevator.leaderMotor, MotorType.kBrushless);
-    followerMotor = new SparkMax(Constants.Elevator.followerMotor, MotorType.kBrushless);
 
-    // Configure motors the same way as real hardware
+    // Create configs
     leaderConfig = new SparkMaxConfig();
-    followerConfig = new SparkMaxConfig();
-
-    followerConfig.follow(leaderMotor, true);
-    followerConfig.smartCurrentLimit(80);
     leaderConfig.smartCurrentLimit(80);
 
-    leaderConfig.closedLoop.pid(0.5, 0, 0);
-    leaderConfig.closedLoop.outputRange(-0.6, 0.6);
+    // Configure PID and motion control
+    leaderConfig.closedLoop.pid(1, 0, 0);
+    leaderConfig.closedLoop.outputRange(-1, 1);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    leaderConfig.closedLoop.maxOutput(1);
 
     leaderConfig.idleMode(IdleMode.kCoast);
+
+    // Motor direction
     leaderConfig.inverted(true);
 
+    // Apply configurations
     leaderMotor.configure(
         leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    followerMotor.configure(
-        followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    elevatorGearbox = DCMotor.getNEO(2);
-
-    // Setup simulation objects
-    leaderMotorSim = new SparkMaxSim(leaderMotor, elevatorGearbox);
-    followerMotorSim = new SparkMaxSim(followerMotor, elevatorGearbox);
-
-    // Create elevator physics simulation
+    // Initialize simulation
+    motorSim = new SparkMaxSim(leaderMotor, elevatorMotorModel);
     elevatorSim =
         new ElevatorSim(
-            elevatorGearbox, // 2 NEO motors
-            ELEVATOR_GEARING,
-            CARRIAGE_MASS_KG,
-            ELEVATOR_DRUM_RADIUS_METERS,
-            MIN_HEIGHT_METERS,
-            MAX_HEIGHT_METERS,
-            true, // Simulate gravity
-            0.0 // Starting position
-            );
+            elevatorMotorModel,
+            1,
+            0.1,
+            DRUM_RADIUS,
+            Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.in(Meters),
+            Constants.Elevator.PHYSICAL_ELEVATOR_TOP_HEIGHT_MEASUREMENT.in(Meters),
+            true,
+            Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.in(Meters));
+  }
+
+  static double DRUM_RADIUS = 0.00178;
+
+  private void stepSimulation() {
+    // Set simulation input voltage
+    elevatorSim.setInput(leaderMotor.getAppliedOutput() * RobotController.getBatteryVoltage());
+
+    // Update the simulation
+    elevatorSim.update(Constants.SIMULATED_LOOP_TIME);
+
+    // var velocityRotationsPerSecond =
+    //     MetersPerSecond.of(elevatorSim.getVelocityMetersPerSecond()).in(InchesPerSecond)
+    //         * Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO;
+
+    // Convert linear position to motor rotations
+    double elevatorPositionMeters = elevatorSim.getPositionMeters();
+    double motorRotations =
+        elevatorPositionMeters / (2 * Math.PI * DRUM_RADIUS); // linear_distance / circumference
+
+    // Convert linear velocity to motor RPM
+    double elevatorVelocityMPS = elevatorSim.getVelocityMetersPerSecond();
+    double motorRPM =
+        (elevatorVelocityMPS / (2 * Math.PI * motorRotations)) * 60.0; // convert to RPM
+
+    // Update the SparkMax simulation
+    motorSim.iterate(motorRPM, RobotController.getBatteryVoltage(), Constants.SIMULATED_LOOP_TIME);
+
+    // TODO: If all the conversions are set correctly, this isn't needed
+    leaderMotor.getEncoder().setPosition(motorRotations);
+
+    // Log simulation data
+    Logger.recordOutput("Elevator/Sim/PositionMeters", elevatorSim.getPositionMeters());
+    Logger.recordOutput(
+        "Elevator/Sim/VelocityMetersPerSec", elevatorSim.getVelocityMetersPerSecond());
+    Logger.recordOutput("Elevator/Sim/CurrentDrawAmps", elevatorSim.getCurrentDrawAmps());
+    Logger.recordOutput("Elevator/Sim/MotorRotations", motorRotations);
+    Logger.recordOutput("Elevator/Sim/MotorRPM", motorRPM);
   }
 
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
-    // Update simulation physics
-    elevatorSim.update(Constants.SIMULATED_LOOP_TIME);
+    stepSimulation();
 
-    // Get voltage from SparkMax controller
-    double motorVoltage = leaderMotorSim.getAppliedOutput() * RobotController.getBatteryVoltage();
+    // Read current elevator position from encoder
+    inputs.currentHeight =
+        // Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.plus(
+        Inches.of(
+            leaderMotor.getEncoder().getPosition()
+                * Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
+    // );
 
-    // Set elevator sim input
-    elevatorSim.setInputVoltage(motorVoltage);
-
-    // Update SparkMax simulation with physics model
-    leaderMotorSim.setMotorCurrent(
-        elevatorSim.getCurrentDrawAmps() / 2); // Split current between motors
-    followerMotorSim.setMotorCurrent(elevatorSim.getCurrentDrawAmps() / 2);
-
-    // Update SparkMax encoder using physics model position
-    double positionTicks = elevatorSim.getPositionMeters() * POSITION_CONVERSION_FACTOR;
-    double velocityTicksPerSecond =
-        elevatorSim.getVelocityMetersPerSecond() * POSITION_CONVERSION_FACTOR;
-
-    leaderMotorSim.setPosition(positionTicks);
-    leaderMotorSim.setVelocity(velocityTicksPerSecond);
-
-    // Update battery simulation
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps()));
-
-    // Update sensor state
-    isBottomSensorTripped = (elevatorSim.getPositionMeters() < 0.01);
+    // Simulate limit switch based on elevator position
+    boolean isBottomSwitchPressed =
+        elevatorSim.getPositionMeters()
+            <= Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.in(Meters) + 0.01;
 
     inputs.sensorState =
-        isBottomSensorTripped ? ElevatorSensorState.BOTTOM : ElevatorSensorState.UP;
-    inputs.currentHeight =
-        Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT.plus(
-            Meters.of(elevatorSim.getPositionMeters()));
+        isBottomSwitchPressed ? ElevatorSensorState.BOTTOM : ElevatorSensorState.UP;
+
+    Logger.recordOutput(
+        "Elevator/Leader/RotToInchesConversionRatio",
+        Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
+    Logger.recordOutput("Elevator/Leader/Rotations", leaderMotor.getEncoder().getPosition());
+    Logger.recordOutput("Elevator/Leader/AppliedAmps", leaderMotor.getOutputCurrent());
+    Logger.recordOutput("Elevator/BottomSwitchPressed", isBottomSwitchPressed);
   }
 
   @Override
   public void runElevatorHeight(Distance height) {
+    // Calculate the target position, accounting for physical offset
     Distance computedElevatorHeight =
         height.minus(Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT);
 
-    Logger.recordOutput("Elevator/computedElevatorMeters", computedElevatorHeight.in(Meters));
+    double targetPosition = computedElevatorHeight.in(Inches);
 
+    // Log the target position for debugging
+    Logger.recordOutput("Elevator/TargetPositionMeters", height.in(Meters));
+
+    // Command the motor to the target position using closed-loop control
     leaderMotor
         .getClosedLoopController()
-        .setReference(computedElevatorHeight.in(Meters), SparkBase.ControlType.kPosition);
+        .setReference(
+            targetPosition / Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO,
+            SparkBase.ControlType.kPosition);
   }
 
   @Override
   public void setBrakes(IdleMode idleMode) {
-    leaderConfig.idleMode(idleMode);
-    leaderMotor.configure(
-        leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    var config = new SparkMaxConfig();
+
+    config.idleMode(idleMode);
+
+    leaderMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+
+    Logger.recordOutput("Elevator/BrakeMode", idleMode.toString());
   }
 
   @Override
-  public void resetPosition(double position) {
-    // Reset both the motor encoder and the physics simulation
-    leaderMotor.getEncoder().setPosition(position / POSITION_CONVERSION_FACTOR);
-    elevatorSim.setState(
-        position / POSITION_CONVERSION_FACTOR, elevatorSim.getVelocityMetersPerSecond());
-  }
-
-  @Override
-  public void setPIDlimits(double lowerBound, double upperBound) {
-    leaderConfig.closedLoop.outputRange(lowerBound, upperBound);
-    leaderMotor.configure(
-        leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  public void resetHeight(Distance height) {
+    // Reset the encoder position
+    leaderMotor
+        .getEncoder()
+        .setPosition(height.in(Inches) / Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
+    Logger.recordOutput("Elevator/ResetHeight", height);
   }
 }

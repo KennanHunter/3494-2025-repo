@@ -3,10 +3,14 @@ package frc.robot.subsystems.superstructure;
 import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.superstructure.SuperStructureTraverseCommand;
 import frc.robot.subsystems.superstructure.Arm.Arm;
 import frc.robot.subsystems.superstructure.Arm.ArmIO;
@@ -17,11 +21,6 @@ import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 public class SuperStructure extends SubsystemBase {
-  // Store the current rotation angle
-  // private double currentAngle = 0.0;
-  // Define rotation speed in radians per second
-  // private final double ROTATION_SPEED = Math.PI / 4; // 45 degrees per second
-
   private final Elevator elevator;
   private final Arm arm;
   private final Intake intake;
@@ -46,11 +45,13 @@ public class SuperStructure extends SubsystemBase {
     getState()
         .ifPresent(
             (state) -> {
-              Logger.recordOutput("SuperStructureState", state);
+              Logger.recordOutput("SuperStructure/SuperStructureState", state);
               Logger.recordOutput(
-                  "SuperStructureMechanismState", currentPositionVisualizer.updateMechanism(state));
+                  "SuperStructure/Visualizer/SuperStructureMechanismState",
+                  currentPositionVisualizer.updateMechanism(state));
               Logger.recordOutput(
-                  "SuperStructureComponents", currentPositionVisualizer.updatePoses(state));
+                  "SuperStructure/Visualizer/SuperStructureComponents",
+                  currentPositionVisualizer.updatePoses(state));
             });
 
     Logger.recordOutput("SuperStructure/isAtTargetState", isAtTarget());
@@ -72,10 +73,13 @@ public class SuperStructure extends SubsystemBase {
     arm.setTargetState(newState.armState());
     intake.setTargetState(newState.intakeState());
 
+    Logger.recordOutput("SuperStructure/TargetSuperStructureState", newState);
     Logger.recordOutput(
-        "TargetSuperStructureMechanismState", targetPositionVisualizer.updateMechanism(newState));
+        "SuperStructure/Visualizer/TargetSuperStructureMechanismState",
+        targetPositionVisualizer.updateMechanism(newState));
     Logger.recordOutput(
-        "TargetSuperStructureComponents", targetPositionVisualizer.updatePoses(newState));
+        "SuperStructure/Visualizer/TargetSuperStructureComponents",
+        targetPositionVisualizer.updatePoses(newState));
   }
 
   public boolean isAtTarget() {
@@ -121,8 +125,29 @@ public class SuperStructure extends SubsystemBase {
   }
 
   public Command createCommandTraversalToKnownState(KnownState targetState) {
+    return createCommandTraversalToKnownStateWithRumbleFeedbackOnFailure(targetState, null);
+  }
+
+  public Command createCommandTraversalToKnownStateWithRumbleFeedbackOnFailure(
+      KnownState targetState, GenericHID rumbler) {
     return new SuperStructureTraverseCommand(
             this, () -> getLastKnownStateIfWithinRange(), targetState)
-        .onlyIf(() -> getLastKnownStateIfWithinRange().isPresent());
+        .onlyIf(
+            () -> {
+              if (getLastKnownStateIfWithinRange().isPresent()) {
+                return true;
+              } else {
+                // TODO: Does not feel like rumble value 1 and has weird behavior when pressed
+                // multiple times Could be fixed with some kind of "rumble counter" that combines
+                // multiple sources of rumble commands
+                if (rumbler != null) {
+                  new RunCommand(() -> rumbler.setRumble(RumbleType.kBothRumble, 1))
+                      .andThen(new WaitCommand(0.5))
+                      .andThen(() -> rumbler.setRumble(RumbleType.kBothRumble, 0));
+                }
+
+                return false;
+              }
+            });
   }
 }

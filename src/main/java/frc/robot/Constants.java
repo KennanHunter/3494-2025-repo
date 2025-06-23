@@ -15,11 +15,13 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 
 import au.grapplerobotics.MitoCANdria;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.util.LoggedTunableNumber;
@@ -78,13 +80,17 @@ public final class Constants {
     public static final Distance PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT = Inches.of(29.5);
     public static final Distance PHYSICAL_ELEVATOR_TOP_HEIGHT_MEASUREMENT = Inches.of(49);
 
+    // TODO: Figure out how to make this work with Measure<PerUnit<AngleUnit, DistanceUnit>> or
+    // Per<Angle, Distance> or similar
     public static final double ROTATIONS_TO_INCHES_CONVERSION_RATIO = (4.0 / 9.0);
+
+    public static final Mass CARRIAGE_MASS = Kilograms.of(4.0);
 
     /**
      * @param percentage value from 0 to 1
      * @return distance
      */
-    public static Distance positionFromPercentage(double percentage) {
+    public static Distance positionFromPercentageDecimal(double percentage) {
       assert percentage >= 0;
       assert percentage <= 1;
 
