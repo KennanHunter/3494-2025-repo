@@ -140,7 +140,7 @@ public class RobotContainer {
         .a()
         .onTrue(
             new SuperStructureManualControlCommand(
-                superStructure, () -> controller.getLeftX(), () -> controller.getLeftY()));
+                superStructure, () -> OI.getElevatorPower(), () -> OI.getArmPower()));
 
     controller.y().onTrue(new ReturnSuperStructureToSafeState(superStructure));
 

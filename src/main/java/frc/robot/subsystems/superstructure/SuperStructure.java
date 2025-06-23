@@ -1,8 +1,10 @@
 package frc.robot.subsystems.superstructure;
 
-import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.util.Color;
@@ -98,16 +100,25 @@ public class SuperStructure extends SubsystemBase {
       return false;
     }
 
-    var old = this.getState().get();
-    var newState = state.getState();
+    var current = this.getState().get();
+    var known = state.getState();
+
+    Rotation2d armDifference = (current.armState().rotation().minus(known.armState().rotation()));
 
     boolean armWithinRange =
-        Math.abs(old.armState().rotation().minus(newState.armState().rotation()).getDegrees())
-            <= arm.ACCEPTABLE_ANGLE_ERROR.in(Degrees);
+        Math.abs(armDifference.getDegrees()) <= arm.ACCEPTABLE_ANGLE_ERROR.in(Degrees);
+
+    Distance heightDifference =
+        current.elevatorState().height().minus(known.elevatorState().height());
 
     boolean heightWithinRange =
-        old.elevatorState().height().minus(newState.elevatorState().height()).abs(Centimeters)
-            <= elevator.ELEVATOR_ACCEPTABLE_HEIGHT_ERROR.in(Centimeters);
+        heightDifference.abs(Meters) <= elevator.ELEVATOR_ACCEPTABLE_HEIGHT_ERROR.in(Meters);
+
+    Logger.recordOutput("SuperStructure/withinRange/armDifference", armDifference);
+    Logger.recordOutput("SuperStructure/withinRange/armInRange", armWithinRange);
+    Logger.recordOutput(
+        "SuperStructure/withinRange/heightDifferenceMeters", heightDifference.in(Meters));
+    Logger.recordOutput("SuperStructure/withinRange/heightInRange", heightWithinRange);
 
     return armWithinRange && heightWithinRange;
   }

@@ -43,7 +43,6 @@ public class ElevatorIOSim implements ElevatorIO {
     leaderConfig.closedLoop.pid(1, 0, 0);
     leaderConfig.closedLoop.outputRange(-1, 1);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    leaderConfig.closedLoop.maxOutput(1);
 
     leaderConfig.idleMode(IdleMode.kCoast);
 

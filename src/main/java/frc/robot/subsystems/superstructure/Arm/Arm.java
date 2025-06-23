@@ -15,7 +15,7 @@ public class Arm extends SubsystemBase {
   // Mechanism2d visualization
   public final LoggedMechanism2d mech2d = new LoggedMechanism2d(60, 60);
 
-  public Angle ACCEPTABLE_ANGLE_ERROR = Degrees.of(5);
+  public Angle ACCEPTABLE_ANGLE_ERROR = Degrees.of(15);
 
   private ArmState target;
 

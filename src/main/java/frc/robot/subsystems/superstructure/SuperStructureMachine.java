@@ -12,6 +12,10 @@ public class SuperStructureMachine {
   private static Graph<KnownState, DefaultEdge> createGraph() {
     var graph = new SimpleGraph<KnownState, DefaultEdge>(DefaultEdge.class);
 
+    for (KnownState knownState: KnownState.values()) {
+      graph.addVertex(knownState);
+    }
+
     graph.addEdge(KnownState.Test, KnownState.Test2);
     graph.addEdge(KnownState.Test, KnownState.SafeReset);
 

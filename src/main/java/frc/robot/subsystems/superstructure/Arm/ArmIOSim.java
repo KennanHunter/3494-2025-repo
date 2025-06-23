@@ -2,6 +2,7 @@ package frc.robot.subsystems.superstructure.Arm;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -14,7 +15,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants;
@@ -27,6 +27,8 @@ public class ArmIOSim implements ArmIO {
   private final DCMotor armMotorModel = DCMotor.getNEO(1);
   private final SparkFlexSim motorSim;
   private final SingleJointedArmSim armSim;
+
+  private final SparkAbsoluteEncoderSim encoderSim;
 
   public ArmIOSim() {
     motor = new SparkFlex(Constants.Arm.ARM_MOTOR_CAN_ID, MotorType.kBrushless);
@@ -64,7 +66,9 @@ public class ArmIOSim implements ArmIO {
             Constants.Arm.MIN_ANGLE.in(Radians),
             Constants.Arm.MAX_ANGLE.in(Radians),
             true,
-            0.0);
+            Math.PI / 2);
+
+    encoderSim = new SparkAbsoluteEncoderSim(motor);
   }
 
   private void stepSimulation() {
@@ -75,16 +79,24 @@ public class ArmIOSim implements ArmIO {
     armSim.update(Constants.SIMULATED_LOOP_TIME);
 
     // Update the SparkFlex simulation
-    motorSim.iterate(
-        Units.radiansPerSecondToRotationsPerMinute(
-            armSim.getVelocityRadPerSec() * Constants.Arm.ARM_REDUCTION),
-        RobotController.getBatteryVoltage(),
-        Constants.SIMULATED_LOOP_TIME);
+    // motorSim.iterate(
+    //     Units.radiansPerSecondToRotationsPerMinute(
+    //         armSim.getVelocityRadPerSec()
+    //         // * Constants.Arm.ARM_REDUCTION
+    //         ),
+    //     RobotController.getBatteryVoltage(),
+    //     Constants.SIMULATED_LOOP_TIME);
+
+    encoderSim.iterate(armSim.getVelocityRadPerSec(), Constants.SIMULATED_LOOP_TIME);
 
     // Log simulation data
     Logger.recordOutput("Arm/Sim/AngleRads", armSim.getAngleRads());
     Logger.recordOutput("Arm/Sim/VelocityRadPerSec", armSim.getVelocityRadPerSec());
     Logger.recordOutput("Arm/Sim/CurrentDrawAmps", armSim.getCurrentDrawAmps());
+
+    Logger.recordOutput("Arm/Sim/AbsEncoderSimOutputPos", motorSim.getPosition());
+    Logger.recordOutput("Arm/Sim/AbsEncoderSimPos", encoderSim.getPosition());
+    Logger.recordOutput("Arm/Sim/AbsEncoderRealPos", motor.getAbsoluteEncoder().getPosition());
   }
 
   @Override
