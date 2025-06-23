@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /**
@@ -59,6 +60,8 @@ public class LoggedTunableNumber implements DoubleSupplier {
       this.defaultValue = defaultValue;
       if (Constants.tuningMode) {
         dashboardNumber = new LoggedNetworkNumber(key, defaultValue);
+      } else {
+        Logger.recordOutput(key, defaultValue);
       }
     }
   }

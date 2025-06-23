@@ -11,15 +11,10 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
-import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark implements ArmIO {
   private final SparkFlex motor;
-  public final LoggedTunableNumber p = new LoggedTunableNumber("Arm/P", 6.0);
-  public final LoggedTunableNumber i = new LoggedTunableNumber("Arm/I", 0.0);
-  public final LoggedTunableNumber d = new LoggedTunableNumber("Arm/D", 0.0);
-  public final LoggedTunableNumber bound = new LoggedTunableNumber("Arm/Bounds", 0.6);
 
   public ArmIOSpark() {
     motor = new SparkFlex(Constants.Arm.ARM_MOTOR_CAN_ID, MotorType.kBrushless);
@@ -29,9 +24,9 @@ public class ArmIOSpark implements ArmIO {
 
     config
         .closedLoop
-        .p(p.get())
-        .i(i.get())
-        .d(d.get())
+        .p(Constants.Arm.p.get())
+        .i(Constants.Arm.i.get())
+        .d(Constants.Arm.d.get())
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
     config.closedLoop.maxMotion.maxVelocity(120).maxAcceleration(60);
@@ -60,17 +55,17 @@ public class ArmIOSpark implements ArmIO {
   public void configurePID() {
     SparkFlexConfig config = new SparkFlexConfig();
 
-    if (!p.hasChanged(hashCode())
-        && !i.hasChanged(hashCode())
-        && !d.hasChanged(hashCode())
-        && !bound.hasChanged(hashCode())) return;
+    if (!Constants.Arm.p.hasChanged(hashCode())
+        && !Constants.Arm.i.hasChanged(hashCode())
+        && !Constants.Arm.d.hasChanged(hashCode())
+        && !Constants.Arm.bound.hasChanged(hashCode())) return;
 
     ClosedLoopConfig newConfig = new ClosedLoopConfig();
 
-    newConfig.p(p.get());
-    newConfig.i(i.get());
-    newConfig.d(d.get());
-    newConfig.outputRange(bound.get(), -bound.get());
+    newConfig.p(Constants.Arm.p.get());
+    newConfig.i(Constants.Arm.i.get());
+    newConfig.d(Constants.Arm.d.get());
+    newConfig.outputRange(Constants.Arm.bound.get(), -Constants.Arm.bound.get());
 
     motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }

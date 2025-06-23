@@ -22,6 +22,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.util.LoggedTunableNumber;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -35,7 +36,10 @@ public final class Constants {
 
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
-  public static final boolean tuningMode = false;
+
+  // We always want tuning mode in Sim, use `tuningModeOnRealField` for real deploys
+  private static final boolean isRealFieldTuningModeEnabled = false;
+  public static final boolean tuningMode = RobotBase.isSimulation() || isRealFieldTuningModeEnabled;
 
   // Should be pretty close to real
   public static final double SIMULATED_LOOP_TIME = 0.02;
@@ -105,6 +109,12 @@ public final class Constants {
         SingleJointedArmSim.estimateMOI(ARM_LENGTH_TO_CENTER_OF_WHEELS.in(Meters), 2);
 
     public static final int ARM_ENCODER_PULSE_PER_REV = 4096;
+
+    public static final LoggedTunableNumber p = new LoggedTunableNumber("Arm/Tuning/P", 4.0);
+    public static final LoggedTunableNumber i = new LoggedTunableNumber("Arm/Tuning/I", 0.0);
+    public static final LoggedTunableNumber d = new LoggedTunableNumber("Arm/Tuning/D", 0.0);
+    public static final LoggedTunableNumber bound =
+        new LoggedTunableNumber("Arm/Tuning/Bounds", 0.6);
   }
 
   public static class Intake {
