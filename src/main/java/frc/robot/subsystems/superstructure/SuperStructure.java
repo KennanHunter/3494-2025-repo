@@ -47,10 +47,10 @@ public class SuperStructure extends SubsystemBase {
             (state) -> {
               Logger.recordOutput("SuperStructure/SuperStructureState", state);
               Logger.recordOutput(
-                  "SuperStructure/Visualizer/SuperStructureMechanismState",
+                  "SuperStructure/2dVisualizer/SuperStructureMechanismState",
                   currentPositionVisualizer.updateMechanism(state));
               Logger.recordOutput(
-                  "SuperStructure/Visualizer/SuperStructureComponents",
+                  "SuperStructure/3dVisualizer/SuperStructureComponents",
                   currentPositionVisualizer.updatePoses(state));
             });
 
@@ -75,10 +75,10 @@ public class SuperStructure extends SubsystemBase {
 
     Logger.recordOutput("SuperStructure/TargetSuperStructureState", newState);
     Logger.recordOutput(
-        "SuperStructure/Visualizer/TargetSuperStructureMechanismState",
+        "SuperStructure/2dVisualizer/TargetSuperStructureMechanismState",
         targetPositionVisualizer.updateMechanism(newState));
     Logger.recordOutput(
-        "SuperStructure/Visualizer/TargetSuperStructureComponents",
+        "SuperStructure/3dVisualizer/TargetSuperStructureComponents",
         targetPositionVisualizer.updatePoses(newState));
   }
 
