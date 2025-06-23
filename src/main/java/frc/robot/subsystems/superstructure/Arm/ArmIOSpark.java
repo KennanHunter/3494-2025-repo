@@ -53,8 +53,6 @@ public class ArmIOSpark implements ArmIO {
   }
 
   public void configurePID() {
-    SparkFlexConfig config = new SparkFlexConfig();
-
     if (!Constants.Arm.p.hasChanged(hashCode())
         && !Constants.Arm.i.hasChanged(hashCode())
         && !Constants.Arm.d.hasChanged(hashCode())
@@ -67,7 +65,10 @@ public class ArmIOSpark implements ArmIO {
     newConfig.d(Constants.Arm.d.get());
     newConfig.outputRange(Constants.Arm.bound.get(), -Constants.Arm.bound.get());
 
-    motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    motor.configure(
+        new SparkFlexConfig().apply(newConfig),
+        ResetMode.kNoResetSafeParameters,
+        PersistMode.kNoPersistParameters);
   }
 
   @Override
