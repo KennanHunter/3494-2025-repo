@@ -32,7 +32,6 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
 import frc.robot.subsystems.superstructure.Arm.ArmIO;
 import frc.robot.subsystems.superstructure.Arm.ArmIOSim;
-import frc.robot.subsystems.superstructure.Arm.ArmIOSpark;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIO;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.superstructure.Elevator.ElevatorIOSpark;
@@ -67,7 +66,7 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       /* Real robot, instantiate hardware IO implementations */
       case REAL -> {
-        superStructure = new SuperStructure(new ElevatorIOSpark(), new ArmIOSpark());
+        superStructure = new SuperStructure(new ElevatorIOSpark(), new ArmIO() {});
 
         drive =
             new Drive(

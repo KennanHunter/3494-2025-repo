@@ -10,8 +10,7 @@ import frc.robot.subsystems.superstructure.Intake.IntakeState;
 public enum KnownState {
   SafeReset(
       new SuperStructureState(
-          new ElevatorState(
-              Constants.Elevator.PHYSICAL_ELEVATOR_TOP_HEIGHT_MEASUREMENT, IdleMode.kBrake),
+          new ElevatorState(Constants.Elevator.positionFromPercentageDecimal(0.7), IdleMode.kBrake),
           new ArmState(Rotation2d.kZero),
           IntakeState.Hold)),
 

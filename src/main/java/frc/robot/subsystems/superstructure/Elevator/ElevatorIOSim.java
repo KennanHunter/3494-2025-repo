@@ -37,7 +37,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
     // Create configs
     leaderConfig = new SparkMaxConfig();
-    leaderConfig.smartCurrentLimit(80);
+    leaderConfig.smartCurrentLimit(Constants.Arm.ARM_STALL_CURRENT_LIMIT);
 
     // Configure PID and motion control
     leaderConfig.closedLoop.pid(1, 0, 0);

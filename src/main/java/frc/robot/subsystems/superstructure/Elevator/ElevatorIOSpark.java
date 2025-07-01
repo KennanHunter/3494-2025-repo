@@ -18,6 +18,8 @@ import org.littletonrobotics.junction.Logger;
 public class ElevatorIOSpark implements ElevatorIO {
   // SparkMax hardware objects
   private final SparkMax leaderMotor;
+  private final SparkMax followerMotor;
+
   private final SparkMaxConfig leaderConfig;
 
   // Limit switch for bottom position detection
@@ -26,24 +28,22 @@ public class ElevatorIOSpark implements ElevatorIO {
   public ElevatorIOSpark() {
     // Create SparkMax motors with the IDs from constants
     leaderMotor = new SparkMax(Constants.Elevator.leaderMotor, MotorType.kBrushless);
+    followerMotor = new SparkMax(Constants.Elevator.followerMotor, MotorType.kBrushless);
+
+    // TODO: Actually hook follower motor in
+    followerMotor.configure(
+        new SparkMaxConfig().idleMode(IdleMode.kCoast),
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
     // Create configs
     leaderConfig = new SparkMaxConfig();
-    leaderConfig.smartCurrentLimit(80);
+    leaderConfig.smartCurrentLimit(Constants.Arm.ARM_STALL_CURRENT_LIMIT);
 
     // Configure PID and motion control
     leaderConfig.closedLoop.pid(1, 0, 0);
-    leaderConfig.closedLoop.outputRange(-1, 1);
+    leaderConfig.closedLoop.outputRange(-0.2, 0.2);
     leaderConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    leaderConfig.closedLoop.maxOutput(0.2);
-
-    // TODO: WHY THE ACTUAL FLYING FUCK DOES THIS CONVERSION FACTOR ERROR
-
-    // leaderConfig.encoder.positionConversionFactor(
-    //     Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
-
-    // leaderConfig.encoder.velocityConversionFactor(
-    //     Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO / 60);
 
     leaderConfig.idleMode(IdleMode.kCoast);
 
@@ -112,7 +112,9 @@ public class ElevatorIOSpark implements ElevatorIO {
     // Reset the encoder position
     leaderMotor
         .getEncoder()
-        .setPosition(height.in(Inches) / Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
+        .setPosition(
+            height.minus(Constants.Elevator.PHYSICAL_ELEVATOR_BOTTOM_HEIGHT_MEASUREMENT).in(Inches)
+                / Constants.Elevator.ROTATIONS_TO_INCHES_CONVERSION_RATIO);
     Logger.recordOutput("Elevator/ResetHeight", height);
   }
 }

@@ -52,9 +52,11 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean isAtTarget() {
-    if (this.target == null) return false;
+    return true;
 
-    return this.target.rotation().minus(this.armIOInputs.armPosition).getDegrees()
-        <= ACCEPTABLE_ANGLE_ERROR.in(Degrees);
+    // if (this.target == null) return false;
+
+    // return this.target.rotation().minus(this.armIOInputs.armPosition).getDegrees()
+    //     <= ACCEPTABLE_ANGLE_ERROR.in(Degrees);
   }
 }

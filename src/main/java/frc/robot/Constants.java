@@ -116,6 +116,8 @@ public final class Constants {
 
     public static final int ARM_ENCODER_PULSE_PER_REV = 4096;
 
+    public static final int ARM_STALL_CURRENT_LIMIT = 15;
+
     public static final LoggedTunableNumber p = new LoggedTunableNumber("Arm/Tuning/P", 4.0);
     public static final LoggedTunableNumber i = new LoggedTunableNumber("Arm/Tuning/I", 0.0);
     public static final LoggedTunableNumber d = new LoggedTunableNumber("Arm/Tuning/D", 0.0);
